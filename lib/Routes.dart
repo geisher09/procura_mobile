@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:procura/Screens/Login/index.dart';
+import 'package:procura/Screens/Home_Admin/index.dart';
 
 class Routes {
   Routes() {
@@ -17,7 +18,16 @@ class Routes {
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
           case '/login':
-            return new ProcuraRoutes();
+            return new ProcuraRoutes(
+              builder: (_) => new LoginScreen(),
+              settings: settings,
+            );
+
+          case '/home':
+            return new ProcuraRoutes(
+              builder: (_) => new Home_AdminScreen(),
+              settings: settings,
+            );
         }
       },
     ));
