@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen>{
                       child: Column(children: <Widget>[
                         Container(
                           height: 150.0,
-                          width: 300.0,
+                          width: double.infinity,
                           decoration: new BoxDecoration(
                             image: new DecorationImage(
                               image: new AssetImage(
@@ -75,40 +75,35 @@ class _LoginScreenState extends State<LoginScreen>{
                           ),
                           child: new Stack(
                             children: <Widget>[
-                              new Positioned(
-                                left: 38.0,
-                                top: 30.0,
-                                child: new Text(
-                                  "PROCURA",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: 'Montserrat',
-                                      fontSize: 30.0,
-                                      fontWeight: FontWeight.bold,
-                                      letterSpacing: 5.0
-                                  ),
-                                ),
-                              ),
-                              new Positioned(
-                                left: 40.0,
-                                top: 75.0,
-                                child: new Text(
-                                  'Better Procurement System.',
-                                  style: new TextStyle(
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ),
-                              new Positioned(
-                                left: 70.0,
-                                top: 95.0,
-                                child: new Text(
-                                  'Better Work Place.',
-                                  style: new TextStyle(
-                                      fontSize: 15.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
+                              new Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    new Text(
+                                      "PROCURA",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Montserrat',
+                                          fontSize: 30.0,
+                                          fontWeight: FontWeight.bold,
+                                          letterSpacing: 5.0
+                                      ),
+                                    ),
+                                    new Text(
+                                      'Better Procurement System.',
+                                      style: new TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    new Text(
+                                      'Better Work Place.',
+                                      style: new TextStyle(
+                                          fontSize: 15.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -137,7 +132,8 @@ class _LoginScreenState extends State<LoginScreen>{
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0)),
-                          onPressed: () {},
+                          onPressed: () =>
+                              Navigator.pushReplacementNamed(context, "/home"),
                         ),
                       ]),
                     ),
