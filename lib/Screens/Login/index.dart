@@ -53,10 +53,11 @@ class _LoginScreenState extends State<LoginScreen>{
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 new Container(
-                  height: 90.0,
+                    height: MediaQuery.of(context).size.height/6
                 ),
                 new Container(
                   padding: EdgeInsets.only(left: 30.0, right: 30.0),
+                  height: MediaQuery.of(context).size.height/1.4,
                   child: new Card(
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(10.0)),
@@ -64,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen>{
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Column(children: <Widget>[
                         Container(
-                          height: 150.0,
+                          height: MediaQuery.of(context).size.height/3.5,
                           width: double.infinity,
                           decoration: new BoxDecoration(
                             image: new DecorationImage(
