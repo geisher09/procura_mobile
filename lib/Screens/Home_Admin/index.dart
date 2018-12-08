@@ -10,7 +10,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: new AppBar(
-        title: new Text('Home Sample hihi')
+        title: new Text('Home Sample')
       ),
       floatingActionButton: new FloatingActionButton(
         backgroundColor: Colors.red,
