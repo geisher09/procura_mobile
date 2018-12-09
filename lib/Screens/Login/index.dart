@@ -119,11 +119,22 @@ class _LoginScreenState extends State<LoginScreen>{
                             fit: BoxFit.fitHeight,
                           ),
                         ),
+                        new Container(
+                          height: MediaQuery.of(context).size.height/25,
+                          child: FractionalTranslation(
+                              translation: Offset(0.0, -2.0),
+                              child: Text(
+                                "Size ${MediaQuery.of(context).size.width} * ${MediaQuery.of(context).size.height}",
+                                style: Theme.of(context).textTheme.title,
+                              )),
+                        ),
                         new FractionalTranslation(
                           translation: Offset(0.0, -0.3),
                           child: new FormContainer(),
                         ),
                         new RaisedButton(
+                          splashColor: Colors.white,
+                          highlightColor: Colors.black,
                           elevation: 4.0,
                           color: Colors.red,
                           child: Text(
