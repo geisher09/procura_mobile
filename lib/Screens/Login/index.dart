@@ -19,12 +19,14 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen>{
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
+
     TextStyle cardButtonStyle = Theme.of(context).textTheme.title.copyWith(
       fontSize: 16.0,
       color: Colors.white,
       letterSpacing: 0.3,
     );
-
 
     return new Scaffold(
       //resizeToAvoidBottomPadding: false,
@@ -57,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen>{
                 ),
                 new Container(
                   padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                  height: MediaQuery.of(context).size.height/1.4,
+                  height: (queryData.size.height >= 570.0)?407.0:queryData.size.height/1.4,
                   child: new Card(
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(10.0)),
@@ -65,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen>{
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Column(children: <Widget>[
                         Container(
-                          height: MediaQuery.of(context).size.height/3.5,
+                          height: (queryData.size.height >= 570.0)?163.0:queryData.size.height/3.5,
                           width: double.infinity,
                           decoration: new BoxDecoration(
                             image: new DecorationImage(

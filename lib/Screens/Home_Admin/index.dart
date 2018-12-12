@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../Components/HomeBottomAppBar.dart';
+import '../../Components/HomeDrawer.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../Components/custom_icons.dart';
 
 class Home_AdminScreen extends StatefulWidget {
   @override
@@ -21,18 +24,11 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: new Drawer(
-        child: new Text(
-          '\n\n\n\t\tDRAWER',
-          style: new TextStyle(
-            fontSize: 20.0
-          ),
-        ),
+      drawer: new HomeDrawer(
       ),
       appBar: new AppBar(
         leading: new IconButton(
-            icon: Icon(Icons.menu),
-            color: Colors.black38,
+            icon: Image.asset('assets/images/user.png'),
             onPressed: () => _scaffoldKey.currentState.openDrawer()
         ),
         title: new Text(
@@ -46,16 +42,6 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         ),
         backgroundColor: Colors.white,
         actions: <Widget>[
-          new Center(
-            child: new Text(
-              'Hello Geisher!',
-              style: TextStyle(color: Colors.black),
-            ),
-          ),
-          new IconButton(
-              icon: Image.asset('assets/images/user.png'),
-              onPressed: () {}
-              ),
         ],
       ),
       body: Center(
@@ -64,12 +50,6 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
           style: TextStyle(fontSize: 30.0),
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
-        backgroundColor: Colors.black45,
-        child: new Icon(Icons.arrow_back),
-        elevation: 2.0,
-        onPressed: () => Navigator.pushReplacementNamed(context, "/login"),
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: HomeBottomAppBar(
         color: Colors.black38,
@@ -77,10 +57,10 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         notchedShape: CircularNotchedRectangle(),
         onTabSelected: _selectedTab,
         items: [
-          HomeBottomAppBarItem(iconData: Icons.dashboard, text: 'Dashboard'),
-          HomeBottomAppBarItem(iconData: Icons.account_balance_wallet, text: 'Budget'),
-          HomeBottomAppBarItem(iconData: Icons.explore, text: 'Track'),
-          HomeBottomAppBarItem(iconData: Icons.notifications, text: 'Notifs'),
+          HomeBottomAppBarItem(iconData: CustomIcons.dashboard_level_1, text: 'Dashboard'),
+          HomeBottomAppBarItem(iconData: FontAwesomeIcons.edit, text: 'For Approval'),
+          HomeBottomAppBarItem(iconData: FontAwesomeIcons.shareSquare, text: 'My Requests'),
+          HomeBottomAppBarItem(iconData: FontAwesomeIcons.bell, text: 'Notifications'),
         ],
       ),
     );
