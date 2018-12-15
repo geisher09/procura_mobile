@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:procura/Screens/Login/index.dart';
 import 'package:procura/Screens/Home_Admin/index.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:dynamic_theme/theme_switcher_widgets.dart';
 
 class Routes {

@@ -27,6 +27,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       drawer: new HomeDrawer(
       ),
       appBar: new AppBar(
+        backgroundColor:Theme.of(context).brightness == Brightness.light? Colors.white:Color(0xFF202020),
         leading: new IconButton(
             icon: Image.asset('assets/images/user.png'),
             onPressed: () => _scaffoldKey.currentState.openDrawer()
@@ -34,13 +35,12 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         title: new Text(
             'Procura',
           style: new TextStyle(
-            color: Colors.black,
+              color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white,
               fontSize: 25.0,
-              letterSpacing: 0.5,
+              letterSpacing: 2.5,
               fontWeight: FontWeight.bold
           ),
         ),
-        backgroundColor: Colors.white,
         actions: <Widget>[
         ],
       ),
@@ -52,7 +52,6 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: HomeBottomAppBar(
-        color: Colors.black38,
         selectedColor: Colors.blueAccent,
         notchedShape: CircularNotchedRectangle(),
         onTabSelected: _selectedTab,
@@ -65,4 +64,5 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       ),
     );
   }
+
 }

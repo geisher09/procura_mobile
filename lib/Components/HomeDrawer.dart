@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'custom_icons.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 
 class HomeDrawer extends StatefulWidget {
   @override
@@ -8,18 +9,7 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer>{
-  bool _isClicked = true;
 
-  void _toggleMoon() {
-    setState(() {
-      if(_isClicked){
-        _isClicked=false;
-      }
-      else{
-        _isClicked=true;
-      }
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -29,17 +19,21 @@ class _HomeDrawerState extends State<HomeDrawer>{
           accountName: new Text(
             'Geisher Bernabe',
             style:
-                new TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                new TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white),
           ),
           accountEmail: new Text(
             'macncheeze00@gmail.com',
-            style:
-                new TextStyle(color: Colors.black),
+            style: new TextStyle(
+              color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white
+            ),
           ),
           currentAccountPicture: CircleAvatar(
             backgroundImage: AssetImage('assets/images/user.png'),
           ),
-          decoration: new BoxDecoration(color: Colors.white),
+          decoration: new BoxDecoration(
+            color: Theme.of(context).brightness == Brightness.light? Colors.white:Color(0xFF202020),
+
+    ),
         ),
         new ListTile(
           title: new Text('Profile'),
@@ -66,10 +60,16 @@ class _HomeDrawerState extends State<HomeDrawer>{
           color: Colors.black,
         ),
         new ListTile(
-          leading: (_isClicked)?Icon(FontAwesomeIcons.moon):Icon(FontAwesomeIcons.solidMoon),
-          onTap: _toggleMoon,
+          leading: Theme.of(context).brightness == Brightness.light?Icon(FontAwesomeIcons.moon):Icon(FontAwesomeIcons.solidMoon),
+          onTap: changeBrightness,
         )
       ],
     ));
   }
+
+  void changeBrightness() {
+    DynamicTheme.of(context).setBrightness(Theme.of(context).brightness == Brightness.dark? Brightness.light: Brightness.dark);
+  }
+
+
 }
