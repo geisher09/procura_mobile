@@ -9,8 +9,8 @@ class HomeBottomAppBarItem {
 class HomeBottomAppBar extends StatefulWidget {
   HomeBottomAppBar({
     this.items,
-    this.height: 60.0,
-    this.iconSize: 24.0,
+    this.height: 45.0,
+    this.iconSize: 20.0,
     this.backgroundColor,
     this.color,
     this.selectedColor,
@@ -59,7 +59,7 @@ class _HomeBottomAppBarState extends State<HomeBottomAppBar> {
       shape: widget.notchedShape,
       child: Row(
         mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: items,
       ),
       color: widget.backgroundColor,
@@ -86,7 +86,8 @@ class _HomeBottomAppBarState extends State<HomeBottomAppBar> {
                 Icon(item.iconData, color: color, size: widget.iconSize),
                 Text(
                   item.text,
-                  style: TextStyle(color: color),
+                  style: TextStyle(color: color, fontSize: 10.0),
+                  maxLines: 2,
                 )
               ],
             ),

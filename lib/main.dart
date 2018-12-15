@@ -1,5 +1,5 @@
-import 'package:procura/Routes.dart';
+import 'Routes2.dart';
 
-void main() {
-  new Routes();
+void main(){
+  launchMain();
 }
