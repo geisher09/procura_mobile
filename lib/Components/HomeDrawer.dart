@@ -57,10 +57,10 @@ class _HomeDrawerState extends State<HomeDrawer>{
           onTap: () => Navigator.pushReplacementNamed(context, "/login"),
         ),
         new Divider(
-          color: Colors.black,
         ),
         new ListTile(
-          leading: Theme.of(context).brightness == Brightness.light?Icon(FontAwesomeIcons.moon):Icon(FontAwesomeIcons.solidMoon),
+          title: new Text('Night Mode'),
+          trailing: Theme.of(context).brightness == Brightness.light?Icon(FontAwesomeIcons.moon):Icon(FontAwesomeIcons.solidMoon),
           onTap: changeBrightness,
         )
       ],

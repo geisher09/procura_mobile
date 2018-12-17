@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen>{
                 ),
                 new Container(
                   padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                  height: (queryData.size.height >= 570.0)?407.0:queryData.size.height/1.4,
+                  height: (queryData.size.height >= 650.0)?queryData.size.height/1.5:queryData.size.height/1.4,
                   child: new Card(
                     color: Colors.white,
                     shape: new RoundedRectangleBorder(
