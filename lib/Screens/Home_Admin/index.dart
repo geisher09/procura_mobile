@@ -3,6 +3,10 @@ import '../../Components/HomeBottomAppBar.dart';
 import '../../Components/HomeDrawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Components/custom_icons.dart';
+import 'HomeDashboard.dart';
+import 'HomeApproval.dart';
+import 'HomeRequests.dart';
+import 'HomeNotifs.dart';
 
 class Home_AdminScreen extends StatefulWidget {
   @override
@@ -17,15 +21,32 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       _current = 'TAB: $index';
     });
   }
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+
+    String _page_title;
+    Widget page;
+    if(_current == 'TAB: 0'){
+      _page_title = 'Dashboard';
+      page = new HomeDashboard();
+    }
+    else if(_current == 'TAB: 1'){
+      _page_title = 'For Approval';
+      page = new HomeApproval(_page_title);
+    }
+    else if(_current == 'TAB: 2'){
+      _page_title = 'My Requests';
+      page = new HomeRequests(_page_title);
+    }
+    else{
+      _page_title = 'Notifications';
+      page = new HomeNotifs(_page_title);
+    }
     return Scaffold(
       key: _scaffoldKey,
-      drawer: new HomeDrawer(
-      ),
+      drawer: new HomeDrawer(),
       appBar: new AppBar(
         backgroundColor:Theme.of(context).brightness == Brightness.light? Colors.white:Color(0xFF202020),
         leading: new IconButton(
@@ -33,7 +54,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             onPressed: () => _scaffoldKey.currentState.openDrawer()
         ),
         title: new Text(
-            'Procura',
+          _page_title,
           style: new TextStyle(
               color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white,
               fontSize: 25.0,
@@ -41,14 +62,12 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               fontWeight: FontWeight.bold
           ),
         ),
+        centerTitle: true,
         actions: <Widget>[
         ],
       ),
       body: Center(
-        child: Text(
-          _current,
-          style: TextStyle(fontSize: 30.0),
-        ),
+        child: page
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: HomeBottomAppBar(
