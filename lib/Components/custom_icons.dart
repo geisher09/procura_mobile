@@ -12,6 +12,22 @@
 ///       - asset: fonts/MyFlutterApp.ttf
 ///
 /// 
+/// * Font Awesome, Copyright (C) 2016 by Dave Gandy
+///         Author:    Dave Gandy
+///         License:   SIL ()
+///         Homepage:  http://fortawesome.github.com/Font-Awesome/
+/// * Entypo, Copyright (C) 2012 by Daniel Bruce
+///         Author:    Daniel Bruce
+///         License:   SIL (http://scripts.sil.org/OFL)
+///         Homepage:  http://www.entypo.com
+/// * Typicons, (c) Stephen Hutchings 2012
+///         Author:    Stephen Hutchings
+///         License:   SIL (http://scripts.sil.org/OFL)
+///         Homepage:  http://typicons.com/
+/// * Linecons, Copyright (C) 2013 by Designmodo
+///         Author:    Designmodo for Smashing Magazine
+///         License:   CC BY ()
+///         Homepage:  http://designmodo.com/linecons-free/
 ///
 import 'package:flutter/widgets.dart';
 
@@ -20,6 +36,10 @@ class CustomIcons {
 
   static const _kFontFam = 'CustomIcons';
 
+  static const IconData ok = const IconData(0xe800, fontFamily: _kFontFam);
+  static const IconData bell = const IconData(0xe801, fontFamily: _kFontFam);
+  static const IconData search_outline = const IconData(0xe802, fontFamily: _kFontFam);
+  static const IconData cog = const IconData(0xe803, fontFamily: _kFontFam);
   static const IconData archive_1 = const IconData(0xe804, fontFamily: _kFontFam);
   static const IconData archive_paper_1 = const IconData(0xe805, fontFamily: _kFontFam);
   static const IconData award_1 = const IconData(0xe806, fontFamily: _kFontFam);
@@ -79,6 +99,9 @@ class CustomIcons {
   static const IconData wallet_1 = const IconData(0xe83c, fontFamily: _kFontFam);
   static const IconData widget_1 = const IconData(0xe83d, fontFamily: _kFontFam);
   static const IconData world_1 = const IconData(0xe83e, fontFamily: _kFontFam);
+  static const IconData paper_plane = const IconData(0xe83f, fontFamily: _kFontFam);
+  static const IconData attach = const IconData(0xe840, fontFamily: _kFontFam);
+  static const IconData chart_bar = const IconData(0xe841, fontFamily: _kFontFam);
   static const IconData uniE800 = const IconData(0xe843, fontFamily: _kFontFam);
   static const IconData uniE801 = const IconData(0xe844, fontFamily: _kFontFam);
   static const IconData uniE802 = const IconData(0xe845, fontFamily: _kFontFam);
@@ -309,4 +332,9 @@ class CustomIcons {
   static const IconData widget = const IconData(0xea3a, fontFamily: _kFontFam);
   static const IconData world = const IconData(0xea3b, fontFamily: _kFontFam);
   static const IconData zoom_2 = const IconData(0xea3c, fontFamily: _kFontFam);
+  static const IconData list_bullet = const IconData(0xf0ca, fontFamily: _kFontFam);
+  static const IconData paper_plane_empty = const IconData(0xf1d9, fontFamily: _kFontFam);
+  static const IconData chart_area = const IconData(0xf1fe, fontFamily: _kFontFam);
+  static const IconData chart_pie = const IconData(0xf200, fontFamily: _kFontFam);
+  static const IconData chart_line = const IconData(0xf201, fontFamily: _kFontFam);
 }

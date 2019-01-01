@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart';
 
 class HomeBottomAppBarItem {
-  HomeBottomAppBarItem({this.text, this.iconData});
+  HomeBottomAppBarItem({this.iconData, this.count});
   IconData iconData;
-  String text;
+  int count;
 }
 
 class HomeBottomAppBar extends StatefulWidget {
   HomeBottomAppBar({
     this.items,
-    this.height: 45.0,
-    this.iconSize: 20.0,
+    this.height: 48.0,
+    this.iconSize: 22.0,
     this.backgroundColor,
     this.color,
     this.selectedColor,
@@ -56,6 +57,7 @@ class _HomeBottomAppBarState extends State<HomeBottomAppBar> {
     });
 
     return BottomAppBar(
+      elevation: 0.0,
       shape: widget.notchedShape,
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -83,12 +85,13 @@ class _HomeBottomAppBarState extends State<HomeBottomAppBar> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Icon(item.iconData, color: color, size: widget.iconSize),
-                Text(
-                  item.text,
-                  style: TextStyle(color: color, fontSize: 10.0),
-                  maxLines: 2,
-                )
+                BadgeIconButton(
+                  itemCount: item.count,
+                  badgeColor: Colors.blueAccent,
+                  badgeTextColor: Colors.white,
+                  icon: Icon(item.iconData, color: color, size: widget.iconSize),
+                  hideZeroCount: true,
+                ),
               ],
             ),
           ),

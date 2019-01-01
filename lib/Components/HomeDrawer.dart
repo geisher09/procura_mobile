@@ -8,8 +8,7 @@ class HomeDrawer extends StatefulWidget {
   _HomeDrawerState createState() => _HomeDrawerState();
 }
 
-class _HomeDrawerState extends State<HomeDrawer>{
-
+class _HomeDrawerState extends State<HomeDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -18,58 +17,86 @@ class _HomeDrawerState extends State<HomeDrawer>{
         new UserAccountsDrawerHeader(
           accountName: new Text(
             'Geisher Bernabe',
-            style:
-                new TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white),
+            style: new TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white),
           ),
           accountEmail: new Text(
             'macncheeze00@gmail.com',
             style: new TextStyle(
-              color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white
-            ),
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white),
           ),
           currentAccountPicture: CircleAvatar(
-            backgroundImage: AssetImage('assets/images/user.png'),
+            backgroundImage: AssetImage('assets/images/user1.png'),
           ),
           decoration: new BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.light? Colors.white:Color(0xFF202020),
-
-    ),
-        ),
-        new ListTile(
-          title: new Text('Profile'),
-          leading: Icon(CustomIcons.uniE82A),
+            color: Colors.transparent,
+          ),
         ),
         new ListTile(
           title: new Text('Budget Proposal'),
-          leading: Icon(FontAwesomeIcons.moneyBillAlt),
+          leading: Icon(
+            CustomIcons.uniE82A,
+            size: 20.0,
+          ),
+        ),
+        new ListTile(
+          title: new Text('Budget Proposal'),
+          leading: Icon(
+            FontAwesomeIcons.moneyBillAlt,
+            size: 20.0,
+          ),
         ),
         new ListTile(
           title: new Text('PPMP'),
-          leading: Icon(CustomIcons.briefcase_24),
+          leading: Icon(
+            CustomIcons.briefcase_24,
+            size: 20.0,
+          ),
         ),
         new ListTile(
           title: new Text('Purchase Request'),
-          leading: Icon(CustomIcons.bag_09),
+          leading: Icon(
+            CustomIcons.bag_09,
+            size: 20.0,
+          ),
         ),
         new ListTile(
           title: new Text('Logout'),
-          leading: Icon(CustomIcons.uniE820),
+          leading: Icon(
+            CustomIcons.uniE820,
+            size: 20.0,
+          ),
           onTap: () => Navigator.pushReplacementNamed(context, "/login"),
         ),
-        new Divider(
-        ),
+        new Divider(),
         new ListTile(
-          title: new Text('Night Mode'),
-          trailing: Theme.of(context).brightness == Brightness.light?Icon(FontAwesomeIcons.moon):Icon(FontAwesomeIcons.solidMoon),
-          onTap: changeBrightness,
+          title: new Text('Settings'),
+          leading: Icon(
+            CustomIcons.cog,
+            size: 20.0,
+          ),
+          onTap: () {},
+          trailing: IconButton(
+            icon: Theme.of(context).brightness == Brightness.light
+                ? Icon(FontAwesomeIcons.moon)
+                : Icon(FontAwesomeIcons.solidMoon),
+            onPressed: changeBrightness,
+            iconSize: 20.0,
+          ),
         )
       ],
     ));
   }
 
   void changeBrightness() {
-    DynamicTheme.of(context).setBrightness(Theme.of(context).brightness == Brightness.dark? Brightness.light: Brightness.dark);
+    DynamicTheme.of(context).setBrightness(
+        Theme.of(context).brightness == Brightness.dark
+            ? Brightness.light
+            : Brightness.dark);
   }
-
-
 }
