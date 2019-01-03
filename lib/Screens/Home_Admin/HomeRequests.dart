@@ -33,6 +33,7 @@ class requestwidgets extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
               child: Container(
                 decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
                   image: new DecorationImage(
                     image: new AssetImage(
                         "assets/images/user3.jpg"),
@@ -58,7 +59,8 @@ class requestwidgets extends StatelessWidget {
               children: <Widget>[
                 Container(
                   height: 15.0,
-                  width: conwidth,
+                  width: MediaQuery.of(context).orientation == Orientation.portrait ?
+                  conwidth : MediaQuery.of(context).size.width / 1.15,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[

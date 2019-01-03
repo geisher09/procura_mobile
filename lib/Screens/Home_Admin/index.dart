@@ -32,7 +32,8 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
           return SingleChildScrollView(
             child: AlertDialog(
               title: Container(
-                height: MediaQuery.of(context).orientation == Orientation.portrait ? 150.0 : 250,
+                height: MediaQuery.of(context).orientation == Orientation.portrait ?
+                MediaQuery.of(context).size.height / 3.75 : MediaQuery.of(context).size.height / 1.25,
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   image: new DecorationImage(

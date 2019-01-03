@@ -7,6 +7,7 @@ class approvalwidgets extends StatelessWidget {
   final text3;
   final w1;
   final date;
+  final time;
   final conwidth;
 
   const approvalwidgets(
@@ -16,6 +17,7 @@ class approvalwidgets extends StatelessWidget {
       this.text3,
       this.w1,
       this.date,
+      this.time,
       this.conwidth})
       : super(key: key);
 
@@ -25,7 +27,7 @@ class approvalwidgets extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => sampscreen2()),
+          MaterialPageRoute(builder: (context) => sampscreen2(text2,text1,date,time)),
         );
       },
       child: Container(
@@ -40,6 +42,7 @@ class approvalwidgets extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
               child: Container(
                 decoration: new BoxDecoration(
+                  shape: BoxShape.circle,
                   image: new DecorationImage(
                     image: new AssetImage("assets/images/user2.jpg"),
                     fit: BoxFit.cover,
@@ -49,14 +52,6 @@ class approvalwidgets extends StatelessWidget {
                 height: 35.0,
               ),
             ),
-//          Padding(
-//            padding: const EdgeInsets.only(left: 5.0),
-//            child: new Container(
-//              height: 20.0,
-//              width: 1.0,
-//              color: Colors.grey.withOpacity(0.5),
-//            ),
-//          ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -64,7 +59,8 @@ class approvalwidgets extends StatelessWidget {
               children: <Widget>[
                 Container(
                   height: 15.0,
-                  width: conwidth,
+                  width: MediaQuery.of(context).orientation == Orientation.portrait ?
+                  conwidth : MediaQuery.of(context).size.width / 1.15,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -137,9 +133,10 @@ class HomeApproval extends StatelessWidget {
         (i) => new approvalwidgets(
               w1: w1,
               text1: "Audrey Noelle Waje",
-              text2: "SUBJECT TEXT",
-              text3: "Laman ng Docu",
-              date: "10 Dec",
+              text2: "SUBJECT TITLE",
+              text3: "Laman na Docu",
+              date: "30/12/2018",
+              time: "3:55 PM",
               conwidth: w2,
             ));
 
