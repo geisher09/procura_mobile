@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'custom_icons.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:procura/Components/custom_icons.dart';
 
 class HomeDrawer extends StatefulWidget {
   @override
@@ -38,7 +38,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
         ),
         new ListTile(
-          title: new Text('Budget Proposal'),
+          title: new Text('Profile'),
           leading: Icon(
             CustomIcons.uniE82A,
             size: 20.0,
@@ -88,7 +88,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             onPressed: changeBrightness,
             iconSize: 20.0,
           ),
-        )
+        ),
       ],
     ));
   }

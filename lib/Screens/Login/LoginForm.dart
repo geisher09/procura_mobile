@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './LoginInputFields.dart';
+import 'package:procura/Screens/Login/LoginInputFields.dart';
 
 class FormContainer extends StatelessWidget {
   @override
