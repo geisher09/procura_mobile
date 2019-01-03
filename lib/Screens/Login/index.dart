@@ -28,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen>{
       letterSpacing: 0.3,
     );
 
+    var width = MediaQuery.of(context).size.width/1.5;
+
     return new Scaffold(
       //resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
@@ -53,13 +55,14 @@ class _LoginScreenState extends State<LoginScreen>{
           SingleChildScrollView(
             child: new Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                new Container(
-                    height: MediaQuery.of(context).size.height/6
+                Container(
+                  height: MediaQuery.of(context).size.height/6,
                 ),
                 new Container(
                   padding: EdgeInsets.only(left: 30.0, right: 30.0),
-                  height: (queryData.size.height >= 650.0)?queryData.size.height/1.5:queryData.size.height/1.4,
                   child: new Card(
                     color: Colors.white,
                     shape: new RoundedRectangleBorder(
@@ -68,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen>{
                       padding: const EdgeInsets.only(bottom: 10.0),
                       child: Column(children: <Widget>[
                         Container(
-                          height: (queryData.size.height >= 570.0)?163.0:queryData.size.height/3.5,
+                          height: 150.0,
                           width: double.infinity,
                           decoration: new BoxDecoration(
                             image: new DecorationImage(
@@ -121,15 +124,6 @@ class _LoginScreenState extends State<LoginScreen>{
                             width: 70.0,
                             fit: BoxFit.fitHeight,
                           ),
-                        ),
-                        new Container(
-                          height: MediaQuery.of(context).size.height/25,
-                          child: FractionalTranslation(
-                              translation: Offset(0.0, -2.0),
-                              child: Text(
-                                "Size ${MediaQuery.of(context).size.width} * ${MediaQuery.of(context).size.height}",
-                                style: Theme.of(context).textTheme.title,
-                              )),
                         ),
                         new FractionalTranslation(
                           translation: Offset(0.0, -0.3),
