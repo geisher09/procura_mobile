@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
 
-import '../../Components/LoginForm.dart';
+import 'package:procura/Screens/Login/LoginForm.dart';
 
 
 

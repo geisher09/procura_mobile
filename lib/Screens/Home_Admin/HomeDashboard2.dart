@@ -323,6 +323,64 @@ class HomeDashboard2 extends StatelessWidget {
           ),
           Stack(
             children: <Widget>[
+              FractionalTranslation(
+                translation: Offset(0.0, 0.9),
+                child: Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Colors.black54,
+                            width: 1.0
+                        )
+                    ),
+                    height: 90.0,
+                    width: w1,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          height: 40.0,
+                        ),
+                        new Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  'SPENT BUDGET',
+                                  style: new TextStyle(fontSize: 12.0),
+                                ),
+                                Text(
+                                  'Php 765,000',
+                                  style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  'UNUSED BUDGET',
+                                  style: new TextStyle(fontSize: 12.0),
+                                ),
+                                Text(
+                                  'Php 255,000',
+                                  style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               Center(
                 child: new Container(
                   width: 130.0,
@@ -359,6 +417,9 @@ class HomeDashboard2 extends StatelessWidget {
               SizedBox(height: 180, width: 180, child: Piechart),
             ],
             alignment: AlignmentDirectional.center,
+          ),
+          Container(
+            height: 40.0,
           ),
           Column(
             children: <Widget>[

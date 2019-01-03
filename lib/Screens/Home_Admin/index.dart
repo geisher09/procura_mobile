@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../Components/HomeBottomAppBar.dart';
-import '../../Components/HomeDrawer.dart';
+import 'package:procura/Screens/Home_Admin/HomeBottomAppBar.dart';
+import 'package:procura/Screens/Home_Admin/HomeDrawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Components/custom_icons.dart';
 import 'HomeDashboard2.dart';
@@ -99,7 +99,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     }
     else{
       _page_title = 'Notifications';
-      page = new HomeNotifs(_page_title);
+      page = new HomeNotifs();
       iconD = Image.asset('assets/icons/pLogo.png',width: 150.0,height: 150.0,);
       onP = _showDialog;
     }
