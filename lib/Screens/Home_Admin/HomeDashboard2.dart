@@ -218,6 +218,7 @@ class HomeDashboard2 extends StatelessWidget {
     var w1 = MediaQuery.of(context).size.width / 1.1;
     var wchart = MediaQuery.of(context).size.width / 1.06;
     var w3 = MediaQuery.of(context).size.width / 3.2;
+    var h = 75.0;
 
     List<Widget> updates = new List.generate(
         5,
@@ -457,7 +458,7 @@ class HomeDashboard2 extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
-                height: 65.0,
+                height: h,
                 width: w3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -484,7 +485,7 @@ class HomeDashboard2 extends StatelessWidget {
                 color: Colors.grey[300],
               ),
               Container(
-                height: 65.0,
+                height: h,
                 width: w3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -511,7 +512,7 @@ class HomeDashboard2 extends StatelessWidget {
                 color: Colors.grey[300],
               ),
               Container(
-                height: 65.0,
+                height: h,
                 width: w3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
