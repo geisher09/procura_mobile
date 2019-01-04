@@ -79,12 +79,16 @@ class sampscreen2 extends StatelessWidget {
             ),
             //Document file
             RaisedButton(
-                child: Text('hehe'),
-              onPressed: () => FlutterPdfViewer.loadAsset("assets\files\finals.pdf"),
+              child: Text('hehe'),
+              onPressed: () => FlutterPdfViewer.loadAsset("assets/files/finals.pdf"),
             ),
             RaisedButton(
               child: Text('hehe2'),
-              onPressed: () => OpenFile.open("assets\files\SAMPLE FILE.docx"),
+              onPressed: () => OpenFile.open("assets/files/SAMPLE FILE.docx"),
+            ),
+            RaisedButton(
+              child: Text('hehe3'),
+              onPressed: () => OpenFile.open('assets/files/finals.pdf'),
             ),
           ],
         ),
