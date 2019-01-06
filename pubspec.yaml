@@ -29,14 +29,14 @@ dependencies:
   open_file: ^1.1.1
   flutter_pdf_viewer: ^0.0.4
   url_launcher: ^4.0.3
+  file_picker: ^1.1.1
+  path_provider: ^0.4.1
 
+  dio: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  flutter_launcher_icons: "^0.7.0"
-
 
 
 # For information on the generic Dart part of this file, see the
@@ -49,6 +49,7 @@ flutter:
       - assets/images/
       - assets/icons/
       - assets/files/
+      - assets/files/Bernabe1.docx
   fonts:
       - family: Raleway
         fonts:
