@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:procura/Screens/Home_Admin/sampscreen2.dart';
+import 'package:procura/Screens/Home_Admin/ApprovalScreen2.dart';
 
 class approvalwidgets extends StatelessWidget {
   final text1;
@@ -27,7 +27,7 @@ class approvalwidgets extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => sampscreen2(text2,text1,date,time)),
+          MaterialPageRoute(builder: (context) => ApprovalScreen2(text2,text1,date,time)),
         );
       },
       child: Container(

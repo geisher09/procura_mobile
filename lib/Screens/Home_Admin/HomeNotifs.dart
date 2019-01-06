@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:procura/Screens/Home_Admin/sampscreen1.dart';
+import 'package:procura/Screens/Home_Admin/sampscreen4.dart';
 import '../../Components/custom_icons.dart';
 
 class notifwidgets extends StatelessWidget {
@@ -22,7 +22,7 @@ class notifwidgets extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => sampscreen1()),
+          MaterialPageRoute(builder: (context) => sampscreen4()),
         );
       },
       child: Container(

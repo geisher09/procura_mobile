@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:procura/Screens/Home_Admin/sampscreen3.dart';
+import 'package:procura/Screens/Home_Admin/RequestScreen2.dart';
 
 class requestwidgets extends StatelessWidget {
   final text1;
@@ -7,9 +7,10 @@ class requestwidgets extends StatelessWidget {
   final text3;
   final w1;
   final date;
+  final time;
   final conwidth;
 
-  const requestwidgets({Key key, this.text1, this.text2, this.text3, this.w1, this.date, this.conwidth})
+  const requestwidgets({Key key, this.text1, this.text2, this.text3, this.w1, this.date, this.time, this.conwidth})
       : super(key: key);
 
   @override
@@ -18,7 +19,7 @@ class requestwidgets extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => sampscreen3()),
+          MaterialPageRoute(builder: (context) => RequestScreen2(text1,text2,text3,date,time)),
         );
       },
       child: Container(
@@ -36,7 +37,7 @@ class requestwidgets extends StatelessWidget {
                   shape: BoxShape.circle,
                   image: new DecorationImage(
                     image: new AssetImage(
-                        "assets/images/user3.jpg"),
+                        "assets/images/user1.png"),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -106,7 +107,7 @@ class requestwidgets extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0),
                       child: Text(
-                        text3,
+                        'to $text3',
                         style: new TextStyle(
                             fontSize: 12.0),
                       ),
@@ -134,10 +135,11 @@ class HomeRequests extends StatelessWidget {
         15,
             (i) => new requestwidgets(
           w1: w1,
-          text1: "Leonardo Pajuyo",
+          text1: "me",
           text2: "SUBJECT TEXT",
-          text3: "Laman ng Docu",
-          date: "30 Dec",
+          text3: "Leonardo Pajuyo",
+          date: "30/12/2018",
+          time: "3:55 PM",
           conwidth: w2,
         ));
 

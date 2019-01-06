@@ -9,9 +9,9 @@ import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 import 'package:procura/Components/custom_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class sampscreen2 extends StatelessWidget {
+class ApprovalScreen2 extends StatelessWidget {
   final text1, text2, date, time;
-  sampscreen2(this.text2, this.text1, this.date, this.time);
+  ApprovalScreen2(this.text2, this.text1, this.date, this.time);
 
   Dio dio = Dio();
   @override
@@ -239,6 +239,7 @@ class sampscreen2 extends StatelessWidget {
                         ),
                       ),
                       onPressed: (){},
+                      //onPressed: () => launch("http://docs.google.com/gview?embedded=true&url=/assets/files/finals.pdf"),
                     ),
                   ],
                 ),
