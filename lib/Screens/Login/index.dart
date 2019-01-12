@@ -1,37 +1,66 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import 'package:flutter/animation.dart';
-import 'dart:async';
 import 'package:flutter/services.dart';
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
-
 import 'package:procura/Screens/Login/LoginForm.dart';
 
-
-
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key key}) : super(key: key);
+  //const LoginScreen({Key key}) : super(key: key);
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen>{
+class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
+
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+
+  void loginProcess(BuildContext context)async {
+    print(usernameController.text + ',' + passwordController.text);
+    var url = "$host/login.php";
+    final response = await
+    http.post(url,body: {
+      "username" : usernameController.text,
+      "password" : passwordController.text,
+    });
+    if(response.body == '"0"'){
+      final snackBar = new SnackBar(
+        content: new Text('User unrecognized! (username/password incorrect)'),
+      );
+      _scaffoldState.currentState.showSnackBar(snackBar);
+    }
+    else{
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('id',response.body.toString());
+      await new Future.delayed(const Duration(seconds: 1));
+      Navigator.pushReplacementNamed(context, "/home");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
 
     TextStyle cardButtonStyle = Theme.of(context).textTheme.title.copyWith(
-      fontSize: 16.0,
-      color: Colors.white,
-      letterSpacing: 0.3,
-    );
+          fontSize: 16.0,
+          color: Colors.white,
+          letterSpacing: 0.3,
+        );
 
-    var width = MediaQuery.of(context).size.width/1.5;
+    var width = MediaQuery.of(context).size.width / 1.5;
 
     return new Scaffold(
       //resizeToAvoidBottomPadding: false,
+      key: _scaffoldState,
       backgroundColor: Colors.white,
       body: new Stack(
         fit: StackFit.expand,
@@ -59,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen>{
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Container(
-                  height: MediaQuery.of(context).size.height/6,
+                  height: MediaQuery.of(context).size.height / 6,
                 ),
                 new Container(
                   padding: EdgeInsets.only(left: 30.0, right: 30.0),
@@ -93,8 +122,7 @@ class _LoginScreenState extends State<LoginScreen>{
                                           fontFamily: 'Montserrat',
                                           fontSize: 30.0,
                                           fontWeight: FontWeight.bold,
-                                          letterSpacing: 5.0
-                                      ),
+                                          letterSpacing: 5.0),
                                     ),
                                     new Text(
                                       'Better Procurement System.',
@@ -127,7 +155,74 @@ class _LoginScreenState extends State<LoginScreen>{
                         ),
                         new FractionalTranslation(
                           translation: Offset(0.0, -0.3),
-                          child: new FormContainer(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 15.0, right: 15.0),
+                            child: new Column(
+                              children: <Widget>[
+                                new Container(
+                                  decoration: new BoxDecoration(
+                                    border: new Border.all(
+                                      color: Colors.grey,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  child: new TextFormField(
+                                    controller: usernameController,
+                                    obscureText: false,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    decoration: new InputDecoration(
+                                      icon: Padding(
+                                        padding: const EdgeInsets.only(left:8.0),
+                                        child: new Icon(
+                                          CustomIcons.single_01,
+                                          color: Colors.black,
+                                          size: 15.0,
+                                        ),
+                                      ),
+                                      border: InputBorder.none,
+                                      hintText: "Username",
+                                      hintStyle: const TextStyle(color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w500),
+                                      contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                                    ),
+                                  ),
+                                ),
+                                new Container(
+                                  height: 8.0,
+                                ),
+                                new Container(
+                                  decoration: new BoxDecoration(
+                                    border: new Border.all(
+                                      color: Colors.grey,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                  child: new TextFormField(
+                                    controller: passwordController,
+                                    obscureText: true,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    decoration: new InputDecoration(
+                                      icon: Padding(
+                                        padding: const EdgeInsets.only(left:8.0),
+                                        child: new Icon(
+                                          CustomIcons.lock,
+                                          color: Colors.black,
+                                          size: 15.0,
+                                        ),
+                                      ),
+                                      border: InputBorder.none,
+                                      hintText: "Password",
+                                      hintStyle: const TextStyle(color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w500),
+                                      contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
                         ),
                         new RaisedButton(
                           splashColor: Colors.white,
@@ -142,7 +237,8 @@ class _LoginScreenState extends State<LoginScreen>{
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(30.0)),
                           onPressed: () =>
-                              Navigator.pushReplacementNamed(context, "/home"),
+                              //Navigator.pushReplacementNamed(context, "/home")
+                              loginProcess(context)
                         ),
                       ]),
                     ),

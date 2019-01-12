@@ -31,6 +31,9 @@ dependencies:
   url_launcher: ^4.0.3
   file_picker: ^1.1.1
   path_provider: ^0.4.1
+  shared_preferences: ^0.4.2
+  wifi: ^0.1.2
+  get_ip: ^0.1.0
 
   dio: any
 
