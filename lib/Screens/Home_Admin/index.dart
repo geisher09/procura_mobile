@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:procura/Screens/Home_Admin/HomeBottomAppBar.dart';
 import 'package:procura/Screens/Home_Admin/HomeDrawer.dart';
+import 'package:http/http.dart' as http;
+import 'package:procura/main.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Components/custom_icons.dart';
 import 'HomeDashboard2.dart';
@@ -14,8 +18,15 @@ class Home_AdminScreen extends StatefulWidget {
 }
 
 class _Home_AdminScreenState extends State<Home_AdminScreen> {
-  String _current = 'TAB: 0';
+  Future<List> getData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final Id = prefs.getString('id') ?? '0';
 
+    final response = await http
+        .post("${host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
+    return json.decode(response.body);
+  }
+  String _current = 'TAB: 0';
   void _selectedTab(int index) {
     setState(() {
       _current = 'TAB: $index';
@@ -32,13 +43,14 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
           return SingleChildScrollView(
             child: AlertDialog(
               title: Container(
-                height: MediaQuery.of(context).orientation == Orientation.portrait ?
-                MediaQuery.of(context).size.height / 3.75 : MediaQuery.of(context).size.height / 1.25,
+                height:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? MediaQuery.of(context).size.height / 3.75
+                        : MediaQuery.of(context).size.height / 1.25,
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage(
-                        "assets/images/alert.png"),
+                    image: new AssetImage("assets/images/alert.png"),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -57,15 +69,21 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               ),
               actions: <Widget>[
                 new FlatButton(
-                  child: new Text("Close",
+                  child: new Text(
+                    "Close",
                     style: TextStyle(
-                        fontFamily: 'Montserrat',
-                      fontWeight: FontWeight.bold
-                    ),
+                        fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: ()
+                  async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove('id');
+                    prefs.remove('ifStop');
+                    Navigator.of(context).popAndPushNamed('/login');
+                  }
+//                  {
+//                    Navigator.of(context).pop();
+//                  },
                 ),
               ],
             ),
@@ -75,54 +93,77 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     }
 
     String _page_title;
-    Widget page;
     var iconD;
     var onP;
-    if(_current == 'TAB: 0'){
+    int page_no;
+    if (_current == 'TAB: 0') {
       _page_title = 'Dashboard';
-      page = new HomeDashboard2();
-      iconD = Image.asset('assets/icons/pLogo.png',width: 150.0,height: 150.0,);
-      onP = _showDialog;
-    }
-    else if(_current == 'TAB: 1'){
-      _page_title = 'For Approval';
-      page = new HomeApproval();
-      iconD = Icon(CustomIcons.uniE86F,
-      color: Colors.blueGrey,
+      page_no = 0;
+      iconD = Image.asset(
+        'assets/icons/pLogo.png',
+        width: 150.0,
+        height: 150.0,
       );
-    }
-    else if(_current == 'TAB: 2'){
-      _page_title = 'My Requests';
-      page = new HomeRequests();
-      iconD = Icon(CustomIcons.uniE86F,
+      onP = _showDialog;
+    } else if (_current == 'TAB: 1') {
+      _page_title = 'For Approval';
+      page_no = 1;
+      iconD = Icon(
+        CustomIcons.uniE86F,
         color: Colors.blueGrey,
       );
-    }
-    else{
+    } else if (_current == 'TAB: 2') {
+      _page_title = 'My Requests';
+      page_no = 2;
+      iconD = Icon(
+        CustomIcons.uniE86F,
+        color: Colors.blueGrey,
+      );
+    } else {
       _page_title = 'Notifications';
-      page = new HomeNotifs();
-      iconD = Image.asset('assets/icons/pLogo.png',width: 150.0,height: 150.0,);
+      page_no = 3;
+      iconD = Image.asset(
+        'assets/icons/pLogo.png',
+        width: 150.0,
+        height: 150.0,
+      );
       onP = _showDialog;
     }
+
     return Scaffold(
       key: _scaffoldKey,
-      drawer: new HomeDrawer(),
+      drawer: new FutureBuilder<List>(
+          future: getData(),
+          builder: (context, snapshot) {
+            return new HomeDrawer(list: snapshot.data, pic: snapshot.data[0]['user_image']);
+          }
+      ),
       appBar: new AppBar(
         centerTitle: true,
         elevation: 0.0,
-        backgroundColor:Colors.transparent,
-        leading: IconButton(
-              icon: Image.asset('assets/images/user1.png',width: 30.0,height: 30.0,),
-              onPressed: () => _scaffoldKey.currentState.openDrawer()
+        backgroundColor: Colors.transparent,
+        leading: new FutureBuilder(
+            future: getData(),
+            builder: (context, snapshot){
+              return new
+              IconButton(
+                  icon: Image.network(
+                    host+snapshot.data[0]['user_image'],
+                    width: 30.0,
+                    height: 30.0,
+                  ),
+                  onPressed: () => _scaffoldKey.currentState.openDrawer());
+            }
         ),
         title: new Text(
           _page_title,
           style: new TextStyle(
-              color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white,
+              color: Theme.of(context).brightness == Brightness.light
+                  ? Colors.black
+                  : Colors.white,
               fontSize: 15.0,
               letterSpacing: 1.5,
-              fontWeight: FontWeight.w900
-          ),
+              fontWeight: FontWeight.w900),
         ),
         actions: <Widget>[
           IconButton(
@@ -132,7 +173,32 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         ],
       ),
       body: Center(
-        child: page
+        child: new FutureBuilder<List>(
+          future: getData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) print(snapshot.error);
+            else{
+              if(snapshot.hasData){
+                if(page_no == 0){
+                  return  page_dashboard(list: snapshot.data);
+                }
+                else if(page_no == 1){
+                  return  page_approval(list: snapshot.data);
+                }
+                else if(page_no == 2){
+                  return  page_requests(list: snapshot.data);
+                }
+                else if(page_no == 3){
+                  return  page_notifs(list: snapshot.data);
+                }
+              }
+              else
+                return new Center(
+                  child: new CircularProgressIndicator(),
+                );
+            }
+          },
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: HomeBottomAppBar(
@@ -140,13 +206,53 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         notchedShape: CircularNotchedRectangle(),
         onTabSelected: _selectedTab,
         items: [
-          HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count:0),
-          HomeBottomAppBarItem(iconData: CustomIcons.ok, count:0),
-          HomeBottomAppBarItem(iconData: CustomIcons.paper_plane_empty,  count:0),
-          HomeBottomAppBarItem(iconData: CustomIcons.bell, count:5),
+          HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
+          HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
+          HomeBottomAppBarItem(
+              iconData: CustomIcons.paper_plane_empty, count: 0),
+          HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
         ],
       ),
     );
   }
+}
 
+class page_dashboard extends StatelessWidget {
+  final List list;
+  page_dashboard({this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return new HomeDashboard2(list);
+  }
+}
+
+class page_approval extends StatelessWidget {
+  final List list;
+  page_approval({this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return new HomeApproval();
+  }
+}
+
+class page_requests extends StatelessWidget {
+  final List list;
+  page_requests({this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return new HomeRequests();
+  }
+}
+
+class page_notifs extends StatelessWidget {
+  final List list;
+  page_notifs({this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return new HomeNotifs();
+  }
 }

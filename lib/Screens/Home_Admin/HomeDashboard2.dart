@@ -212,6 +212,8 @@ Widget recentUpdate(w1, text1, text2, text3) {
 }
 
 class HomeDashboard2 extends StatelessWidget {
+  HomeDashboard2(this.list);
+  final List list;
   @override
   Widget build(BuildContext context) {
     var w = MediaQuery.of(context).size.width / 2.19;
@@ -299,272 +301,268 @@ class HomeDashboard2 extends StatelessWidget {
         animate: false,
         defaultRenderer: new charts.LineRendererConfig(includePoints: true));
 
-    return SingleChildScrollView(
-        child: Container(
-      child: new Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-//          Padding(
-//            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 10.0),
-//            child: Container(
-//              height: 100.0,
-//              width: double.infinity,
-//              decoration: new BoxDecoration(
-//                image: new DecorationImage(
-//                  image: new AssetImage(
-//                      "assets/images/wave.png"),
-//                  fit: BoxFit.cover,
-//                ),
-//              ),
-//            ),
-//          ),
-          Text(
-            'BUDGET USED',
-            style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
-          ),
-          Stack(
-            children: <Widget>[
-              FractionalTranslation(
-                translation: Offset(0.0, 0.9),
-                child: Center(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Colors.black54,
-                            width: 1.0
-                        )
-                    ),
-                    height: 90.0,
-                    width: w1,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 40.0,
-                        ),
-                        new Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  'SPENT BUDGET',
-                                  style: new TextStyle(fontSize: 12.0),
-                                ),
-                                Text(
-                                  'Php 765,000',
-                                  style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Text(
-                                  'UNUSED BUDGET',
-                                  style: new TextStyle(fontSize: 12.0),
-                                ),
-                                Text(
-                                  'Php 255,000',
-                                  style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+    return ListView.builder(
+        itemCount: list == null ? 0 : list.length,
+        itemBuilder: (context,i){
+          return SingleChildScrollView(
+          child: Container(
+        child: new Column(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text(
+                'Hello ${list[0]['username']}!',
+                style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+              ),
+            ),
+            Text(
+              'BUDGET USED',
+              style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+            ),
+            Stack(
+              children: <Widget>[
+                FractionalTranslation(
+                  translation: Offset(0.0, 0.9),
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Colors.black54,
+                              width: 1.0
+                          )
+                      ),
+                      height: 90.0,
+                      width: w1,
+                      child: Column(
+                        children: <Widget>[
+                          Container(
+                            height: 40.0,
+                          ),
+                          new Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'SPENT BUDGET',
+                                    style: new TextStyle(fontSize: 12.0),
+                                  ),
+                                  Text(
+                                    'Php 765,000',
+                                    style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'UNUSED BUDGET',
+                                    style: new TextStyle(fontSize: 12.0),
+                                  ),
+                                  Text(
+                                    'Php 255,000',
+                                    style: new TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Montserrat'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Center(
-                child: new Container(
-                  width: 130.0,
-                  height: 130.0,
-                  decoration: new BoxDecoration(
-                    gradient: new RadialGradient(colors: [
-                      Color(0xFFb6babf),
-                      Color(0xFF767b7b),
-                    ]),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(0xFF19b3b1),
-                        offset: Offset.zero,
-                        blurRadius: 20.0,
-                        spreadRadius: 5.0
-                      ),
-                      BoxShadow(
-                          color: Color(0xFF093b5e),
-                          offset: Offset.zero,
-                          blurRadius: 15.0,
-                          spreadRadius: 4.0
-                      ),
-                      BoxShadow(
-                          color: Color(0xFF0b1925),
+                Center(
+                  child: new Container(
+                    width: 130.0,
+                    height: 130.0,
+                    decoration: new BoxDecoration(
+                      gradient: new RadialGradient(colors: [
+                        Color(0xFFb6babf),
+                        Color(0xFF767b7b),
+                      ]),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFF19b3b1),
                           offset: Offset.zero,
                           blurRadius: 20.0,
-                          spreadRadius: 4.0
-                      ),
-                    ],
-                    shape: BoxShape.circle,
+                          spreadRadius: 5.0
+                        ),
+                        BoxShadow(
+                            color: Color(0xFF093b5e),
+                            offset: Offset.zero,
+                            blurRadius: 15.0,
+                            spreadRadius: 4.0
+                        ),
+                        BoxShadow(
+                            color: Color(0xFF0b1925),
+                            offset: Offset.zero,
+                            blurRadius: 20.0,
+                            spreadRadius: 4.0
+                        ),
+                      ],
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 180, width: 180, child: Piechart),
-            ],
-            alignment: AlignmentDirectional.center,
-          ),
-          Container(
-            height: 40.0,
-          ),
-          Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    legend(Color(0xFF0b1925), '35% Consultancy', w),
-                    legend(Color(0xFF19b3b1), '25% Infastracture', w),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    legend(Color(0xFF093b5e), '15% Goods & Services', w),
-                    legend(Color(0xFF767b7b), '25% Unused', w),
-                  ],
-                ),
-              )
-            ],
-          ),
-          new Divider(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 10.0),
-            child: Text(
-              'DOCUMENTS MADE',
-              style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+                SizedBox(height: 180, width: 180, child: Piechart),
+              ],
+              alignment: AlignmentDirectional.center,
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                height: h,
-                width: w3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      '15',
-                      style: new TextStyle(
-                          fontSize: 40.0,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'PPMP',
-                      style: new TextStyle(
-                        fontSize: 20.0,
+            Container(
+              height: 40.0,
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      legend(Color(0xFF0b1925), '35% Consultancy', w),
+                      legend(Color(0xFF19b3b1), '25% Infastracture', w),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      legend(Color(0xFF093b5e), '15% Goods & Services', w),
+                      legend(Color(0xFF767b7b), '25% Unused', w),
+                    ],
+                  ),
+                )
+              ],
+            ),
+            new Divider(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 10.0),
+              child: Text(
+                'DOCUMENTS MADE',
+                style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  height: h,
+                  width: w3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '15',
+                        style: new TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              new Container(
-                height: 35.0,
-                width: 1.0,
-                color: Colors.grey[300],
-              ),
-              Container(
-                height: h,
-                width: w3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      '5',
-                      style: new TextStyle(
-                          fontSize: 40.0,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'PR',
-                      style: new TextStyle(
-                        fontSize: 20.0,
+                      Text(
+                        'PPMP',
+                        style: new TextStyle(
+                          fontSize: 20.0,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              new Container(
-                height: 35.0,
-                width: 1.0,
-                color: Colors.grey[300],
-              ),
-              Container(
-                height: h,
-                width: w3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      '8',
-                      style: new TextStyle(
-                          fontSize: 40.0,
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'BP',
-                      style: new TextStyle(
-                        fontSize: 20.0,
+                new Container(
+                  height: 35.0,
+                  width: 1.0,
+                  color: Colors.grey[300],
+                ),
+                Container(
+                  height: h,
+                  width: w3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '5',
+                        style: new TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
                       ),
-                    ),
-                  ],
+                      Text(
+                        'PR',
+                        style: new TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+                new Container(
+                  height: 35.0,
+                  width: 1.0,
+                  color: Colors.grey[300],
+                ),
+                Container(
+                  height: h,
+                  width: w3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '8',
+                        style: new TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'BP',
+                        style: new TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            new Divider(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'BUDGET ALLOCATED',
+                style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
               ),
-            ],
-          ),
-          new Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'BUDGET ALLOCATED',
-              style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
             ),
-          ),
-          SizedBox(height: 180, width: wchart, child: HBarchart),
-          new Divider(),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 10.0),
-            child: Text(
-              'PURCHASES MADE',
-              style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+            SizedBox(height: 180, width: wchart, child: HBarchart),
+            new Divider(),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 10.0),
+              child: Text(
+                'PURCHASES MADE',
+                style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+              ),
             ),
-          ),
-          SizedBox(height: 180, width: wchart, child: PointLinechart),
-          new Divider(),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'RECENT UPDATES',
-              style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+            SizedBox(height: 180, width: wchart, child: PointLinechart),
+            new Divider(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'RECENT UPDATES',
+                style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+              ),
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: updates,
-          ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: updates,
+            ),
 //          new Container(
 //            height: 350.0,
 //              width: w1,
@@ -606,18 +604,20 @@ class HomeDashboard2 extends StatelessWidget {
 //              ),
 //            ],
 //          ),
-          new Divider(),
-          Padding(
-            padding: const EdgeInsets.only(top: 5.0),
-            child: Center(
-              child: Text(
-                '© 2018 Procura | Technological Univeristy of the Philippines Manila',
-                style: new TextStyle(fontSize: 10.0, fontFamily: 'Montserrat'),
+            new Divider(),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Center(
+                child: Text(
+                  '© 2018 Procura | Technological Univeristy of the Philippines Manila',
+                  style: new TextStyle(fontSize: 10.0, fontFamily: 'Montserrat'),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    ));
+          ],
+        ),
+      ));
+            }
+    );
   }
 }

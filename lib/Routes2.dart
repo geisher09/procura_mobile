@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:procura/Screens/Home_Admin/HomeDashboard.dart';
 import 'package:procura/Screens/Login/index.dart';
 import 'package:procura/Screens/Home_Admin/index.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
-
-void launchMain() => runApp(new Routes());
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+void launchMain({Widget dh}) => runApp(new Routes(dh));
 
 class Routes extends StatelessWidget {
+  Routes(this.dh);
+  final Widget dh;
   @override
   Widget build(BuildContext context) {
     return new DynamicTheme(
@@ -21,7 +25,9 @@ class Routes extends StatelessWidget {
             title: "Procura Mobile App",
             theme: theme,
             debugShowCheckedModeBanner: false,
-            home: new LoginScreen(),
+            home:
+            dh,
+            //LoginScreen(),
             onGenerateRoute: (RouteSettings settings) {
               switch (settings.name) {
                 case '/login':
@@ -33,6 +39,7 @@ class Routes extends StatelessWidget {
                 case '/home':
                   return new ProcuraRoutes(
                     builder: (_) => new Home_AdminScreen(),
+                    //builder: (_) => new HomeDashboard(),
                     settings: settings,
                   );
               }

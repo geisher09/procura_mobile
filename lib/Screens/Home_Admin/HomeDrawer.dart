@@ -2,13 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class HomeDrawer extends StatefulWidget {
+  final List list;
+  final String pic;
+  HomeDrawer({this.list, this.pic});
   @override
-  _HomeDrawerState createState() => _HomeDrawerState();
+  _HomeDrawerState createState() => _HomeDrawerState(list,pic);
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
+  _HomeDrawerState(this.list,this.pic);
+  final List list;
+  final String pic;
+
+  Future<List> getData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final Id = prefs.getString('id') ?? '0';
+
+    final response = await http
+        .post("${host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
+    return json.decode(response.body);
+  }
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -16,7 +36,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       children: <Widget>[
         new UserAccountsDrawerHeader(
           accountName: new Text(
-            'Geisher Bernabe',
+            '${list[0]['name']}',
             style: new TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).brightness == Brightness.light
@@ -24,14 +44,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     : Colors.white),
           ),
           accountEmail: new Text(
-            'macncheeze00@gmail.com',
+            '${list[0]['username']}',
             style: new TextStyle(
                 color: Theme.of(context).brightness == Brightness.light
                     ? Colors.black
                     : Colors.white),
           ),
           currentAccountPicture: CircleAvatar(
-            backgroundImage: AssetImage('assets/images/user1.png'),
+            backgroundImage: NetworkImage(host+list[0]['user_image'])
           ),
           decoration: new BoxDecoration(
             color: Colors.transparent,
@@ -71,7 +91,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
             CustomIcons.uniE820,
             size: 20.0,
           ),
-          onTap: () => Navigator.pushReplacementNamed(context, "/login"),
+          onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
+              () async {
+            final prefs = await SharedPreferences.getInstance();
+            prefs.remove('id');
+            prefs.remove('ifStop');
+            Navigator.of(context).popAndPushNamed('/login');
+          }
         ),
         new Divider(),
         new ListTile(
