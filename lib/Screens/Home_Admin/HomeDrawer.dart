@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/Screens/Home_Admin/BudgetProposalScreen.dart';
+import 'package:procura/Screens/Home_Admin/PPMPScreen.dart';
+import 'package:procura/Screens/Home_Admin/ProfileScreen.dart';
+import 'package:procura/Screens/Home_Admin/PurchaseRequestScreen.dart';
+import 'package:procura/Screens/Home_Admin/SettingsScreen.dart';
+import 'package:procura/Screens/Home_Admin/sampscreen1.dart';
 import 'package:procura/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -34,28 +40,36 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return Drawer(
         child: new ListView(
       children: <Widget>[
-        new UserAccountsDrawerHeader(
-          accountName: new Text(
-            '${list[0]['name']}',
-            style: new TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white),
+        GestureDetector(
+          child: new UserAccountsDrawerHeader(
+            accountName: new Text(
+              '${list[0]['name']}',
+              style: new TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white),
+            ),
+            accountEmail: new Text(
+              '${list[0]['username']}',
+              style: new TextStyle(
+                  color: Theme.of(context).brightness == Brightness.light
+                      ? Colors.black
+                      : Colors.white),
+            ),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: NetworkImage(host+list[0]['user_image'])
+            ),
+            decoration: new BoxDecoration(
+              color: Colors.transparent,
+            ),
           ),
-          accountEmail: new Text(
-            '${list[0]['username']}',
-            style: new TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white),
-          ),
-          currentAccountPicture: CircleAvatar(
-            backgroundImage: NetworkImage(host+list[0]['user_image'])
-          ),
-          decoration: new BoxDecoration(
-            color: Colors.transparent,
-          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen(list: list, pic: pic)),
+            );
+          },
         ),
         new ListTile(
           title: new Text('Profile'),
@@ -63,6 +77,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
             CustomIcons.uniE82A,
             size: 20.0,
           ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen(list: list, pic: pic)),
+            );
+          },
         ),
         new ListTile(
           title: new Text('Budget Proposal'),
@@ -70,6 +90,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
             FontAwesomeIcons.moneyBillAlt,
             size: 20.0,
           ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => BudgetProposalScreen()),
+              );
+            }
         ),
         new ListTile(
           title: new Text('PPMP'),
@@ -77,6 +103,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
             CustomIcons.briefcase_24,
             size: 20.0,
           ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PPMPScreen()),
+              );
+            }
         ),
         new ListTile(
           title: new Text('Purchase Request'),
@@ -84,6 +116,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
             CustomIcons.bag_09,
             size: 20.0,
           ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PurchaseRequestScreen()),
+              );
+            }
         ),
         new ListTile(
           title: new Text('Logout'),
@@ -106,7 +144,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
             CustomIcons.cog,
             size: 20.0,
           ),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SettingsScreen()),
+            );
+          },
           trailing: IconButton(
             icon: Theme.of(context).brightness == Brightness.light
                 ? Icon(FontAwesomeIcons.moon)

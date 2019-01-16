@@ -26,11 +26,25 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         .post("${host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
     return json.decode(response.body);
   }
+
   String _current = 'TAB: 0';
-  void _selectedTab(int index) {
-    setState(() {
-      _current = 'TAB: $index';
-    });
+  void _selectedTab(int index) async {
+    List userDetails = await getData();
+    if (userDetails[0]['user_type_id']=='1'){
+      if(index==2){
+        _current = 'TAB: 3';
+      }else{
+        _current = 'TAB: $index';
+      }
+      setState(() {
+        _current;
+      });
+    }
+    else{
+      setState(() {
+        _current = 'TAB: $index';
+      });
+    }
   }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -69,22 +83,22 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               ),
               actions: <Widget>[
                 new FlatButton(
-                  child: new Text(
-                    "Close",
-                    style: TextStyle(
-                        fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
-                  ),
-                  onPressed: ()
-                  async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.remove('id');
-                    prefs.remove('ifStop');
-                    Navigator.of(context).popAndPushNamed('/login');
-                  }
+                    child: new Text(
+                      "Close",
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      prefs.remove('id');
+                      prefs.remove('ifStop');
+                      Navigator.of(context).popAndPushNamed('/login');
+                    }
 //                  {
 //                    Navigator.of(context).pop();
 //                  },
-                ),
+                    ),
               ],
             ),
           );
@@ -119,7 +133,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         CustomIcons.uniE86F,
         color: Colors.blueGrey,
       );
-    } else {
+    } else if (_current == 'TAB: 3') {
       _page_title = 'Notifications';
       page_no = 3;
       iconD = Image.asset(
@@ -131,89 +145,90 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     }
 
     return Scaffold(
-      key: _scaffoldKey,
-      drawer: new FutureBuilder<List>(
-          future: getData(),
-          builder: (context, snapshot) {
-            return new HomeDrawer(list: snapshot.data, pic: snapshot.data[0]['user_image']);
-          }
-      ),
-      appBar: new AppBar(
-        centerTitle: true,
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        leading: new FutureBuilder(
+        key: _scaffoldKey,
+        drawer: new FutureBuilder<List>(
             future: getData(),
-            builder: (context, snapshot){
-              return new
-              IconButton(
-                  icon: Image.network(
-                    host+snapshot.data[0]['user_image'],
-                    width: 30.0,
-                    height: 30.0,
-                  ),
-                  onPressed: () => _scaffoldKey.currentState.openDrawer());
-            }
+            builder: (context, snapshot) {
+              return new HomeDrawer(
+                  list: snapshot.data, pic: snapshot.data[0]['user_image']);
+            }),
+        appBar: new AppBar(
+          centerTitle: true,
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          leading: new FutureBuilder(
+              future: getData(),
+              builder: (context, snapshot) {
+                return new IconButton(
+                    icon: Image.network(
+                      host + snapshot.data[0]['user_image'],
+                      width: 30.0,
+                      height: 30.0,
+                    ),
+                    onPressed: () => _scaffoldKey.currentState.openDrawer());
+              }),
+          title: new Text(
+            _page_title,
+            style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 15.0,
+                letterSpacing: 1.5,
+                fontWeight: FontWeight.w900),
+          ),
+          actions: <Widget>[
+            IconButton(
+              icon: iconD,
+              onPressed: onP,
+            )
+          ],
         ),
-        title: new Text(
-          _page_title,
-          style: new TextStyle(
-              color: Theme.of(context).brightness == Brightness.light
-                  ? Colors.black
-                  : Colors.white,
-              fontSize: 15.0,
-              letterSpacing: 1.5,
-              fontWeight: FontWeight.w900),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: iconD,
-            onPressed: onP,
-          )
-        ],
-      ),
-      body: Center(
-        child: new FutureBuilder<List>(
-          future: getData(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) print(snapshot.error);
-            else{
-              if(snapshot.hasData){
-                if(page_no == 0){
-                  return  page_dashboard(list: snapshot.data);
-                }
-                else if(page_no == 1){
-                  return  page_approval(list: snapshot.data);
-                }
-                else if(page_no == 2){
-                  return  page_requests(list: snapshot.data);
-                }
-                else if(page_no == 3){
-                  return  page_notifs(list: snapshot.data);
-                }
+        body: Center(
+          child: new FutureBuilder<List>(
+            future: getData(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError)
+                print(snapshot.error);
+              else {
+                if (snapshot.hasData) {
+                  if (page_no == 0) {
+                    return page_dashboard(list: snapshot.data);
+                  } else if (page_no == 1) {
+                    return page_approval(list: snapshot.data);
+                  } else if (page_no == 2) {
+                    return page_requests(list: snapshot.data);
+                  } else if (page_no == 3) {
+                    return page_notifs(list: snapshot.data);
+                  }
+                } else
+                  return new Center(
+                    child: new CircularProgressIndicator(),
+                  );
               }
-              else
-                return new Center(
-                  child: new CircularProgressIndicator(),
-                );
-            }
-          },
+            },
+          ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: HomeBottomAppBar(
-        selectedColor: Colors.blueAccent,
-        notchedShape: CircularNotchedRectangle(),
-        onTabSelected: _selectedTab,
-        items: [
-          HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
-          HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
-          HomeBottomAppBarItem(
-              iconData: CustomIcons.paper_plane_empty, count: 0),
-          HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
-        ],
-      ),
-    );
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        bottomNavigationBar: new FutureBuilder<List>(
+            future: getData(),
+            builder: (context, snapshot) {
+              return HomeBottomAppBar(
+                selectedColor: Colors.blueAccent,
+                notchedShape: CircularNotchedRectangle(),
+                onTabSelected: _selectedTab,
+                items: snapshot.data[0]['user_type_id'] == '1' ?
+                [
+                  HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
+                  HomeBottomAppBarItem(iconData: CustomIcons.paper_plane_empty, count: 0),
+                  HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),] :
+                [
+                  HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
+                  HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
+                  HomeBottomAppBarItem(iconData: CustomIcons.paper_plane_empty, count: 0),
+                  HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5), ]
+              );
+            }));
   }
 }
 

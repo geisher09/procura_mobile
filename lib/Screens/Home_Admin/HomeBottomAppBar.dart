@@ -20,7 +20,7 @@ class HomeBottomAppBar extends StatefulWidget {
   })
 
   {
-    assert(this.items.length == 2 || this.items.length == 4);
+    assert(this.items.length == 3 || this.items.length == 4);
   }
 
   final List<HomeBottomAppBarItem> items;
