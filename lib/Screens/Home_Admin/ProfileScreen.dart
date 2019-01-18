@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:procura/Components/custom_icons.dart';
-import 'package:procura/main.dart';
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({this.list, this.pic});
+  ProfileScreen({this.host,this.list, this.pic});
+  final String host;
   final List list;
   final String pic;
   @override
@@ -43,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
               FractionalTranslation(
                 translation: Offset(0.0, 0.6),
                 child: IconButton(
-                  icon: Icon(CustomIcons.uniE879),
+                  icon: Icon(CustomIcons.uniE875),
                   iconSize: 20.0,
                   onPressed: () {
                     Navigator.pop(context);
@@ -148,6 +148,20 @@ class ProfileScreen extends StatelessWidget {
                             fontSize: 17.0,
                             letterSpacing: 0.5,
                             fontFamily: 'Montserrat'),
+                      ),
+                    ),
+                    FractionalTranslation(
+                      translation: Offset(0.0, 2.0),
+                      child: Text(
+                        list[0]['user_types'],
+                        style: new TextStyle(
+                            color: Theme.of(context).brightness ==
+                                Brightness.light
+                                ? Colors.black
+                                : Colors.white,
+                            fontSize: 17.0,
+                            fontStyle: FontStyle.italic,
+                            letterSpacing: 0.5,),
                       ),
                     ),
                   ],

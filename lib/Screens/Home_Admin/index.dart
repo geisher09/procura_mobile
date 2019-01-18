@@ -13,15 +13,18 @@ import 'HomeRequests.dart';
 import 'HomeNotifs.dart';
 
 class Home_AdminScreen extends StatefulWidget {
+  final String host;
+  Home_AdminScreen({this.host});
   @override
-  _Home_AdminScreenState createState() => _Home_AdminScreenState();
+  _Home_AdminScreenState createState() => _Home_AdminScreenState(host);
 }
 
 class _Home_AdminScreenState extends State<Home_AdminScreen> {
-  Future<List> getData() async {
+  _Home_AdminScreenState(this.host);
+  final String host;
+  Future<List> getData() async{
     final prefs = await SharedPreferences.getInstance();
     final Id = prefs.getString('id') ?? '0';
-
     final response = await http
         .post("${host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
     return json.decode(response.body);
@@ -150,7 +153,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             future: getData(),
             builder: (context, snapshot) {
               return new HomeDrawer(
-                  list: snapshot.data, pic: snapshot.data[0]['user_image']);
+                  host: host, list: snapshot.data, pic: snapshot.data[0]['user_image']);
             }),
         appBar: new AppBar(
           centerTitle: true,
