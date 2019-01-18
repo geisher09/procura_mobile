@@ -13,20 +13,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:flutter/cupertino.dart';
+
 
 class HomeDrawer extends StatefulWidget {
+  final String host;
   final List list;
   final String pic;
-  HomeDrawer({this.list, this.pic});
+  HomeDrawer({this.host, this.list, this.pic});
   @override
-  _HomeDrawerState createState() => _HomeDrawerState(list,pic);
+  _HomeDrawerState createState() => _HomeDrawerState(host,list,pic);
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  _HomeDrawerState(this.list,this.pic);
+  _HomeDrawerState(this.host, this.list,this.pic);
+  final String host;
   final List list;
   final String pic;
-
   Future<List> getData() async {
     final prefs = await SharedPreferences.getInstance();
     final Id = prefs.getString('id') ?? '0';
@@ -37,6 +41,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   }
   @override
   Widget build(BuildContext context) {
+    timeDilation = 1.0; // 1.0 means normal animation speed.
     return Drawer(
         child: new ListView(
       children: <Widget>[
@@ -67,7 +72,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfileScreen(list: list, pic: pic)),
+              CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
             );
           },
         ),
@@ -78,9 +83,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
             size: 20.0,
           ),
           onTap: () {
+            Navigator.pop(context);
+//            Navigator.of(context, rootNavigator: true).push(
+//              new CupertinoPageRoute<bool>(
+//                fullscreenDialog: true,
+//                builder: (BuildContext context) => new ProfileScreen(host: host, list: list, pic: pic)),
+//              ),
+//            );
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ProfileScreen(list: list, pic: pic)),
+              CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
             );
           },
         ),
@@ -93,7 +105,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => BudgetProposalScreen()),
+                CupertinoPageRoute(builder: (context) => BudgetProposalScreen()),
               );
             }
         ),
@@ -106,7 +118,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PPMPScreen()),
+                CupertinoPageRoute(builder: (context) => PPMPScreen()),
               );
             }
         ),
@@ -119,7 +131,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PurchaseRequestScreen()),
+                CupertinoPageRoute(builder: (context) => PurchaseRequestScreen()),
               );
             }
         ),
@@ -147,7 +159,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SettingsScreen()),
+              CupertinoPageRoute(builder: (context) => SettingsScreen()),
             );
           },
           trailing: IconButton(

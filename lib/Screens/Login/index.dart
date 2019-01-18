@@ -14,11 +14,15 @@ import 'package:procura/Screens/Login/LoginForm.dart';
 
 class LoginScreen extends StatefulWidget {
   //const LoginScreen({Key key}) : super(key: key);
+  final String host;
+  LoginScreen({this.host});
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState(host);
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  _LoginScreenState(this.host);
+  final String host;
   final GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
 
   TextEditingController usernameController = new TextEditingController();
@@ -26,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void loginProcess(BuildContext context)async {
     print(usernameController.text + ',' + passwordController.text);
+    print(host);
     var url = "$host/login.php";
     final response = await
     http.post(url,body: {
