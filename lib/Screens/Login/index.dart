@@ -5,12 +5,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:procura/Components/custom_icons.dart';
-import 'package:procura/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
-import 'package:procura/Screens/Login/LoginForm.dart';
 
 class LoginScreen extends StatefulWidget {
   //const LoginScreen({Key key}) : super(key: key);

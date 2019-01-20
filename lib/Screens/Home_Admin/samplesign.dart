@@ -1,24 +1,28 @@
 import 'dart:io';
 import 'dart:async';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:procura/Screens/Home_Admin/upload.dart';
 import 'package:simple_permissions/simple_permissions.dart';
+import 'package:http/http.dart' as http;
+import 'package:async/async.dart';
+
 
 const directoryName = 'Signature';
 
-class SignApp extends StatefulWidget {
+class SignApp2 extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return SignAppState();
+    return SignApp2State();
   }
 }
 
-class SignAppState extends State<SignApp> {
+class SignApp2State extends State<SignApp2> {
   GlobalKey<SignatureState> signatureKey = GlobalKey();
   var image;
+  File _imagesign;
   String _platformVersion = 'Unknown';
   Permission _permission = Permission.WriteExternalStorage;
 
@@ -68,47 +72,58 @@ class SignAppState extends State<SignApp> {
             setState(() {
               image = signatureKey.currentState.rendered;
             });
-            showImage(context);
+            showImage(context, point: signatureKey.currentState._points);
           },
         )
       ],
     );
   }
-
-  Future<Null> showImage(BuildContext context) async {
+  Future<Null> showImage(BuildContext context, {List<ui.Offset> point}) async {
     var pngBytes = await image.toByteData(format: ui.ImageByteFormat.png);
+    int num2 = point.length;
     if(!(await checkPermission())) await requestPermission();
     // Use plugin [path_provider] to export image to storage
     Directory directory = await getExternalStorageDirectory();
     String path = directory.path;
     print(path);
     await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/yeer.png')
+    File('$path/$directoryName/yeer2.png')
         .writeAsBytesSync(pngBytes.buffer.asInt8List());
+
+    setState(() {
+      _imagesign = File('$path/$directoryName/yeer2.png');
+    });
+    String text;
+    if(num2 > 0){
+      text = 'Success! You have set your signature!';
+    }else{
+      text = 'Error! You should draw something.';
+    }
+    upload(_imagesign);
     return showDialog<Null>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text(
-              'Please check your device\'s Signature folder',
-              style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w300,
-                  color: Theme.of(context).primaryColor,
-                  letterSpacing: 1.1
+              title: Text(
+                text,
+                style: TextStyle(
+                    fontWeight: FontWeight.w300,
+                    color: Theme.of(context).primaryColor,
+                    letterSpacing: 1.1
+                ),
               ),
-            ),
-            //content: Image.memory(Uint8List.view(pngBytes.buffer)),
-            content: Column(
-              children: <Widget>[
-                Image.asset('$path/$directoryName/yeer.png'),
-                //Image.file(File('$path/$directoryName/heee.png'))
-              ],
-            )
+              //content: Image.memory(Uint8List.view(pngBytes.buffer)),
+              content: Column(
+                children: <Widget>[
+                  Image.asset('$path/$directoryName/yeer2.png'),
+                  //Image.file(File('$path/$directoryName/heee.png'))
+                ],
+              )
           );
         }
     );
   }
+
 
   requestPermission() async {
     PermissionStatus result = await SimplePermissions.requestPermission(_permission);
