@@ -8,18 +8,25 @@ import 'package:procura/Screens/Home_Admin/upload.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
+import 'package:flutter/services.dart';
 
 
 const directoryName = 'Signature';
 
 class SignApp2 extends StatefulWidget {
+  SignApp2({this.host,this.list});
+  final String host;
+  final List list;
   @override
   State<StatefulWidget> createState() {
-    return SignApp2State();
+    return SignApp2State(host: host, list: list);
   }
 }
 
 class SignApp2State extends State<SignApp2> {
+  SignApp2State({this.host,this.list});
+  final String host;
+  final List list;
   GlobalKey<SignatureState> signatureKey = GlobalKey();
   var image;
   File _imagesign;
@@ -54,6 +61,10 @@ class SignApp2State extends State<SignApp2> {
 
   @override
   Widget build(BuildContext context) {
+    //forced-landscape
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeRight
+    ]);
     return Scaffold(
       body: Signature(key: signatureKey),
       persistentFooterButtons: <Widget>[
@@ -85,13 +96,23 @@ class SignApp2State extends State<SignApp2> {
     // Use plugin [path_provider] to export image to storage
     Directory directory = await getExternalStorageDirectory();
     String path = directory.path;
+    int lastnum;
     print(path);
+    List<String> splitSignpath = list[0]['user_signature'].split('.');
+    if(list[0]['user_signature']==''){
+      lastnum = 0;
+    }else{
+      lastnum = int.parse(splitSignpath[3]);
+    }
+    //./assets/UserSignatures/signature1-1.png
+    print(splitSignpath);
+    lastnum += 1;
     await Directory('$path/$directoryName').create(recursive: true);
-    File('$path/$directoryName/yeer2.png')
+    File('$path/$directoryName/${list[0]['id']}.$lastnum.png')
         .writeAsBytesSync(pngBytes.buffer.asInt8List());
 
     setState(() {
-      _imagesign = File('$path/$directoryName/yeer2.png');
+      _imagesign = File('$path/$directoryName/${list[0]['id']}.$lastnum.png');
     });
     String text;
     if(num2 > 0){
@@ -99,11 +120,12 @@ class SignApp2State extends State<SignApp2> {
     }else{
       text = 'Error! You should draw something.';
     }
-    upload(_imagesign);
+    upload(host, list, _imagesign);
     return showDialog<Null>(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
+          return SingleChildScrollView(
+            child: AlertDialog(
               title: Text(
                 text,
                 style: TextStyle(
@@ -115,10 +137,27 @@ class SignApp2State extends State<SignApp2> {
               //content: Image.memory(Uint8List.view(pngBytes.buffer)),
               content: Column(
                 children: <Widget>[
-                  Image.asset('$path/$directoryName/yeer2.png'),
+                  Image.asset('$path/$directoryName/${list[0]['id']}.$lastnum.png'),
                   //Image.file(File('$path/$directoryName/heee.png'))
                 ],
-              )
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                    child: new Text(
+                      "Close",
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontWeight: FontWeight.bold),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).popAndPushNamed('/home');
+                    }
+//                  {
+//                    Navigator.of(context).pop();
+//                  },
+                ),
+              ],
+            ),
           );
         }
     );
@@ -222,7 +261,7 @@ class SignaturePainter extends CustomPainter {
     var paint = Paint()
       ..color = Colors.black
       ..strokeCap = StrokeCap.round
-      ..strokeWidth = 3.0;
+      ..strokeWidth = 4.0;
 
     for(int i=0; i < points.length - 1; i++) {
       if(points[i] != null && points[i+1] != null) {

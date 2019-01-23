@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:open_file/open_file.dart';
-import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
+import 'package:flutter_pdf_viewer/main.dart';
 import 'package:procura/Components/custom_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -112,7 +112,7 @@ class ApprovalScreen2 extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 50.0),
                 child: GestureDetector(
-                  onTap: () => FlutterPdfViewer.loadAsset("assets/files/finals.pdf"),
+                  onTap: () => PdfViewer.loadAsset("assets/files/finals.pdf"),
                   child: Container(
                       height: 50.0,
                       width: conwidth,

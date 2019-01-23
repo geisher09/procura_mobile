@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:flutter/services.dart';
 
 class updatewidgets extends StatelessWidget {
   final text1;
@@ -216,6 +217,12 @@ class HomeDashboard2 extends StatelessWidget {
   final List list;
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft
+    ]);
     var w = MediaQuery.of(context).size.width / 2.19;
     var w1 = MediaQuery.of(context).size.width / 1.1;
     var wchart = MediaQuery.of(context).size.width / 1.06;
