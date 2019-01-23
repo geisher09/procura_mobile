@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class sampscreen4 extends StatefulWidget {
   @override
@@ -62,7 +63,20 @@ class _sampscreen4State extends State<sampscreen4> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: RaisedButton(
-                    child: const Text('Get Temporary Directory'),
+                    child: const Text('URL Launcher'),
+                    onPressed: (){
+                      launch('http://');
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: RaisedButton(
+                    child: const Text('Get Temporary Directoryzzza'),
                     onPressed: _requestTempDirectory,
                   ),
                 ),

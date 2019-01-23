@@ -46,134 +46,134 @@ class _HomeDrawerState extends State<HomeDrawer> {
     timeDilation = 1.0; // 1.0 means normal animation speed.
     return Drawer(
         child: new ListView(
-      children: <Widget>[
-        GestureDetector(
-          child: new UserAccountsDrawerHeader(
-            accountName: new Text(
-              '${list[0]['name']}',
-              style: new TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white),
+          children: <Widget>[
+            GestureDetector(
+              child: new UserAccountsDrawerHeader(
+                accountName: new Text(
+                  '${list[0]['name']}',
+                  style: new TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white),
+                ),
+                accountEmail: new Text(
+                  '${list[0]['username']}',
+                  style: new TextStyle(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white),
+                ),
+                currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(host+list[0]['user_image'])
+                ),
+                decoration: new BoxDecoration(
+                  color: Colors.transparent,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
+                );
+              },
             ),
-            accountEmail: new Text(
-              '${list[0]['username']}',
-              style: new TextStyle(
-                  color: Theme.of(context).brightness == Brightness.light
-                      ? Colors.black
-                      : Colors.white),
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: NetworkImage(host+list[0]['user_image'])
-            ),
-            decoration: new BoxDecoration(
-              color: Colors.transparent,
-            ),
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
-            );
-          },
-        ),
-        new ListTile(
-          title: new Text('Profile'),
-          leading: Icon(
-            CustomIcons.uniE82A,
-            size: 20.0,
-          ),
-          onTap: () {
-            Navigator.pop(context);
+            new ListTile(
+              title: new Text('Profile'),
+              leading: Icon(
+                CustomIcons.uniE82A,
+                size: 20.0,
+              ),
+              onTap: () {
+                Navigator.pop(context);
 //            Navigator.of(context, rootNavigator: true).push(
 //              new CupertinoPageRoute<bool>(
 //                fullscreenDialog: true,
 //                builder: (BuildContext context) => new ProfileScreen(host: host, list: list, pic: pic)),
 //              ),
 //            );
-            Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
-            );
-          },
-        ),
-        new ListTile(
-          title: new Text('Budget Proposal'),
-          leading: Icon(
-            FontAwesomeIcons.moneyBillAlt,
-            size: 20.0,
-          ),
-            onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (context) => SignApp()),
-              );
-            }
-        ),
-        new ListTile(
-          title: new Text('PPMP'),
-          leading: Icon(
-            CustomIcons.briefcase_24,
-            size: 20.0,
-          ),
-            onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (context) => SignApp2()),
-              );
-            }
-        ),
-        new ListTile(
-          title: new Text('Purchase Request'),
-          leading: Icon(
-            CustomIcons.bag_09,
-            size: 20.0,
-          ),
-            onTap: () {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(builder: (context) => PurchaseRequestScreen()),
-              );
-            }
-        ),
-        new ListTile(
-          title: new Text('Logout'),
-          leading: Icon(
-            CustomIcons.uniE820,
-            size: 20.0,
-          ),
-          onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-              () async {
-            final prefs = await SharedPreferences.getInstance();
-            prefs.remove('id');
-            prefs.remove('ifStop');
-            Navigator.of(context).popAndPushNamed('/login');
-          }
-        ),
-        new Divider(),
-        new ListTile(
-          title: new Text('Settings'),
-          leading: Icon(
-            CustomIcons.cog,
-            size: 20.0,
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              CupertinoPageRoute(builder: (context) => SettingsScreen()),
-            );
-          },
-          trailing: IconButton(
-            icon: Theme.of(context).brightness == Brightness.light
-                ? Icon(FontAwesomeIcons.moon)
-                : Icon(FontAwesomeIcons.solidMoon),
-            onPressed: changeBrightness,
-            iconSize: 20.0,
-          ),
-        ),
-      ],
-    ));
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
+                );
+              },
+            ),
+            new ListTile(
+                title: new Text('Budget Proposal'),
+                leading: Icon(
+                  FontAwesomeIcons.moneyBillAlt,
+                  size: 20.0,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => SignApp()),
+                  );
+                }
+            ),
+            new ListTile(
+                title: new Text('PPMP'),
+                leading: Icon(
+                  CustomIcons.briefcase_24,
+                  size: 20.0,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => SignApp2(host: host, list: list)),
+                  );
+                }
+            ),
+            new ListTile(
+                title: new Text('Purchase Request'),
+                leading: Icon(
+                  CustomIcons.bag_09,
+                  size: 20.0,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => PurchaseRequestScreen()),
+                  );
+                }
+            ),
+            new ListTile(
+                title: new Text('Logout'),
+                leading: Icon(
+                  CustomIcons.uniE820,
+                  size: 20.0,
+                ),
+                onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
+                    () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.remove('id');
+                  prefs.remove('ifStop');
+                  Navigator.of(context).popAndPushNamed('/login');
+                }
+            ),
+            new Divider(),
+            new ListTile(
+              title: new Text('Settings'),
+              leading: Icon(
+                CustomIcons.cog,
+                size: 20.0,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(builder: (context) => SettingsScreen()),
+                );
+              },
+              trailing: IconButton(
+                icon: Theme.of(context).brightness == Brightness.light
+                    ? Icon(FontAwesomeIcons.moon)
+                    : Icon(FontAwesomeIcons.solidMoon),
+                onPressed: changeBrightness,
+                iconSize: 20.0,
+              ),
+            ),
+          ],
+        ));
   }
 
   void changeBrightness() {
