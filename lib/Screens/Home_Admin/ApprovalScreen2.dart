@@ -16,6 +16,203 @@ class ApprovalScreen2 extends StatelessWidget {
   Dio dio = Dio();
   @override
   Widget build(BuildContext context) {
+    void _approveDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'I hereby agree to digitally sign this document',
+                style: TextStyle(fontFamily: 'Montserrat', fontSize: 13.0),
+                textAlign: TextAlign.center,
+              ),
+              titlePadding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              content: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      height: 80.0,
+                      width: 180.0,
+                      child: Image.network('http://192.168.22.8/Procura/mobile/assets/UserSignatures/signature5.png'),
+                    ),
+                  ),
+                  Container(
+                    decoration: new BoxDecoration(
+                      border: new Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: TextFormField(
+                      //controller:
+                      obscureText: true,
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                      decoration: new InputDecoration(
+                        icon: Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: new Icon(
+                            CustomIcons.lock,
+                            color: Colors.black,
+                            size: 15.0,
+                          ),
+                        ),
+                        border: InputBorder.none,
+                        hintText: "Password",
+                        hintStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w500),
+                        contentPadding:
+                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
+                    child: Text(
+                      'Enter password to continue',
+                      style:
+                          TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      new FlatButton(
+                        child: new Text(
+                          "Cancel",
+                          style: TextStyle(
+                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      new FlatButton(
+                        child: new Text(
+                          "Sign",
+                          style: TextStyle(
+                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    void _rejectDialog() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return SingleChildScrollView(
+            child: AlertDialog(
+              title: Text(
+                'Reject file',
+                style: TextStyle(fontFamily: 'Montserrat', fontSize: 13.0),
+                textAlign: TextAlign.center,
+              ),
+              titlePadding: EdgeInsets.all(15.0),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              content: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Container(
+                      height: 80.0,
+                      width: 180.0,
+                      child: Icon(
+                        CustomIcons.uniE86E,
+                        size: 40.0,
+                        color: Colors.redAccent[700],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    decoration: new BoxDecoration(
+                      border: new Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
+                    child: TextFormField(
+                      //controller:
+                      autocorrect: true,
+                      obscureText: true,
+                      style: const TextStyle(
+                        color: Colors.black,
+                      ),
+                      decoration: new InputDecoration(
+                        border: InputBorder.none,
+                        hintText: "Notes/Comments",
+                        hintStyle: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w500),
+                        contentPadding:
+                        EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
+                    child: Text(
+                      'Provide notes about the file',
+                      style:
+                      TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      new FlatButton(
+                        child: new Text(
+                          "Cancel",
+                          style: TextStyle(
+                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      new FlatButton(
+                        child: new Text(
+                          "Done",
+                          style: TextStyle(
+                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    }
+
     var conwidth = MediaQuery.of(context).size.width / 1.25;
     var noteswidth = MediaQuery.of(context).size.width / 1.15;
     return Scaffold(
@@ -145,8 +342,10 @@ class ApprovalScreen2 extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Container(
                   width: noteswidth,
-                  height: MediaQuery.of(context).orientation == Orientation.portrait ?
-                  60 : 30,
+                  height:
+                      MediaQuery.of(context).orientation == Orientation.portrait
+                          ? 60
+                          : 30,
                   child: RichText(
                     overflow: TextOverflow.ellipsis,
                     maxLines: 4,
@@ -154,15 +353,17 @@ class ApprovalScreen2 extends StatelessWidget {
                       style: new TextStyle(
                         fontSize: 12.5,
                         //fontFamily: 'Montserrat',
-                        color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                            text: 'NOTES:'+' ',
+                            text: 'NOTES:' + ' ',
                             style: new TextStyle(fontWeight: FontWeight.w700)),
                         TextSpan(
                           text:
-                          "Sample text Sample text Sample text Sample text Sample text Sample text Sample text"
+                              "Sample text Sample text Sample text Sample text Sample text Sample text Sample text"
                               " Sample text Sample text Limit to 120 chars",
                           style: new TextStyle(fontWeight: FontWeight.w400),
                         )
@@ -196,9 +397,8 @@ class ApprovalScreen2 extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 10.0),
                 child: Text(
                   'Approve this file?',
-                  style: new TextStyle(
-                      fontSize: 13.0,
-                      fontFamily: 'Montserrat'),
+                  style:
+                      new TextStyle(fontSize: 13.0, fontFamily: 'Montserrat'),
                 ),
               ),
               Padding(
@@ -219,7 +419,7 @@ class ApprovalScreen2 extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onPressed: (){},
+                      onPressed: _rejectDialog,
                     ),
                     new Container(
                       height: 15.0,
@@ -238,7 +438,7 @@ class ApprovalScreen2 extends StatelessWidget {
                           ),
                         ),
                       ),
-                      onPressed: (){},
+                      onPressed: _approveDialog,
                       //onPressed: () => launch("http://docs.google.com/gview?embedded=true&url=/assets/files/finals.pdf"),
                     ),
                   ],
