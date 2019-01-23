@@ -65,7 +65,7 @@ class _sampscreen4State extends State<sampscreen4> {
                   child: RaisedButton(
                     child: const Text('URL Launcher'),
                     onPressed: (){
-                      launch('http://');
+                      launch('http://192.168.22.8/Procura/mobile/sampleurl.php');
                     },
                   ),
                 ),

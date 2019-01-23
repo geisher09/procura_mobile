@@ -77,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
                 Stack(
                   alignment: AlignmentDirectional.center,
                   children: <Widget>[
-                    list[0]['user_signature'] == ''
+                    list[0]['user_signature'] == null
                         ? FractionalTranslation(
                             translation: Offset(0.0, -0.4),
                             child: Container(
