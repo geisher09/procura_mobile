@@ -22,7 +22,7 @@ class Home_AdminScreen extends StatefulWidget {
 class _Home_AdminScreenState extends State<Home_AdminScreen> {
   _Home_AdminScreenState(this.host);
   final String host;
-  Future<List> getData() async{
+  Future<List> getData() async {
     final prefs = await SharedPreferences.getInstance();
     final Id = prefs.getString('id') ?? '0';
     final response = await http
@@ -33,17 +33,16 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
   String _current = 'TAB: 0';
   void _selectedTab(int index) async {
     List userDetails = await getData();
-    if (userDetails[0]['user_type_id']=='1'){
-      if(index==2){
+    if (userDetails[0]['user_type_id'] == '1') {
+      if (index == 2) {
         _current = 'TAB: 3';
-      }else{
+      } else {
         _current = 'TAB: $index';
       }
       setState(() {
         _current;
       });
-    }
-    else{
+    } else {
       setState(() {
         _current = 'TAB: $index';
       });
@@ -86,22 +85,15 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               ),
               actions: <Widget>[
                 new FlatButton(
-                    child: new Text(
-                      "Close",
-                      style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.remove('id');
-                      prefs.remove('ifStop');
-                      Navigator.of(context).popAndPushNamed('/login');
-                    }
-//                  {
-//                    Navigator.of(context).pop();
-//                  },
-                    ),
+                  child: new Text(
+                    "Close",
+                    style: TextStyle(
+                        fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
               ],
             ),
           );
@@ -153,7 +145,9 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             future: getData(),
             builder: (context, snapshot) {
               return new HomeDrawer(
-                  host: host, list: snapshot.data, pic: snapshot.data[0]['user_image']);
+                  host: host,
+                  list: snapshot.data,
+                  pic: snapshot.data[0]['user_image']);
             }),
         appBar: new AppBar(
           centerTitle: true,
@@ -217,20 +211,30 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             future: getData(),
             builder: (context, snapshot) {
               return HomeBottomAppBar(
-                selectedColor: Colors.blueAccent,
-                notchedShape: CircularNotchedRectangle(),
-                onTabSelected: _selectedTab,
-                items: snapshot.data[0]['user_type_id'] == '1' ?
-                [
-                  HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
-                  HomeBottomAppBarItem(iconData: CustomIcons.paper_plane_empty, count: 0),
-                  HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),] :
-                [
-                  HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
-                  HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
-                  HomeBottomAppBarItem(iconData: CustomIcons.paper_plane_empty, count: 0),
-                  HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5), ]
-              );
+                  selectedColor: Colors.blueAccent,
+                  notchedShape: CircularNotchedRectangle(),
+                  onTabSelected: _selectedTab,
+                  items: snapshot.data[0]['user_type_id'] == '1'
+                      ? [
+                          HomeBottomAppBarItem(
+                              iconData: CustomIcons.chart_bar, count: 0),
+                          HomeBottomAppBarItem(
+                              iconData: CustomIcons.paper_plane_empty,
+                              count: 0),
+                          HomeBottomAppBarItem(
+                              iconData: CustomIcons.bell, count: 5),
+                        ]
+                      : [
+                          HomeBottomAppBarItem(
+                              iconData: CustomIcons.chart_bar, count: 0),
+                          HomeBottomAppBarItem(
+                              iconData: CustomIcons.ok, count: 0),
+                          HomeBottomAppBarItem(
+                              iconData: CustomIcons.paper_plane_empty,
+                              count: 0),
+                          HomeBottomAppBarItem(
+                              iconData: CustomIcons.bell, count: 5),
+                        ]);
             }));
   }
 }

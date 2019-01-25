@@ -23,22 +23,37 @@ class ApprovalScreen2 extends StatelessWidget {
           return SingleChildScrollView(
             child: AlertDialog(
               title: Text(
-                'I hereby agree to digitally sign this document',
+                'Approve File',
                 style: TextStyle(fontFamily: 'Montserrat', fontSize: 13.0),
                 textAlign: TextAlign.center,
               ),
-              titlePadding: EdgeInsets.all(15.0),
+              titlePadding: EdgeInsets.only(top: 15.0),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20.0))),
               contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
               content: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.only(top: 5.0),
                     child: Container(
                       height: 80.0,
                       width: 180.0,
-                      child: Image.network('http://192.168.22.8/Procura/mobile/assets/UserSignatures/signature5.png'),
+                      child: Image.network(
+                          'http://192.168.22.7/Procura/mobile/assets/UserSignatures/signature4.png'),
+                    ),
+                  ),
+                  FractionalTranslation(
+                      translation: Offset(0.0, -1.0),
+                      child: Divider(
+                        color: Colors.grey[600],
+                      )),
+                  FractionalTranslation(
+                    translation: Offset(0.0, -1.5),
+                    child: Text(
+                      'I hereby agree to digitally sign this file',
+                      style:
+                          TextStyle(fontFamily: 'Montserrat', fontSize: 12.0),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   Container(
@@ -78,8 +93,8 @@ class ApprovalScreen2 extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
                     child: Text(
                       'Enter password to continue',
-                      style:
-                          TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
+                      style: TextStyle(
+                          fontSize: 12.0, fontStyle: FontStyle.italic),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -90,17 +105,22 @@ class ApprovalScreen2 extends StatelessWidget {
                         child: new Text(
                           "Cancel",
                           style: TextStyle(
-                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                              color: Colors.teal[700],
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
                       new FlatButton(
+                        color: Colors.teal[700],
                         child: new Text(
                           "Sign",
                           style: TextStyle(
-                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
@@ -134,15 +154,12 @@ class ApprovalScreen2 extends StatelessWidget {
               content: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: const EdgeInsets.only(bottom:10.0),
                     child: Container(
                       height: 80.0,
                       width: 180.0,
-                      child: Icon(
-                        CustomIcons.uniE86E,
-                        size: 40.0,
-                        color: Colors.redAccent[700],
-                      ),
+                      child: Image.asset(
+                          "assets/images/Reject.png"),
                     ),
                   ),
                   Container(
@@ -155,7 +172,7 @@ class ApprovalScreen2 extends StatelessWidget {
                     child: TextFormField(
                       //controller:
                       autocorrect: true,
-                      obscureText: true,
+                      obscureText: false,
                       style: const TextStyle(
                         color: Colors.black,
                       ),
@@ -167,16 +184,16 @@ class ApprovalScreen2 extends StatelessWidget {
                             fontSize: 13.0,
                             fontWeight: FontWeight.w500),
                         contentPadding:
-                        EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
                     child: Text(
-                      'Provide notes about the file',
-                      style:
-                      TextStyle(fontSize: 12.0, fontStyle: FontStyle.italic),
+                      'Provide notes on why you rejected this file',
+                      style: TextStyle(
+                          fontSize: 12.0, fontStyle: FontStyle.italic),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -187,17 +204,22 @@ class ApprovalScreen2 extends StatelessWidget {
                         child: new Text(
                           "Cancel",
                           style: TextStyle(
-                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                              color: Colors.red[900],
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
                       ),
                       new FlatButton(
+                        color: Colors.red[900],
                         child: new Text(
                           "Done",
                           style: TextStyle(
-                              fontFamily: 'Montserrat', fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
                           Navigator.of(context).pop();
