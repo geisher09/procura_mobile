@@ -62,9 +62,10 @@ class SignApp2State extends State<SignApp2> {
   @override
   Widget build(BuildContext context) {
     //forced-landscape
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight
-    ]);
+//    SystemChrome.setPreferredOrientations([
+//      DeviceOrientation.landscapeRight
+//    ]);
+
     return Scaffold(
       body: Signature(key: signatureKey),
       persistentFooterButtons: <Widget>[
