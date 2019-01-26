@@ -163,7 +163,7 @@ class ProfileScreen extends StatelessWidget {
                       child: OutlineButton(
                         splashColor: Colors.blueGrey,
                         highlightedBorderColor: Colors.blueGrey,
-                        shape: StadiumBorder(),
+                        //shape: StadiumBorder(),
                         borderSide: BorderSide(
                             width: 2.0,
                             color: Colors.blueGrey[700],
@@ -315,7 +315,7 @@ class ProfileScreen extends StatelessWidget {
               child: OutlineButton(
                 splashColor: Colors.blueGrey,
                 highlightedBorderColor: Colors.blueGrey,
-                shape: StadiumBorder(),
+                //shape: StadiumBorder(),
                 borderSide: BorderSide(
                     width: 2.0,
                     color: Colors.blueGrey[700],

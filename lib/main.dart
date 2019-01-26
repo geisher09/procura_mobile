@@ -13,7 +13,7 @@ void main() async {
   final Id = prefs.getString('id') ?? '0';
   List<String> splitId = ipAdd.split('.');
   int lastnum = int.parse(splitId[3]);
-  lastnum -= 1;
+  lastnum += 2;
   String newIp = splitId[0] + '.' + splitId[1] + '.' + splitId[2] + '.$lastnum';
   String host = 'http://$newIp/Procura/mobile';
   print(host);
