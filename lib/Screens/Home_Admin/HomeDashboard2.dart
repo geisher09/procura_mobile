@@ -385,7 +385,7 @@ class HomeDashboard2 extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    'Hello ${list[0]['username']}!',
+                    'Hello ${list[0]['name']}!',
                     style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
                   ),
                 ),

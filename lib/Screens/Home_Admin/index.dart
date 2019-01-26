@@ -27,6 +27,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     final Id = prefs.getString('id') ?? '0';
     final response = await http
         .post("${host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
+    //print(response.body);
     return json.decode(response.body);
   }
 
@@ -138,16 +139,23 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       );
       onP = _showDialog;
     }
-
     return Scaffold(
         key: _scaffoldKey,
         drawer: new FutureBuilder<List>(
             future: getData(),
             builder: (context, snapshot) {
-              return new HomeDrawer(
-                  host: host,
-                  list: snapshot.data,
-                  pic: snapshot.data[0]['user_image']);
+              if (snapshot.hasData) {
+                return new HomeDrawer(
+                    host: host,
+                    list: snapshot.data,
+                    pic: snapshot.data[0]['user_image']);
+              } else{
+                return Center(
+                  child: new Container(
+                    width: 10.0,
+                    height: 10.0,
+                  ),
+                );}
             }),
         appBar: new AppBar(
           centerTitle: true,
@@ -156,13 +164,21 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
           leading: new FutureBuilder(
               future: getData(),
               builder: (context, snapshot) {
-                return new IconButton(
-                    icon: Image.network(
-                      host + snapshot.data[0]['user_image'],
-                      width: 30.0,
-                      height: 30.0,
+                if (snapshot.hasData) {
+                  return new IconButton(
+                      icon: Image.network(
+                        host + snapshot.data[0]['user_image'],
+                        width: 30.0,
+                        height: 30.0,
+                      ),
+                      onPressed: () => _scaffoldKey.currentState.openDrawer());
+                } else
+                  return new Center(
+                    child: new Container(
+                      width: 10.0,
+                      height: 10.0,
                     ),
-                    onPressed: () => _scaffoldKey.currentState.openDrawer());
+                  );
               }),
           title: new Text(
             _page_title,
@@ -210,31 +226,36 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         bottomNavigationBar: new FutureBuilder<List>(
             future: getData(),
             builder: (context, snapshot) {
-              return HomeBottomAppBar(
-                  selectedColor: Colors.blueAccent,
-                  notchedShape: CircularNotchedRectangle(),
-                  onTabSelected: _selectedTab,
-                  items: snapshot.data[0]['user_type_id'] == '1'
-                      ? [
-                          HomeBottomAppBarItem(
-                              iconData: CustomIcons.chart_bar, count: 0),
-                          HomeBottomAppBarItem(
-                              iconData: CustomIcons.paper_plane_empty,
-                              count: 0),
-                          HomeBottomAppBarItem(
-                              iconData: CustomIcons.bell, count: 5),
-                        ]
-                      : [
-                          HomeBottomAppBarItem(
-                              iconData: CustomIcons.chart_bar, count: 0),
-                          HomeBottomAppBarItem(
-                              iconData: CustomIcons.ok, count: 0),
-                          HomeBottomAppBarItem(
-                              iconData: CustomIcons.paper_plane_empty,
-                              count: 0),
-                          HomeBottomAppBarItem(
-                              iconData: CustomIcons.bell, count: 5),
-                        ]);
+              if(snapshot.hasData){
+                return HomeBottomAppBar(
+                    selectedColor: Colors.blueAccent,
+                    notchedShape: CircularNotchedRectangle(),
+                    onTabSelected: _selectedTab,
+                    items: snapshot.data[0]['user_type_id'] == '1'
+                        ? [
+                      HomeBottomAppBarItem(
+                          iconData: CustomIcons.chart_bar, count: 0),
+                      HomeBottomAppBarItem(
+                          iconData: CustomIcons.paper_plane_empty,
+                          count: 0),
+                      HomeBottomAppBarItem(
+                          iconData: CustomIcons.bell, count: 5),
+                    ]
+                        : [
+                      HomeBottomAppBarItem(
+                          iconData: CustomIcons.chart_bar, count: 0),
+                      HomeBottomAppBarItem(
+                          iconData: CustomIcons.ok, count: 0),
+                      HomeBottomAppBarItem(
+                          iconData: CustomIcons.paper_plane_empty,
+                          count: 0),
+                      HomeBottomAppBarItem(
+                          iconData: CustomIcons.bell, count: 5),
+                    ]);
+              }else
+                return new Center(
+                  child: new CircularProgressIndicator(),
+                );
             }));
   }
 }

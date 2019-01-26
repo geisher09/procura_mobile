@@ -100,7 +100,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               },
             ),
             new ListTile(
-                title: new Text('Budget Proposal'),
+                title: new Text('Budgeting'),
                 leading: Icon(
                   FontAwesomeIcons.moneyBillAlt,
                   size: 20.0,
@@ -149,7 +149,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   final prefs = await SharedPreferences.getInstance();
                   prefs.remove('id');
                   prefs.remove('ifStop');
-                  Navigator.of(context).popAndPushNamed('/login');
+                  Navigator.of(context).pushNamedAndRemoveUntil('/login',(Route<dynamic> route)=>false);
                 }
             ),
             new Divider(),
