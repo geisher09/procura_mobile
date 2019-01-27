@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class BudgetProposalScreen extends StatelessWidget {
+class BudgetYearScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,7 +8,7 @@ class BudgetProposalScreen extends StatelessWidget {
         iconTheme: IconThemeData(
           color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white,//change your color here
         ),
-        title: Text("Screen for Budget Proposal",
+        title: Text("Screen for Budget Year",
           style: new TextStyle(
               color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white,
               fontSize: 13.0,

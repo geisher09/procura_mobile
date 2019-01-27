@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:procura/Screens/Home_Admin/upload.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/upload.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 import 'package:http/http.dart' as http;
 import 'package:async/async.dart';
@@ -99,6 +99,7 @@ class SignApp2State extends State<SignApp2> {
     String path = directory.path;
     int lastnum;
     print(path);
+    print('hehe'+list[0]['user_signature']);
     List<String> splitSignpath;
     if(list[0]['user_signature']==null){
       lastnum = 0;
@@ -106,7 +107,7 @@ class SignApp2State extends State<SignApp2> {
       splitSignpath = list[0]['user_signature'].split('.');
       lastnum = int.parse(splitSignpath[3]);
     }
-    //./assets/UserSignatures/signature1-1.png
+    //./assets/UserSignatures/7.2.png
     print(splitSignpath);
     lastnum += 1;
     await Directory('$path/$directoryName').create(recursive: true);

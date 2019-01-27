@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get_ip/get_ip.dart';
-import 'package:procura/Screens/Home_Admin/HomeDashboard.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeDashboard.dart';
 import 'package:procura/Screens/Login/index.dart';
 import 'package:procura/Screens/Home_Admin/index.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';

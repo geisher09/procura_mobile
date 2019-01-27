@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:procura/Screens/Home_Admin/ApprovalScreen2.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/ApprovalScreen2.dart';
 
 class approvalwidgets extends StatelessWidget {
   final text1;

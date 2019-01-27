@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:procura/Screens/Home_Admin/HomeBottomAppBar.dart';
-import 'package:procura/Screens/Home_Admin/HomeDrawer.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeBottomAppBar.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/HomeDrawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:procura/main.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../Components/custom_icons.dart';
-import 'HomeDashboard2.dart';
-import 'HomeApproval.dart';
-import 'HomeRequests.dart';
-import 'HomeNotifs.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeDashboard2.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeApproval.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeRequests.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeNotifs.dart';
 
 class Home_AdminScreen extends StatefulWidget {
   final String host;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:procura/Screens/Home_Admin/RequestScreen2.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/RequestScreen2.dart';
 
 class requestwidgets extends StatelessWidget {
   final text1;
