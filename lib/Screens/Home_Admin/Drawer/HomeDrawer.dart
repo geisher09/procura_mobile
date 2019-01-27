@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:procura/Components/custom_icons.dart';
-import 'package:procura/Screens/Home_Admin/BudgetProposalScreen.dart';
-import 'package:procura/Screens/Home_Admin/PPMPScreen.dart';
-import 'package:procura/Screens/Home_Admin/ProfileScreen.dart';
-import 'package:procura/Screens/Home_Admin/PurchaseRequestScreen.dart';
-import 'package:procura/Screens/Home_Admin/SettingsScreen.dart';
-import 'package:procura/Screens/Home_Admin/flutterappbadger.dart';
-import 'package:procura/Screens/Home_Admin/loop.dart';
-import 'package:procura/Screens/Home_Admin/samplesign.dart';
-import 'package:procura/Screens/Home_Admin/sampscreen1.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/BudgetAllocationScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/BudgetProposalScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/BudgetYearScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PPMPScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/ProfileScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PurchaseRequestScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/SettingsScreen.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/flutterappbadger.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/loop.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/samplesign.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/sampscreen1.dart';
 import 'package:procura/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -24,22 +26,18 @@ class HomeDrawer extends StatefulWidget {
   final String host;
   final List list;
   final String pic;
-  HomeDrawer({this.host, this.list, this.pic});
+  const HomeDrawer({this.host, this.list, this.pic});
   @override
-  _HomeDrawerState createState() => _HomeDrawerState(host,list,pic);
+  _HomeDrawerState createState() => _HomeDrawerState();
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  _HomeDrawerState(this.host, this.list,this.pic);
-  final String host;
-  final List list;
-  final String pic;
   Future<List> getData() async {
     final prefs = await SharedPreferences.getInstance();
     final Id = prefs.getString('id') ?? '0';
 
     final response = await http
-        .post("${host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
+        .post("${widget.host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
     return json.decode(response.body);
   }
   @override
@@ -51,7 +49,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             GestureDetector(
               child: new UserAccountsDrawerHeader(
                 accountName: new Text(
-                  '${list[0]['name']}',
+                  '${widget.list[0]['name']}',
                   style: new TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).brightness == Brightness.light
@@ -59,14 +57,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           : Colors.white),
                 ),
                 accountEmail: new Text(
-                  '${list[0]['username']}',
+                  '${widget.list[0]['username']}',
                   style: new TextStyle(
                       color: Theme.of(context).brightness == Brightness.light
                           ? Colors.black
                           : Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(host+list[0]['user_image'])
+                    backgroundImage: NetworkImage(widget.host+widget.list[0]['user_image'])
                 ),
                 decoration: new BoxDecoration(
                   color: Colors.transparent,
@@ -75,14 +73,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
               onTap: () {
                 Navigator.push(
                   context,
-                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
+                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
                 );
               },
             ),
             new ListTile(
               title: new Text('Profile'),
               leading: Icon(
-                CustomIcons.uniE82A,
+                CustomIcons.single_01,
                 size: 20.0,
               ),
               onTap: () {
@@ -95,33 +93,60 @@ class _HomeDrawerState extends State<HomeDrawer> {
 //            );
                 Navigator.push(
                   context,
-                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: host, list: list, pic: pic)),
+                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
                 );
               },
             ),
-            new ListTile(
-                title: new Text('Budgeting'),
-                leading: Icon(
-                  FontAwesomeIcons.moneyBillAlt,
-                  size: 20.0,
+            new ExpansionTile(
+              title: new Text('Budgeting',
+              style: TextStyle(
+                fontSize: 14.0
+              ),
+              ),
+              leading: Icon(
+                CustomIcons.wallet_43,
+                size: 20.0,
+              ),
+              children: <Widget>[
+                new ListTile(
+                    title: new Text('Budget Proposals'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(builder: (context) => BudgetProposalScreen()),
+                      );
+                    }
                 ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(builder: (context) => BudgetProposalScreen()),
-                  );
-                }
+                new ListTile(
+                    title: new Text('Budget Year'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(builder: (context) => BudgetYearScreen()),
+                      );
+                    }
+                ),
+                new ListTile(
+                    title: new Text('Budget Allocation'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(builder: (context) => BudgetAllocationScreen(host: widget.host)),
+                      );
+                    }
+                ),
+              ],
             ),
             new ListTile(
                 title: new Text('PPMP'),
                 leading: Icon(
-                  CustomIcons.briefcase_24,
+                  CustomIcons.single_folded_content,
                   size: 20.0,
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => SignApp2(host: host, list: list)),
+                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
                   );
                 }
             ),

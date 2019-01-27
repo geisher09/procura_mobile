@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:procura/Screens/Home_Admin/sampscreen4.dart';
-import '../../Components/custom_icons.dart';
+import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/sampscreen4.dart';
 
 class notifwidgets extends StatelessWidget {
   final notiftexts;

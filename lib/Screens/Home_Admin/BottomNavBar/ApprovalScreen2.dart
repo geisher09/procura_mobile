@@ -105,7 +105,7 @@ class ApprovalScreen2 extends StatelessWidget {
                         child: new Text(
                           "Cancel",
                           style: TextStyle(
-                              color: Colors.teal[700],
+                              color: Colors.green[800],
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold),
                         ),
@@ -114,7 +114,7 @@ class ApprovalScreen2 extends StatelessWidget {
                         },
                       ),
                       new FlatButton(
-                        color: Colors.teal[700],
+                        color: Colors.green[800],
                         child: new Text(
                           "Sign",
                           style: TextStyle(
@@ -204,7 +204,7 @@ class ApprovalScreen2 extends StatelessWidget {
                         child: new Text(
                           "Cancel",
                           style: TextStyle(
-                              color: Colors.red[900],
+                              color: Colors.red[800],
                               fontFamily: 'Montserrat',
                               fontWeight: FontWeight.bold),
                         ),
@@ -213,7 +213,7 @@ class ApprovalScreen2 extends StatelessWidget {
                         },
                       ),
                       new FlatButton(
-                        color: Colors.red[900],
+                        color: Colors.red[800],
                         child: new Text(
                           "Done",
                           style: TextStyle(
@@ -430,7 +430,7 @@ class ApprovalScreen2 extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     RaisedButton(
-                      color: Colors.red,
+                      color: Colors.red[800],
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 3.0),
@@ -449,7 +449,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       color: Colors.grey[500],
                     ),
                     RaisedButton(
-                      color: Colors.green,
+                      color: Colors.green[800],
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 3.0),
