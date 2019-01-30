@@ -76,22 +76,24 @@ class BudgetProposalScreen extends StatelessWidget {
                           : Colors.grey[850],
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Table(
-                          children: [
-                            TableRow(children: [
-                              TableCell(
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: <Widget>[
-                                    Text('Sample Name'),
-                                    Text('Sample Status'),
-                                    Text('Sample Year')
-                                  ],
-                                ),
-                              )
-                            ])
-                          ],
+                        child: Center(
+                          child: Table(
+                            children: [
+                              TableRow(children: [
+                                TableCell(
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: <Widget>[
+                                      Expanded(flex: 1,child: Container(child: Text('Sample aasdascascca', overflow: TextOverflow.ellipsis))),
+                                      Expanded(flex: 1,child: Container(child: Text('Sample sample', overflow: TextOverflow.ellipsis))),
+                                      Expanded(flex: 1,child: Container(child: Text('Sample sample', overflow: TextOverflow.ellipsis))),
+                                    ],
+                                  ),
+                                )
+                              ])
+                            ],
+                          ),
                         ),
                       ),
                     ),
