@@ -2,18 +2,21 @@
 
 include 'connection.php';
 
+$ID = $_POST["id"];
+
 $queryResult=$connect->query("
 	SELECT
-	sectors.name as sectorname,
 	departments.name departmentname,
-	coalesce(department_budgets.fund_101, 'Unallocated') fund_101,
-	coalesce(department_budgets.fund_164, 'Unallocated') fund_164
+	coalesce(department_budgets.fund_101, 'Unallocated') dfund_101,
+	coalesce(department_budgets.fund_164, 'Unallocated') dfund_164
 	from departments
 	LEFT OUTER JOIN department_budgets
 	on departments.id=department_budgets.id
 	LEFT OUTER JOIN sectors
 	on departments.sector_id=sectors.id
-	");
+	LEFT OUTER JOIN sector_budgets
+	on sector_budgets.sector_id=sectors.id
+	where sectors.id = '".$ID."'");
 
 
 $result=array();
