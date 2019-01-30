@@ -99,7 +99,6 @@ class SignApp2State extends State<SignApp2> {
     String path = directory.path;
     int lastnum;
     print(path);
-    print('hehe'+list[0]['user_signature']);
     List<String> splitSignpath;
     if(list[0]['user_signature']==null){
       lastnum = 0;

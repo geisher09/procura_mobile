@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/BudgetAllocPage.dart';
 
 class BudgetAllocationScreen extends StatefulWidget {
   final String host;
@@ -12,8 +14,38 @@ class BudgetAllocationScreen extends StatefulWidget {
 }
 
 class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
-  Future<List> getData() async {
-    final response = await http.get("${widget.host}/getBudgetAlloc.php");
+  Future<List> getSectors() async {
+    final response = await http.get("${widget.host}/getSectors.php");
+    print(response.body);
+    return json.decode(response.body);
+  }
+
+  Future<List> getData1() async {
+    final response = await http.get("${widget.host}/getBudgetAlloc1.php");
+    print(response.body);
+    return json.decode(response.body);
+  }
+
+  Future<List> getData2() async {
+    final response = await http.get("${widget.host}/getBudgetAlloc2.php");
+    print(response.body);
+    return json.decode(response.body);
+  }
+
+  Future<List> getData3() async {
+    final response = await http.get("${widget.host}/getBudgetAlloc3.php");
+    print(response.body);
+    return json.decode(response.body);
+  }
+
+  Future<List> getData4() async {
+    final response = await http.get("${widget.host}/getBudgetAlloc4.php");
+    print(response.body);
+    return json.decode(response.body);
+  }
+
+  Future<List> getData5() async {
+    final response = await http.get("${widget.host}/getBudgetAlloc5.php");
     print(response.body);
     return json.decode(response.body);
   }
@@ -27,6 +59,7 @@ class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
               ? Colors.black
               : Colors.white, //change your color here
         ),
+        centerTitle: true,
         title: Text(
           "BUDGET ALLOCATION",
           style: new TextStyle(
@@ -34,116 +67,44 @@ class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
                   ? Colors.black
                   : Colors.white,
               fontSize: 15.0,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 2.0),
+              fontFamily: 'Lulo'),
         ),
         elevation: 0.0,
         backgroundColor: Colors.transparent,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Card(
-          child: FutureBuilder(
-            future: getData(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) print(snapshot.error);
-              return snapshot.hasData
-                  ? new BudgetAllocList(list: snapshot.data)
-                  : new Center(
-                      child: CircularProgressIndicator(),
-                    );
-            },
-          ),
-        ),
-      ),
-//      body: Container(
-//          padding: EdgeInsets.all(10.0),
-//          alignment: Alignment.topCenter,
-//          child: Card(
-//            child: Padding(
-//              padding: const EdgeInsets.all(8.0),
-//              child: Column(
-//                children: <Widget>[
-//                  Padding(
-//                    padding: const EdgeInsets.all(8.0),
-//                    child: Row(
-//                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                      children: <Widget>[
-//                        Text(
-//                          'SECTOR',
-//                          style: new TextStyle(
-//                              fontFamily: 'Montserrat',
-//                              fontSize: 14.0,
-//                              fontWeight: FontWeight.w600),
-//                        ),
-//                        Text(
-//                          'FUND 101',
-//                          style: new TextStyle(
-//                              fontFamily: 'Montserrat',
-//                              fontSize: 14.0,
-//                              fontWeight: FontWeight.w600),
-//                        ),
-//                        Text(
-//                          'FUND 164',
-//                          style: new TextStyle(
-//                              fontFamily: 'Montserrat',
-//                              fontSize: 14.0,
-//                              fontWeight: FontWeight.w600),
-//                        )
-//                      ],
-//                    ),
-//                  ),
-//                  FutureBuilder(
-//                    future: getData(),
-//                    builder: (context, snapshot) {
-//                      if (snapshot.hasError) print(snapshot.error);
-//                      return snapshot.hasData
-//                          ? new BudgetAllocList(list: snapshot.data)
-//                          : new Center(
-//                        child: CircularProgressIndicator(),
-//                      );
-//                    },
-//                  ),
-////                  Container(
-////                    color: Theme.of(context).brightness == Brightness.light
-////                        ? Colors.grey[300]
-////                        : Colors.grey[850],
-////                    child: Padding(
-////                      padding: const EdgeInsets.all(8.0),
-////                      child: Column(
-////                        children: <Widget>[
-////
-////                        ],
-////                      ),
-////                    ),
-////                  ),
-//                ],
-//              ),
-//            ),
-//          )),
+    body: FutureBuilder<List>(
+        future: getSectors(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return new SectorList(host: widget.host,list: snapshot.data);
+          } else{
+            return Center(
+                child: CircularProgressIndicator()
+            );}
+        }),
     );
   }
 }
 
-class BudgetAllocList extends StatelessWidget {
+class SectorList extends StatelessWidget {
+  final String host;
   final List list;
-  BudgetAllocList({this.list});
+  SectorList({this.host, this.list});
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
       itemCount: list == null ? 0 : list.length,
-      itemBuilder: (context, i) {
-        return Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: new Container(
-            height: 30.0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Expanded(flex: 2,child: Container(child: Text(list[i]['departmentname'], overflow: TextOverflow.ellipsis))),
-                Expanded(flex: 1,child: Container(child: Text(list[i]['fund_101'], overflow: TextOverflow.ellipsis))),
-                Expanded(flex: 1,child: Container(child: Text(list[i]['fund_164'], overflow: TextOverflow.ellipsis))),
-              ],
+      itemBuilder: (context, i){
+        return Container(
+          padding: EdgeInsets.all(10.0),
+          child: GestureDetector(
+            onTap: ()=>Navigator.of(context).push(
+              new MaterialPageRoute(builder: (BuildContext context)=> new BudgetAllocPage(host: host, title:list[i]['name'], id: i+1))
+            ),
+            child: Card(
+              child: new ListTile(
+                title: Text(list[i]['name']),
+              ),
             ),
           ),
         );
