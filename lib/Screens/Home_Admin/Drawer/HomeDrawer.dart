@@ -11,6 +11,7 @@ import 'package:procura/Screens/Home_Admin/Drawer/PurchaseRequestScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/SettingsScreen.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/flutterappbadger.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/loop.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/combobox.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/samplesign.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/sampscreen1.dart';
 import 'package:procura/main.dart';
@@ -122,7 +123,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        CupertinoPageRoute(builder: (context) => BudgetYearScreen()),
+                        CupertinoPageRoute(builder: (context) => BudgetYearScreen(host:widget.host)),
                       );
                     }
                 ),
@@ -159,7 +160,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => PurchaseRequestScreen()),
+                    CupertinoPageRoute(builder: (context) => MyAppbadger()),
                   );
                 }
             ),
