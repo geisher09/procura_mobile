@@ -15,7 +15,6 @@ class BudgetAllocPage extends StatelessWidget {
     Future<List> getBudgetAlloc() async {
       final response = await http
           .post("$host/getSectorDepartments.php", body: {"id": id.toString()});
-      print(response.body);
       return json.decode(response.body);
     }
 
@@ -36,7 +35,7 @@ class BudgetAllocPage extends StatelessWidget {
               fontWeight: FontWeight.bold,
               fontSize: 16.0,
               letterSpacing: 1.0,
-            fontFamily: 'Monserrat',
+            fontFamily: 'Montserrat',
             fontStyle: FontStyle.italic,
           ),
         ),

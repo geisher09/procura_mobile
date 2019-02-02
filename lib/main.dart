@@ -15,7 +15,7 @@ void main() async {
   int lastnum = int.parse(splitId[3]);
   lastnum -= 1;
   String newIp = splitId[0] + '.' + splitId[1] + '.' + splitId[2] + '.$lastnum';
-  String host = 'http://$newIp/Procura/mobile';
+  String host = 'http://192.168.1.22/Procura/mobile';
   print(host);
   Widget _defaultHome = new LoginScreen(host: host);
   if (Id != '0') {
