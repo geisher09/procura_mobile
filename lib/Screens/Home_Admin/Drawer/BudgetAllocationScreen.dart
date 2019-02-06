@@ -209,6 +209,7 @@ class SectorList extends StatelessWidget {
                               fontFamily: 'Montserrat',
                               fontSize: 11.0,
                               fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),

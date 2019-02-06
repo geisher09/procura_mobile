@@ -114,7 +114,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        CupertinoPageRoute(builder: (context) => BudgetProposalScreen()),
+                        CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
                       );
                     }
                 ),
@@ -147,7 +147,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
+                    CupertinoPageRoute(builder: (context) => PPMPScreen(host: widget.host, id: widget.list[0]['id'])),
                   );
                 }
             ),
@@ -188,7 +188,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               onTap: () {
                 Navigator.push(
                   context,
-                  CupertinoPageRoute(builder: (context) => SettingsScreen()),
+                  CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
                 );
               },
               trailing: IconButton(
