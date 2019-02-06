@@ -82,7 +82,7 @@ class _BudgetYearScreenState extends State<BudgetYearScreen> {
                   style: TextStyle(
                       fontSize: 20.0,
                       fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w400),
                 ),
               ),
               Center(
@@ -167,49 +167,56 @@ class BudgetYearDetails extends StatelessWidget {
             Container(
               height: 100.0,
               width: width / 1.1,
-              child: Card(
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(5.0)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text('FUND 101',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25.0,
-                            letterSpacing: 2.0)),
-                    Text(money(fund_101),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 27.0,
-                        )),
-                  ],
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      height: 80.0,
+                      width: 80.0,
+                      child: Theme.of(context).brightness == Brightness.light
+                          ? Image.asset("assets/images/fund101.png") : Image.asset("assets/images/2fund101.png")
+                  ),
+                  Text(money(fund_101),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0,
+                      )),
+                ],
               ),
             ),
             Container(
               height: 100.0,
               width: width / 1.1,
-              child: Card(
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(5.0)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text('FUND 164',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25.0,
-                            letterSpacing: 2.0)),
-                    Text(money(fund_164),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 27.0,
-                        )),
-                  ],
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      height: 80.0,
+                      width: 80.0,
+                      child: Theme.of(context).brightness == Brightness.light
+                          ? Image.asset("assets/images/fund164.png") : Image.asset("assets/images/2fund164.png")
+                  ),
+                  Text(money(fund_164),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 30.0,
+                      )),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: RaisedButton(
+                splashColor: Colors.blueGrey,
+                //shape: StadiumBorder(),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0,bottom:15.0),
+                  child: Text(
+                    'Proceed to Budget Allocation',
+                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.0),
+                  ),
                 ),
+                onPressed: () {},
               ),
             ),
           ],
@@ -220,55 +227,64 @@ class BudgetYearDetails extends StatelessWidget {
     Widget fundsLandscape(String fund_101, String fund_164) {
       return Padding(
         padding: const EdgeInsets.only(top: 15.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Column(
           children: <Widget>[
-            Container(
-              height: height / 4.0,
-              width: width / 3.0,
-              child: Card(
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(5.0)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text('FUND 101',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  width: width / 2.8,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          height: 80.0,
+                          width: 80.0,
+                          child: Theme.of(context).brightness == Brightness.light
+                              ? Image.asset("assets/images/fund101.png") : Image.asset("assets/images/2fund101.png")
+                      ),
+                      Text(money(fund_101),
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 25.0,
-                            letterSpacing: 2.0)),
-                    Text(money(fund_101),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 27.0,
-                        )),
-                  ],
+                            fontSize: 30.0,
+                          )),
+                    ],
+                  ),
                 ),
-              ),
+                Container(
+                  width: width / 2.8,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          height: 80.0,
+                          width: 80.0,
+                          child: Theme.of(context).brightness == Brightness.light
+                              ? Image.asset("assets/images/fund164.png") : Image.asset("assets/images/2fund164.png")
+                      ),
+                      Text(money(fund_164),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30.0,
+                          )),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Container(
-              height: height / 4.0,
-              width: width / 3.0,
-              child: Card(
-                shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(5.0)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text('FUND 164',
-                        style: TextStyle(
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25.0,
-                            letterSpacing: 2.0)),
-                    Text(money(fund_164),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 27.0,
-                        )),
-                  ],
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: RaisedButton(
+                splashColor: Colors.blueGrey,
+                //shape: StadiumBorder(),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 15.0,bottom:15.0),
+                  child: Text(
+                    'Proceed to Budget Allocation',
+                    style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.0),
+                  ),
                 ),
+                onPressed: () {},
               ),
             ),
           ],
@@ -281,35 +297,6 @@ class BudgetYearDetails extends StatelessWidget {
       child: Center(
         child: Column(
           children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? height / 8.0
-                  : height / 4.0,
-              width: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? width / 1.7
-                  : width / 3.0,
-              child: Card(
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Icon(
-                        FontAwesomeIcons.calendarAlt
-                      ),
-                      Text(list[0]['budget_year'],
-                          style: TextStyle(
-                              color: Theme.of(context).brightness == Brightness.light
-                                  ? Colors.black
-                                  : Colors.white,
-                              fontFamily: 'Lulo',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 35.0,
-                              letterSpacing: 2.0)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
 //            Container(
 //              height: MediaQuery.of(context).orientation == Orientation.portrait
 //                  ? height / 8.0
@@ -317,40 +304,15 @@ class BudgetYearDetails extends StatelessWidget {
 //              width: MediaQuery.of(context).orientation == Orientation.portrait
 //                  ? width / 1.7
 //                  : width / 3.0,
-//              decoration: BoxDecoration(
-//                gradient: new LinearGradient(
-//                    begin: Alignment.topLeft,
-//                    end: Alignment.bottomRight,
-//                    colors: [
-//                      Color(0xFF17ead9).withOpacity(0.7),
-//                      Color(0xFF6078ea).withOpacity(0.7)
-//                    ]),
-//                borderRadius: new BorderRadius.only(
-//                    topLeft: Radius.circular(20.0),
-//                    topRight: Radius.circular(20.0),
-//                    bottomLeft: Radius.circular(20.0),
-//                    bottomRight: Radius.circular(20.0)),
-//              ),
-//              child: Center(
-//                  child: Container(
-//                    height: MediaQuery.of(context).orientation == Orientation.portrait
-//                        ? height / 9.2
-//                        : height / 4.6,
-//                    width: MediaQuery.of(context).orientation == Orientation.portrait
-//                        ? width / 1.8
-//                        : width / 3.15,
-//                    decoration: BoxDecoration(
-//                      color: Theme.of(context).brightness == Brightness.light
-//                          ? Colors.white
-//                          : Colors.grey[850],
-//                      borderRadius: new BorderRadius.only(
-//                          topLeft: Radius.circular(15.0),
-//                          topRight: Radius.circular(15.0),
-//                          bottomLeft: Radius.circular(15.0),
-//                          bottomRight: Radius.circular(15.0)),
-//                    ),
-//                    child: Center(
-//                      child: Text(list[0]['budget_year'],
+//              child: Card(
+//                child: Center(
+//                  child: Row(
+//                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                    children: <Widget>[
+//                      Icon(
+//                        FontAwesomeIcons.calendarAlt
+//                      ),
+//                      Text(list[0]['budget_year'],
 //                          style: TextStyle(
 //                              color: Theme.of(context).brightness == Brightness.light
 //                                  ? Colors.black
@@ -359,12 +321,74 @@ class BudgetYearDetails extends StatelessWidget {
 //                              fontWeight: FontWeight.bold,
 //                              fontSize: 35.0,
 //                              letterSpacing: 2.0)),
-//                    ),
-//                  )
+//                    ],
+//                  ),
+//                ),
 //              ),
 //            ),
+            Container(
+              height: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? height / 8.0
+                  : height / 4.0,
+              width: MediaQuery.of(context).orientation == Orientation.portrait
+                  ? width / 1.7
+                  : width / 3.0,
+              decoration: BoxDecoration(
+                gradient: new LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color(0xFF17ead9).withOpacity(0.7),
+                      Color(0xFF6078ea).withOpacity(0.7)
+                    ]),
+                borderRadius: new BorderRadius.only(
+                    topLeft: Radius.circular(20.0),
+                    topRight: Radius.circular(20.0),
+                    bottomLeft: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0)),
+              ),
+              child: Center(
+                  child: Container(
+                    height: MediaQuery.of(context).orientation == Orientation.portrait
+                        ? height / 9.2
+                        : height / 4.6,
+                    width: MediaQuery.of(context).orientation == Orientation.portrait
+                        ? width / 1.8
+                        : width / 3.15,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.grey[50]
+                          : Colors.grey[850],
+                      borderRadius: new BorderRadius.only(
+                          topLeft: Radius.circular(15.0),
+                          topRight: Radius.circular(15.0),
+                          bottomLeft: Radius.circular(15.0),
+                          bottomRight: Radius.circular(15.0)),
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Icon(
+                              FontAwesomeIcons.calendarAlt
+                          ),
+                          Text(list[0]['budget_year'],
+                              style: TextStyle(
+                                  color: Theme.of(context).brightness == Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
+                                  fontFamily: 'Lulo',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 35.0,
+                                  letterSpacing: 2.0)),
+                        ],
+                      ),
+                    ),
+                  )
+              ),
+            ),
             Padding(
-              padding: EdgeInsets.all(0.0),
+              padding: EdgeInsets.only(top:20.0),
               child: MediaQuery.of(context).orientation == Orientation.portrait
                   ? fundsPortrait(list[0]['fund_101'], list[0]['fund_164'])
                   : fundsLandscape(list[0]['fund_101'], list[0]['fund_164']),

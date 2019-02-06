@@ -70,6 +70,92 @@ class DataTablesampState extends State<DataTablesamp> {
   }
 }
 
+class table extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+          padding: EdgeInsets.all(10.0),
+          alignment: Alignment.topCenter,
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Table(
+                      children: [
+                        TableRow(children: [
+                          TableCell(
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Text(
+                                  'NAME',
+                                  style: new TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'STATUS',
+                                  style: new TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  'YEAR',
+                                  style: new TextStyle(
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w600),
+                                )
+                              ],
+                            ),
+                          )
+                        ]),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.grey[300]
+                        : Colors.grey[850],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Table(
+                          children: [
+                            TableRow(children: [
+                              TableCell(
+                                child: Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceAround,
+                                  children: <Widget>[
+                                    Expanded(flex: 1,child: Container(child: Text('Sample aasdascascca', overflow: TextOverflow.ellipsis))),
+                                    Expanded(flex: 1,child: Container(child: Text('Sample sample', overflow: TextOverflow.ellipsis))),
+                                    Expanded(flex: 1,child: Container(child: Text('Sample sample', overflow: TextOverflow.ellipsis))),
+                                  ],
+                                ),
+                              )
+                            ])
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )),
+    );
+  }
+}
+
+
 class Name {
   String firstName;
   String lastName;
