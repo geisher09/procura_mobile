@@ -37,13 +37,24 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     if (userDetails[0]['user_type_id'] == '1') {
       if (index == 2) {
         _current = 'TAB: 3';
-      } else {
+      }else if (index == 1) {
+        _current = 'TAB: 2';
+      }else {
         _current = 'TAB: $index';
       }
       setState(() {
         _current;
       });
-    } else {
+    }else if(userDetails[0]['user_type_id'] == '2') {
+      if (index == 2) {
+        _current = 'TAB: 3';
+      }else {
+        _current = 'TAB: $index';
+      }
+      setState(() {
+        _current;
+      });
+    }else{
       setState(() {
         _current = 'TAB: $index';
       });
@@ -118,17 +129,21 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     } else if (_current == 'TAB: 1') {
       _page_title = 'For Approval';
       page_no = 1;
-      iconD = Icon(
-        CustomIcons.uniE86F,
-        color: Colors.blueGrey,
+      iconD = Image.asset(
+        'assets/icons/pLogo.png',
+        width: 150.0,
+        height: 150.0,
       );
+      onP = _showDialog;
     } else if (_current == 'TAB: 2') {
       _page_title = 'My Requests';
       page_no = 2;
-      iconD = Icon(
-        CustomIcons.uniE86F,
-        color: Colors.blueGrey,
+      iconD = Image.asset(
+        'assets/icons/pLogo.png',
+        width: 150.0,
+        height: 150.0,
       );
+      onP = _showDialog;
     } else if (_current == 'TAB: 3') {
       _page_title = 'Notifications';
       page_no = 3;
@@ -138,6 +153,57 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         height: 150.0,
       );
       onP = _showDialog;
+    }
+
+    HomeBottomAppBar HomeBAP(String usertype){
+      if(usertype == '1'){
+        return HomeBottomAppBar(
+            selectedColor: Colors.blueAccent,
+            notchedShape: CircularNotchedRectangle(),
+            onTabSelected: _selectedTab,
+            items: [
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.chart_bar, count: 0),
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.paper_plane_empty,
+                  count: 0),
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.bell, count: 5),
+            ]
+      );
+      }else if(usertype == '2'){
+        return HomeBottomAppBar(
+            selectedColor: Colors.blueAccent,
+            notchedShape: CircularNotchedRectangle(),
+            onTabSelected: _selectedTab,
+            items: [
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.chart_bar, count: 0),
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.ok, count: 0),
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.bell, count: 5),
+            ]
+        );
+      }else{
+        return HomeBottomAppBar(
+            selectedColor: Colors.blueAccent,
+            notchedShape: CircularNotchedRectangle(),
+            onTabSelected: _selectedTab,
+            items: [
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.chart_bar, count: 0),
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.ok, count: 0),
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.paper_plane_empty,
+                  count: 0),
+              HomeBottomAppBarItem(
+                  iconData: CustomIcons.bell, count: 5),
+            ]
+        );
+      }
+
     }
     return Scaffold(
         key: _scaffoldKey,
@@ -227,31 +293,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             future: getData(),
             builder: (context, snapshot) {
               if(snapshot.hasData){
-                return HomeBottomAppBar(
-                    selectedColor: Colors.blueAccent,
-                    notchedShape: CircularNotchedRectangle(),
-                    onTabSelected: _selectedTab,
-                    items: snapshot.data[0]['user_type_id'] == '1'
-                        ? [
-                      HomeBottomAppBarItem(
-                          iconData: CustomIcons.chart_bar, count: 0),
-                      HomeBottomAppBarItem(
-                          iconData: CustomIcons.paper_plane_empty,
-                          count: 0),
-                      HomeBottomAppBarItem(
-                          iconData: CustomIcons.bell, count: 5),
-                    ]
-                        : [
-                      HomeBottomAppBarItem(
-                          iconData: CustomIcons.chart_bar, count: 0),
-                      HomeBottomAppBarItem(
-                          iconData: CustomIcons.ok, count: 0),
-                      HomeBottomAppBarItem(
-                          iconData: CustomIcons.paper_plane_empty,
-                          count: 0),
-                      HomeBottomAppBarItem(
-                          iconData: CustomIcons.bell, count: 5),
-                    ]);
+                return HomeBAP(snapshot.data[0]['user_type_id']);
               }else
                 return new Center(
                   child: new CircularProgressIndicator(),

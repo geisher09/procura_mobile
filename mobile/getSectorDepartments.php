@@ -16,7 +16,7 @@ $queryResult=$connect->query("
 	on departments.sector_id=sectors.id
 	LEFT OUTER JOIN sector_budgets
 	on sector_budgets.sector_id=sectors.id
-	where sectors.id = '".$ID."'");
+	WHERE sectors.id = '".$ID."'");
 
 
 $result=array();

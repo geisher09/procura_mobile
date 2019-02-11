@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/BudgetAllocationScreen.dart';
 
 final formatCurrency = new NumberFormat("#,##0.00", "en_US");
 
@@ -125,7 +126,7 @@ class _BudgetYearScreenState extends State<BudgetYearScreen> {
                           print(snapshot.error);
                         }
                         if (snapshot.hasData) {
-                          return new BudgetYearDetails(list: snapshot.data);
+                          return new BudgetYearDetails(host: widget.host, list: snapshot.data);
                         } else {
                           return Center(
                               child: Container(
@@ -143,8 +144,9 @@ class _BudgetYearScreenState extends State<BudgetYearScreen> {
 }
 
 class BudgetYearDetails extends StatelessWidget {
+  final String host;
   final List list;
-  BudgetYearDetails({this.list});
+  BudgetYearDetails({this.host, this.list});
   @override
   String money(String fund) {
     if (fund == 'Unallocated') {
@@ -158,7 +160,7 @@ class BudgetYearDetails extends StatelessWidget {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    Widget fundsPortrait(String fund_101, String fund_164) {
+    Widget fundsPortrait(String fund_101, String fund_164, String id) {
       return Padding(
         padding: const EdgeInsets.only(top: 15.0),
         child: Column(
@@ -216,7 +218,8 @@ class BudgetYearDetails extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.0),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) => new BudgetAllocationScreen(host: host, funcId: '2', yearId: id))),
               ),
             ),
           ],
@@ -224,7 +227,7 @@ class BudgetYearDetails extends StatelessWidget {
       );
     }
 
-    Widget fundsLandscape(String fund_101, String fund_164) {
+    Widget fundsLandscape(String fund_101, String fund_164, String id) {
       return Padding(
         padding: const EdgeInsets.only(top: 15.0),
         child: Column(
@@ -284,14 +287,51 @@ class BudgetYearDetails extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15.0),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () => Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) => new BudgetAllocationScreen(host: host, funcId: '2', yearId: id))),
               ),
             ),
           ],
         ),
       );
     }
-
+    Widget active(String isactive){
+      if(isactive == '1'){
+        return Container(
+          height: 20.0,
+          width: 150.0,
+          decoration: BoxDecoration(
+            borderRadius: new BorderRadius.circular(15.0),
+            color: Colors.green,
+          ),
+          child: Center(
+            child: Text('Active year',
+              style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  color: Colors.white
+              ),
+            ),
+          ),
+        );
+      }else{
+        return Container(
+          height: 20.0,
+          width: 150.0,
+          decoration: BoxDecoration(
+            borderRadius: new BorderRadius.circular(15.0),
+            color: Colors.red,
+          ),
+          child: Center(
+            child: Text('This year is inactive',
+              style: TextStyle(
+                fontStyle: FontStyle.italic,
+                  color: Colors.white
+              ),
+            ),
+          ),
+        );
+      }
+    }
     return Padding(
       padding: const EdgeInsets.only(top: 30.0),
       child: Center(
@@ -388,10 +428,14 @@ class BudgetYearDetails extends StatelessWidget {
               ),
             ),
             Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: active(list[0]['is_active']),
+            ),
+            Padding(
               padding: EdgeInsets.only(top:20.0),
               child: MediaQuery.of(context).orientation == Orientation.portrait
-                  ? fundsPortrait(list[0]['fund_101'], list[0]['fund_164'])
-                  : fundsLandscape(list[0]['fund_101'], list[0]['fund_164']),
+                  ? fundsPortrait(list[0]['fund_101'], list[0]['fund_164'], list[0]['id'])
+                  : fundsLandscape(list[0]['fund_101'], list[0]['fund_164'], list[0]['id']),
             )
           ],
         ),

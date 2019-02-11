@@ -9,7 +9,8 @@ $queryResult=$connect->query("
 	id,
 	budget_year,
 	fund_101,
-	fund_164
+	fund_164,
+	is_active
 	from budget_years where id = '".$ID."'");
 
 

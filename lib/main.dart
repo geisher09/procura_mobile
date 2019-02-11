@@ -6,11 +6,10 @@ import 'Routes.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_ip/get_ip.dart';
-//final String host = "http://192.168.22.7/ProcuraMobile";
 void main() async {
   final prefs = await SharedPreferences.getInstance();
   final Id = prefs.getString('id') ?? '0';
-  String host = 'http://172.20.10.10/Procura/mobile';
+  String host = 'http://192.168.22.8/Procura/mobile';
   print(host);
   Widget _defaultHome = new LoginScreen(host: host);
   if (Id != '0') {
@@ -19,3 +18,24 @@ void main() async {
 
   launchMain(host: host, dh: _defaultHome);
 }
+
+//return new FutureBuilder<SharedPreferences>(
+//future: SharedPreferences.getInstance(),
+//builder:
+//(BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
+//switch (snapshot.connectionState) {
+//case ConnectionState.none:
+//case ConnectionState.waiting:
+//return new LoadingScreen();
+//default:
+//if (!snapshot.hasError) {
+//@ToDo("Return a welcome screen")
+//return snapshot.data.getBool("welcome") != null
+//? new MainView()
+//    : new LoadingScreen();
+//} else {
+//return new ErrorScreen(error: snapshot.error);
+//}
+//}
+//},
+//);
