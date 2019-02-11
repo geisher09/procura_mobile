@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:procura/Components/custom_icons.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/RequestScreen2.dart';
 
 class requestwidgets extends StatelessWidget {
@@ -131,27 +132,59 @@ class HomeRequests extends StatelessWidget {
     var w1 = MediaQuery.of(context).size.width;
     var w2 = MediaQuery.of(context).size.width / 1.25;
 
-    List<Widget> requests = new List.generate(
-        15,
-            (i) => new requestwidgets(
-          w1: w1,
-          text1: "me",
-          text2: "SUBJECT TEXT",
-          text3: "Leonardo Pajuyo",
-          date: "30/12/2018",
-          time: "3:55 PM",
-          conwidth: w2,
-        ));
-
+    TextEditingController searchController = TextEditingController();
     return Container(
       alignment: Alignment.topLeft,
-      child: new SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(),
-            child: Column(
-              children: requests,
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              decoration: new BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                border: new Border.all(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
+              child: new TextFormField(
+                controller: searchController,
+                style: TextStyle(
+                  fontSize: 13.0
+                ),
+                decoration: new InputDecoration(
+                  icon: Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0,4.0,0.0,0.0),
+                    child: Icon(
+                      CustomIcons.uniE86F,
+                      size: 15.0,
+                    ),
+                  ),
+                  border: InputBorder.none,
+                  hintText: "Search",
+                  hintStyle: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.w500),
+                  contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                ),
+              ),
+            )
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 15,
+              itemBuilder: (context, index){
+                return requestwidgets(
+                  w1: w1,
+                  text1: "me",
+                  text2: "SUBJECT TEXT",
+                  text3: "Leonardo Pajuyo",
+                  date: "30/12/2018",
+                  time: "3:55 PM",
+                  conwidth: w2,
+                );
+              }
             ),
           )
+        ],
       ),
     );
   }

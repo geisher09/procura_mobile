@@ -10,7 +10,9 @@ final formatCurrency = new NumberFormat("#,##0.00", "en_US");
 
 class BudgetAllocationScreen extends StatefulWidget {
   final String host;
-  const BudgetAllocationScreen({Key key, this.host}) : super(key: key);
+  final String funcId;
+  final String yearId;
+  const BudgetAllocationScreen({Key key, this.host, this.funcId, this.yearId}) : super(key: key);
 
   @override
   _BudgetAllocationScreenState createState() => _BudgetAllocationScreenState();
@@ -18,13 +20,15 @@ class BudgetAllocationScreen extends StatefulWidget {
 
 class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
   Future<List> getSectors() async {
-    final response = await http.get("${widget.host}/getSectors.php");
+    final response = await http
+        .get("${widget.host}/getSectors.php");
+    print(response.body);
     return json.decode(response.body);
   }
 
   Future<List> getBudgetAllocationDetails() async {
-    final response =
-        await http.get("${widget.host}/getBudgetAllocationDetails.php");
+    final response = await http
+        .post("${widget.host}/getBudgetAllocationDetails.php", body: {"pid": widget.funcId, "yid": widget.yearId});
     return json.decode(response.body);
   }
 

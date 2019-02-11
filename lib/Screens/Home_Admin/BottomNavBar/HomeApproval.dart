@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:procura/Components/custom_icons.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/ApprovalScreen2.dart';
 
 class approvalwidgets extends StatelessWidget {
@@ -128,27 +129,60 @@ class HomeApproval extends StatelessWidget {
     var w1 = MediaQuery.of(context).size.width;
     var w2 = MediaQuery.of(context).size.width / 1.25;
 
-    List<Widget> approvals = new List.generate(
-        15,
-        (i) => new approvalwidgets(
-              w1: w1,
-              text1: "Audrey Noelle Waje",
-              text2: "SUBJECT TITLE",
-              text3: "Laman na Docu",
-              date: "30/12/2018",
-              time: "3:55 PM",
-              conwidth: w2,
-            ));
-
+    TextEditingController searchController = TextEditingController();
     return Container(
       alignment: Alignment.topLeft,
-      child: new SingleChildScrollView(
-          child: ConstrainedBox(
-        constraints: BoxConstraints(),
-        child: Column(
-          children: approvals,
+      child: Column(
+      children: <Widget>[
+      Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            decoration: new BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              border: new Border.all(
+                color: Colors.grey,
+                width: 1.0,
+              ),
+            ),
+            child: new TextFormField(
+              controller: searchController,
+              style: TextStyle(
+                  fontSize: 13.0
+              ),
+              decoration: new InputDecoration(
+                icon: Padding(
+                  padding: const EdgeInsets.fromLTRB(10.0,4.0,0.0,0.0),
+                  child: Icon(
+                    CustomIcons.uniE86F,
+                    size: 15.0,
+                  ),
+                ),
+                border: InputBorder.none,
+                hintText: "Search",
+                hintStyle: const TextStyle(fontSize: 13.0, fontWeight: FontWeight.w500),
+                contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              ),
+            ),
+          )
+      ),
+      Expanded(
+        child: ListView.builder(
+            itemCount: 15,
+            itemBuilder: (context, index){
+              return approvalwidgets(
+                w1: w1,
+                text1: "Audrey Noelle Waje",
+                text2: "SUBJECT TITLE",
+                text3: "Laman na Docu",
+                date: "30/12/2018",
+                time: "3:55 PM",
+                conwidth: w2,
+              );
+            }
         ),
-      )),
+      )
+      ],
+      ),
     );
   }
 }

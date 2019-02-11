@@ -5,15 +5,17 @@ import 'package:procura/Components/custom_icons.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/BudgetAllocationScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/BudgetProposalScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/BudgetYearScreen.dart';
-import 'package:procura/Screens/Home_Admin/Drawer/PPMPScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/DeptPPMPScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/ProfileScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/PurchaseRequestScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/SectorPPMPScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/SettingsScreen.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/flutterappbadger.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/loop.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/combobox.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/samplesign.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/sampscreen1.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/search.dart';
 import 'package:procura/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
@@ -42,165 +44,433 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return json.decode(response.body);
   }
   @override
-  Widget build(BuildContext context) {
-    timeDilation = 1.0; // 1.0 means normal animation speed.
-    return Drawer(
-        child: new ListView(
-          children: <Widget>[
-            GestureDetector(
-              child: new UserAccountsDrawerHeader(
-                accountName: new Text(
-                  '${widget.list[0]['name']}',
-                  style: new TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? Colors.black
-                          : Colors.white),
+  Widget drawerIndicator(String type){
+    if(type == '1'){
+      return Drawer(
+          child: new ListView(
+            children: <Widget>[
+              GestureDetector(
+                child: new UserAccountsDrawerHeader(
+                  accountName: new Text(
+                    '${widget.list[0]['name']}',
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white),
+                  ),
+                  accountEmail: new Text(
+                    '${widget.list[0]['username']}',
+                    style: new TextStyle(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white),
+                  ),
+                  currentAccountPicture: CircleAvatar(
+                      backgroundImage: NetworkImage(widget.host+widget.list[0]['user_image'])
+                  ),
+                  decoration: new BoxDecoration(
+                    color: Colors.transparent,
+                  ),
                 ),
-                accountEmail: new Text(
-                  '${widget.list[0]['username']}',
-                  style: new TextStyle(
-                      color: Theme.of(context).brightness == Brightness.light
-                          ? Colors.black
-                          : Colors.white),
-                ),
-                currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(widget.host+widget.list[0]['user_image'])
-                ),
-                decoration: new BoxDecoration(
-                  color: Colors.transparent,
-                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
+                  );
+                },
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
-                );
-              },
-            ),
-            new ListTile(
-              title: new Text('Profile'),
-              leading: Icon(
-                CustomIcons.single_01,
-                size: 20.0,
-              ),
-              onTap: () {
-                Navigator.pop(context);
+              new ListTile(
+                title: new Text('Profile'),
+                leading: Icon(
+                  CustomIcons.single_01,
+                  size: 20.0,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
 //            Navigator.of(context, rootNavigator: true).push(
 //              new CupertinoPageRoute<bool>(
 //                fullscreenDialog: true,
 //                builder: (BuildContext context) => new ProfileScreen(host: host, list: list, pic: pic)),
 //              ),
 //            );
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
-                );
-              },
-            ),
-            new ExpansionTile(
-              title: new Text('Budgeting',
-              style: TextStyle(
-                fontSize: 14.0
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
+                  );
+                },
               ),
-              ),
-              leading: Icon(
-                CustomIcons.wallet_43,
-                size: 20.0,
-              ),
-              children: <Widget>[
-                new ListTile(
-                    title: new Text('Budget Proposals'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
-                      );
-                    }
+              new ExpansionTile(
+                title: new Text('Budgeting',
+                  style: TextStyle(
+                      fontSize: 14.0
+                  ),
                 ),
-                new ListTile(
-                    title: new Text('Budget Year'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(builder: (context) => BudgetYearScreen(host:widget.host)),
-                      );
-                    }
-                ),
-                new ListTile(
-                    title: new Text('Budget Allocation'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(builder: (context) => BudgetAllocationScreen(host: widget.host)),
-                      );
-                    }
-                ),
-              ],
-            ),
-            new ListTile(
-                title: new Text('PPMP'),
                 leading: Icon(
-                  CustomIcons.single_folded_content,
+                  CustomIcons.wallet_43,
+                  size: 20.0,
+                ),
+                children: <Widget>[
+                  new ListTile(
+                      title: new Text('Budget Proposals'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
+                        );
+                      }
+                  ),
+                ],
+              ),
+              new ListTile(
+                  title: new Text('PPMP'),
+                  leading: Icon(
+                    CustomIcons.single_folded_content,
+                    size: 20.0,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => DeptPPMPScreen(host: widget.host, id: widget.list[0]['id'])),
+                    );
+                  }
+              ),
+              new ListTile(
+                  title: new Text('Purchase Request'),
+                  leading: Icon(
+                    CustomIcons.bag_09,
+                    size: 20.0,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => PurchaseRequestScreen()),
+                    );
+                  }
+              ),
+              new ListTile(
+                  title: new Text('Logout'),
+                  leading: Icon(
+                    CustomIcons.uniE820,
+                    size: 20.0,
+                  ),
+                  onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
+                      () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove('id');
+                    prefs.remove('ifStop');
+                    Navigator.of(context).pushNamedAndRemoveUntil('/login',(Route<dynamic> route)=>false);
+                  }
+              ),
+              new Divider(),
+              new ListTile(
+                title: new Text('Settings'),
+                leading: Icon(
+                  CustomIcons.cog,
                   size: 20.0,
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => PPMPScreen(host: widget.host, id: widget.list[0]['id'])),
+                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
                   );
-                }
-            ),
-            new ListTile(
-                title: new Text('Purchase Request'),
+                },
+                trailing: IconButton(
+                  icon: Theme.of(context).brightness == Brightness.light
+                      ? Icon(FontAwesomeIcons.moon)
+                      : Icon(FontAwesomeIcons.solidMoon),
+                  onPressed: changeBrightness,
+                  iconSize: 20.0,
+                ),
+              ),
+            ],
+          ));
+    }else if(type == '3'){
+      return Drawer(
+          child: new ListView(
+            children: <Widget>[
+              GestureDetector(
+                child: new UserAccountsDrawerHeader(
+                  accountName: new Text(
+                    '${widget.list[0]['name']}',
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white),
+                  ),
+                  accountEmail: new Text(
+                    '${widget.list[0]['username']}',
+                    style: new TextStyle(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white),
+                  ),
+                  currentAccountPicture: CircleAvatar(
+                      backgroundImage: NetworkImage(widget.host+widget.list[0]['user_image'])
+                  ),
+                  decoration: new BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
+                  );
+                },
+              ),
+              new ListTile(
+                title: new Text('Profile'),
                 leading: Icon(
-                  CustomIcons.bag_09,
+                  CustomIcons.single_01,
+                  size: 20.0,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+//            Navigator.of(context, rootNavigator: true).push(
+//              new CupertinoPageRoute<bool>(
+//                fullscreenDialog: true,
+//                builder: (BuildContext context) => new ProfileScreen(host: host, list: list, pic: pic)),
+//              ),
+//            );
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
+                  );
+                },
+              ),
+              new ExpansionTile(
+                title: new Text('Budgeting',
+                  style: TextStyle(
+                      fontSize: 14.0
+                  ),
+                ),
+                leading: Icon(
+                  CustomIcons.wallet_43,
+                  size: 20.0,
+                ),
+                children: <Widget>[
+                  new ListTile(
+                      title: new Text('Budget Proposals'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
+                        );
+                      }
+                  ),
+                  new ListTile(
+                      title: new Text('Budget Allocation'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder: (context) => BudgetAllocationScreen(host: widget.host, funcId: '1', yearId: '1')),
+                        );
+                      }
+                  ),
+                ],
+              ),
+              new ListTile(
+                  title: new Text('PPMP'),
+                  leading: Icon(
+                    CustomIcons.single_folded_content,
+                    size: 20.0,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => SectorPPMPScreen(host: widget.host, id: widget.list[0]['id'])),
+                    );
+                  }
+              ),
+              new ListTile(
+                  title: new Text('Purchase Request'),
+                  leading: Icon(
+                    CustomIcons.bag_09,
+                    size: 20.0,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => MyAppbadger()),
+                    );
+                  }
+              ),
+              new ListTile(
+                  title: new Text('Logout'),
+                  leading: Icon(
+                    CustomIcons.uniE820,
+                    size: 20.0,
+                  ),
+                  onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
+                      () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove('id');
+                    prefs.remove('ifStop');
+                    Navigator.of(context).pushNamedAndRemoveUntil('/login',(Route<dynamic> route)=>false);
+                  }
+              ),
+              new Divider(),
+              new ListTile(
+                title: new Text('Settings'),
+                leading: Icon(
+                  CustomIcons.cog,
                   size: 20.0,
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => MyAppbadger()),
+                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
                   );
-                }
-            ),
-            new ListTile(
-                title: new Text('Logout'),
+                },
+                trailing: IconButton(
+                  icon: Theme.of(context).brightness == Brightness.light
+                      ? Icon(FontAwesomeIcons.moon)
+                      : Icon(FontAwesomeIcons.solidMoon),
+                  onPressed: changeBrightness,
+                  iconSize: 20.0,
+                ),
+              ),
+            ],
+          ));
+    }else if(type == '2'){
+      return Drawer(
+          child: new ListView(
+            children: <Widget>[
+              GestureDetector(
+                child: new UserAccountsDrawerHeader(
+                  accountName: new Text(
+                    '${widget.list[0]['name']}',
+                    style: new TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white),
+                  ),
+                  accountEmail: new Text(
+                    '${widget.list[0]['username']}',
+                    style: new TextStyle(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white),
+                  ),
+                  currentAccountPicture: CircleAvatar(
+                      backgroundImage: NetworkImage(widget.host+widget.list[0]['user_image'])
+                  ),
+                  decoration: new BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
+                  );
+                },
+              ),
+              new ListTile(
+                title: new Text('Profile'),
                 leading: Icon(
-                  CustomIcons.uniE820,
+                  CustomIcons.single_01,
                   size: 20.0,
                 ),
-                onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                    () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('id');
-                  prefs.remove('ifStop');
-                  Navigator.of(context).pushNamedAndRemoveUntil('/login',(Route<dynamic> route)=>false);
-                }
-            ),
-            new Divider(),
-            new ListTile(
-              title: new Text('Settings'),
-              leading: Icon(
-                CustomIcons.cog,
-                size: 20.0,
+                onTap: () {
+                  Navigator.pop(context);
+//            Navigator.of(context, rootNavigator: true).push(
+//              new CupertinoPageRoute<bool>(
+//                fullscreenDialog: true,
+//                builder: (BuildContext context) => new ProfileScreen(host: host, list: list, pic: pic)),
+//              ),
+//            );
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => ProfileScreen(host: widget.host, list: widget.list, pic: widget.pic)),
+                  );
+                },
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
-                );
-              },
-              trailing: IconButton(
-                icon: Theme.of(context).brightness == Brightness.light
-                    ? Icon(FontAwesomeIcons.moon)
-                    : Icon(FontAwesomeIcons.solidMoon),
-                onPressed: changeBrightness,
-                iconSize: 20.0,
+              new ExpansionTile(
+                title: new Text('Budgeting',
+                  style: TextStyle(
+                      fontSize: 14.0
+                  ),
+                ),
+                leading: Icon(
+                  CustomIcons.wallet_43,
+                  size: 20.0,
+                ),
+                children: <Widget>[
+                  new ListTile(
+                      title: new Text('Budget Proposals'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
+                        );
+                      }
+                  ),
+                  new ListTile(
+                      title: new Text('Budget Year'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder: (context) => BudgetYearScreen(host:widget.host)),
+                        );
+                      }
+                  ),
+                  new ListTile(
+                      title: new Text('Budget Allocation'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          CupertinoPageRoute(builder: (context) => BudgetAllocationScreen(host: widget.host, funcId: '1', yearId: '1')),
+                        );
+                      }
+                  ),
+                ],
               ),
-            ),
-          ],
-        ));
+              new ListTile(
+                  title: new Text('Logout'),
+                  leading: Icon(
+                    CustomIcons.uniE820,
+                    size: 20.0,
+                  ),
+                  onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
+                      () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.remove('id');
+                    prefs.remove('ifStop');
+                    Navigator.of(context).pushNamedAndRemoveUntil('/login',(Route<dynamic> route)=>false);
+                  }
+              ),
+              new Divider(),
+              new ListTile(
+                title: new Text('Settings'),
+                leading: Icon(
+                  CustomIcons.cog,
+                  size: 20.0,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
+                  );
+                },
+                trailing: IconButton(
+                  icon: Theme.of(context).brightness == Brightness.light
+                      ? Icon(FontAwesomeIcons.moon)
+                      : Icon(FontAwesomeIcons.solidMoon),
+                  onPressed: changeBrightness,
+                  iconSize: 20.0,
+                ),
+              ),
+            ],
+          ));
+    }
+  }
+  Widget build(BuildContext context) {
+    timeDilation = 1.0; // 1.0 means normal animation speed.
+    return drawerIndicator(widget.list[0]['user_type_id']);
   }
 
   void changeBrightness() {
