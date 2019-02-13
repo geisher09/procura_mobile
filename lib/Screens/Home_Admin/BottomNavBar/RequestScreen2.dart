@@ -1,7 +1,5 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dio/dio.dart';
 import 'package:open_file/open_file.dart';
@@ -9,11 +7,69 @@ import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 import 'package:procura/Components/custom_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RequestScreen2 extends StatelessWidget {
-  final text1, text2, text3, date, time;
-  RequestScreen2(this.text1, this.text2, this.text3, this.date, this.time);
+final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
-  Dio dio = Dio();
+class RequestScreen2 extends StatelessWidget {
+  final String host;
+  final String title;
+  final String requestType;
+  final String image;
+  final String approver;
+  final String date;
+  final String status;
+  final String remarks;
+  RequestScreen2(
+      {this.host,
+      this.title,
+      this.requestType,
+      this.image,
+      this.approver,
+      this.date,
+      this.status,
+      this.remarks});
+  String datef(String date) {
+    return formatter.format(DateTime.parse(date));
+  }
+
+  Widget stats() {
+    if (status == null) {
+      return Text(
+        'PENDING',
+        style: new TextStyle(
+            fontSize: 14.0,
+            fontFamily: 'Montserrat',
+            color: Colors.yellow[800],
+            fontWeight: FontWeight.bold),
+      );
+    } else if (status == '1') {
+      return Text(
+        'APPROVED',
+        style: new TextStyle(
+            fontSize: 14.0,
+            fontFamily: 'Montserrat',
+            color: Colors.green[700],
+            fontWeight: FontWeight.bold),
+      );
+    } else {
+      return Text(
+        'REJECTED',
+        style: new TextStyle(
+            fontSize: 14.0,
+            fontFamily: 'Montserrat',
+            color: Colors.red[700],
+            fontWeight: FontWeight.bold),
+      );
+    }
+  }
+
+  String remarksText(String notes){
+    if(notes == null){
+      return 'No remarks';
+    }else{
+      return notes;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var conwidth = MediaQuery.of(context).size.width / 1.25;
@@ -29,29 +85,46 @@ class RequestScreen2 extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
-              child: Text(
-                text2,
-                style: new TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.5),
+              child: Container(
+                width:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? MediaQuery.of(context).size.width / 1.8
+                        : MediaQuery.of(context).size.width / 1.35,
+                child: Text(
+                  title,
+                  style: new TextStyle(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5),
+                  overflow: TextOverflow.fade,
+                ),
               ),
             ),
             Container(
-              height: 15.0,
-              width: 30.0,
-              color: Colors.grey[500],
+              height: 30.0,
+              width: 60.0,
+              decoration: BoxDecoration(
+                borderRadius: new BorderRadius.circular(8.0),
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.grey[850]
+                    : Colors.grey[50],
+              ),
               child: Center(
-                child: Text(
-                  'PR',
-                  style: new TextStyle(
-                      color: Colors.black,
-                      fontSize: 10.0,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: 'Montserrat'),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    requestType,
+                    style: new TextStyle(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.grey[50]
+                            : Colors.grey[850],
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Lulo'),
+                  ),
                 ),
               ),
             )
@@ -75,7 +148,7 @@ class RequestScreen2 extends StatelessWidget {
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
-                          image: new AssetImage("assets/images/user1.png"),
+                          image: new NetworkImage(host + image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -91,7 +164,7 @@ class RequestScreen2 extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0, bottom: 5.0),
                         child: Text(
-                          text1,
+                          "me",
                           style: new TextStyle(
                               fontSize: 13.5,
                               fontFamily: 'Montserrat',
@@ -101,7 +174,7 @@ class RequestScreen2 extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0, bottom: 5.0),
                         child: Text(
-                          'to '+text3,
+                          'to ' + approver,
                           style: new TextStyle(
                               fontSize: 13.0,
                               fontFamily: 'Montserrat',
@@ -111,49 +184,32 @@ class RequestScreen2 extends StatelessWidget {
                       Padding(
                           padding: const EdgeInsets.only(left: 12.0),
                           child: Text(
-                            date + ', ' + time,
+                            datef(date),
                             style: new TextStyle(
                                 fontSize: 11.0, fontFamily: 'Montserrat-Thin'),
                           )),
                     ],
                   ),
-
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 50.0),
-                child: Container(
-                  height: 30.0,
-                  width: noteswidth,
-                  //color: Colors.grey,
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Status: ',
-                        style: new TextStyle(
-                            fontSize: 14.0, fontFamily: 'Montserrat'),
-                      ),
-                      Text(
-                        'ON-HOLD/',
-                        style: new TextStyle(
-                            fontSize: 14.0, fontFamily: 'Montserrat',color: Colors.deepOrange, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'APPROVED/',
-                        style: new TextStyle(
-                            fontSize: 14.0, fontFamily: 'Montserrat',color: Colors.green[700], fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'REJECTED',
-                        style: new TextStyle(
-                            fontSize: 14.0, fontFamily: 'Montserrat',color: Colors.red, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                )
-              ),
+                  padding: const EdgeInsets.only(top: 50.0),
+                  child: Container(
+                      height: 30.0,
+                      width: noteswidth,
+                      //color: Colors.grey,
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            'Status: ',
+                            style: new TextStyle(
+                                fontSize: 15.0, fontFamily: 'Montserrat',letterSpacing: 1.0),
+                          ),
+                          stats(),
+                        ],
+                      ))),
               Padding(
-                padding: const EdgeInsets.only(top:10.0),
+                padding: const EdgeInsets.only(top: 10.0),
                 child: GestureDetector(
                   onTap: () => PdfViewer.loadAsset("assets/files/finals.pdf"),
                   child: Container(
@@ -188,26 +244,29 @@ class RequestScreen2 extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Container(
                   width: noteswidth,
-                  height: MediaQuery.of(context).orientation == Orientation.portrait ?
-                  60 : 30,
+//                  height:
+//                      MediaQuery.of(context).orientation == Orientation.portrait
+//                          ? 60
+//                          : 30,
                   child: RichText(
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 4,
+                    maxLines: 20,
                     text: new TextSpan(
                       style: new TextStyle(
-                        fontSize: 12.5,
+                        fontSize: 13.5,
                         //fontFamily: 'Montserrat',
-                        color: Theme.of(context).brightness == Brightness.light? Colors.black:Colors.white,
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                            text: 'NOTES:'+' ',
-                            style: new TextStyle(fontWeight: FontWeight.w700)),
+                            text: 'REMARKS:' + ' ',
+                            style: new TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1.0)),
                         TextSpan(
                           text:
-                          "Sample text Sample text Sample text Sample text Sample text Sample text Sample text"
-                              " Sample text Sample text Limit to 120 chars",
-                          style: new TextStyle(fontWeight: FontWeight.w400),
+                              remarksText(remarks),
+                          style: new TextStyle(fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
                         )
                       ],
                     ),

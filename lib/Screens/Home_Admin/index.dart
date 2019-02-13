@@ -276,7 +276,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
                   } else if (page_no == 1) {
                     return page_approval(list: snapshot.data);
                   } else if (page_no == 2) {
-                    return page_requests(list: snapshot.data);
+                    return page_requests(host: host, list: snapshot.data);
                   } else if (page_no == 3) {
                     return page_notifs(list: snapshot.data);
                   }
@@ -323,12 +323,13 @@ class page_approval extends StatelessWidget {
 }
 
 class page_requests extends StatelessWidget {
+  final String host;
   final List list;
-  page_requests({this.list});
+  page_requests({this.host, this.list});
 
   @override
   Widget build(BuildContext context) {
-    return new HomeRequests();
+    return new HomeRequests(host: host, list: list);
   }
 }
 

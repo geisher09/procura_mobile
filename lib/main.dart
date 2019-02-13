@@ -9,7 +9,7 @@ import 'package:get_ip/get_ip.dart';
 void main() async {
   final prefs = await SharedPreferences.getInstance();
   final Id = prefs.getString('id') ?? '0';
-  String host = 'http://192.168.22.8/Procura/mobile';
+  String host = 'http://192.168.22.7/Procura/mobile';
   print(host);
   Widget _defaultHome = new LoginScreen(host: host);
   if (Id != '0') {

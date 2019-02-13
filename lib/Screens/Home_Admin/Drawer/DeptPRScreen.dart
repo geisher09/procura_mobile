@@ -5,17 +5,17 @@ import 'package:http/http.dart' as http;
 import 'package:procura/Components/custom_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/DataTable.dart';
-import 'package:procura/Screens/Home_Admin/Drawer/PPMPDetailsPage.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PRDetailsPage.dart';
 
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
-class DeptPPMPScreen extends StatelessWidget {
-  DeptPPMPScreen({this.host, this.id});
+class DeptPRScreen extends StatelessWidget {
+  DeptPRScreen({this.host, this.id});
   final String host;
   final String id;
-  Future<List> getPPMP(String page) async {
+  Future<List> getPR(String page) async {
     final response = await http
-        .post("$host/getPPMP_Dept.php", body: {"pid": page, "uid": id});
+        .post("$host/getPurchaseRequest_Dept.php", body: {"pid": page, "uid": id});
     //print(response.body);
     return json.decode(response.body);
   }
@@ -26,49 +26,49 @@ class DeptPPMPScreen extends StatelessWidget {
       return <Widget>[
         Tab(
             child: Text(
-          'ALL',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-        )),
+              'ALL',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
         Tab(
             child: Text(
-          'APPROVED',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-        )),
+              'APPROVED',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
         Tab(
             child: Text(
-          'REJECTED',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-          overflow: TextOverflow.ellipsis,
-        )),
+              'REJECTED',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            )),
         Tab(
             child: Text(
-          'PENDING',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-        )),
+              'PENDING',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
       ];
     }
 
@@ -86,7 +86,7 @@ class DeptPPMPScreen extends StatelessWidget {
             tabs: _buildTabs(),
           ),
           title: Text(
-            "My PPMP",
+            "My Purchase Request",
             style: new TextStyle(
                 color: Theme.of(context).brightness == Brightness.light
                     ? Colors.black
@@ -100,7 +100,7 @@ class DeptPPMPScreen extends StatelessWidget {
         body: TabBarView(
           children: <Widget>[
             FutureBuilder<List>(
-                future: getPPMP('1'),
+                future: getPR('1'),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print(snapshot.error);
@@ -109,14 +109,14 @@ class DeptPPMPScreen extends StatelessWidget {
                     if (snapshot.data.length == 0) {
                       return Center(child: Text('No Data Available'));
                     } else {
-                      return new PPMP(host: host, page: 1, list: snapshot.data);
+                      return new PR(host: host, page: 1, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
                 }),
             FutureBuilder<List>(
-                future: getPPMP('2'),
+                future: getPR('2'),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print(snapshot.error);
@@ -125,14 +125,14 @@ class DeptPPMPScreen extends StatelessWidget {
                     if (snapshot.data.length == 0) {
                       return Center(child: Text('No Data Available'));
                     } else {
-                      return new PPMP(host: host, page: 2, list: snapshot.data);
+                      return new PR(host: host, page: 2, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
                 }),
             FutureBuilder<List>(
-                future: getPPMP('3'),
+                future: getPR('3'),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print(snapshot.error);
@@ -141,14 +141,14 @@ class DeptPPMPScreen extends StatelessWidget {
                     if (snapshot.data.length == 0) {
                       return Center(child: Text('No Data Available'));
                     } else {
-                      return new PPMP(host: host, page: 3, list: snapshot.data);
+                      return new PR(host: host, page: 3, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
                 }),
             FutureBuilder<List>(
-                future: getPPMP('4'),
+                future: getPR('4'),
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     print(snapshot.error);
@@ -157,7 +157,7 @@ class DeptPPMPScreen extends StatelessWidget {
                     if (snapshot.data.length == 0) {
                       return Center(child: Text('No Data Available'));
                     } else {
-                      return new PPMP(host: host, page: 4, list: snapshot.data);
+                      return new PR(host: host, page: 4, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -170,11 +170,11 @@ class DeptPPMPScreen extends StatelessWidget {
   }
 }
 
-class PPMP extends StatelessWidget {
+class PR extends StatelessWidget {
   final String host;
-  final List list;
   final int page;
-  PPMP({this.host, this.page, this.list});
+  final List list;
+  PR({this.host, this.page, this.list});
   @override
   String date(String date) {
     return formatter.format(DateTime.parse(date));
@@ -198,7 +198,7 @@ class PPMP extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.0),
                 splashColor: Colors.grey[500],
                 onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext context) => new PPMPDetailsPage(
+                    builder: (BuildContext context) => new PRDetailsPage(
                         usertype: 'dept', title: title, host: host, id: id))),
                 child: Container(
                   height: 30.0,
@@ -250,7 +250,7 @@ class PPMP extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.0),
           splashColor: Colors.grey[500],
           onTap: () => Navigator.of(context).push(new MaterialPageRoute(
-              builder: (BuildContext context) => new PPMPDetailsPage(
+              builder: (BuildContext context) => new PRDetailsPage(
                   usertype: 'dept', title: title, host: host, id: id))),
           child: Container(
             height: 30.0,
@@ -288,21 +288,21 @@ class PPMP extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 10.0),
                     child: Text(
-                      list[i]['title'],
+                      list[i]['pr_number'],
                       style: new TextStyle(
                           fontSize: 16.0, fontFamily: 'Montserrat'),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 5.0,bottom: 5.0),
+                    padding: const EdgeInsets.only(top: 5.0,bottom: 3.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'Approver: ',
                           style: new TextStyle(
-                            fontStyle: FontStyle.italic,
+                              fontStyle: FontStyle.italic,
                               fontWeight: FontWeight.w300,
                               fontFamily: 'Montserrat',
                               fontSize: 13.5),
@@ -310,6 +310,31 @@ class PPMP extends StatelessWidget {
                         ),
                         Text(
                           list[i]['approver'],
+                          style: new TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontFamily: 'Montserrat',
+                              fontSize: 13.5),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Purpose: ',
+                          style: new TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.w300,
+                              fontFamily: 'Montserrat',
+                              fontSize: 13.5),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          list[i]['purpose'],
                           style: new TextStyle(
                               fontWeight: FontWeight.w500,
                               fontFamily: 'Montserrat',
@@ -358,7 +383,7 @@ class PPMP extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 15.0),
-                    child: options(list[i]['title'], list[i]['id'], page),
+                    child: options(list[i]['pr_number'], list[i]['prId'], page),
                   ),
                 ],
               ),
