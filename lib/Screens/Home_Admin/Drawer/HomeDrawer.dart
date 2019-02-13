@@ -6,6 +6,7 @@ import 'package:procura/Screens/Home_Admin/Drawer/BudgetAllocationScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/BudgetProposalScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/BudgetYearScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/DeptPPMPScreen.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/DeptPRScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/ProfileScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/PurchaseRequestScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/SectorPPMPScreen.dart';
@@ -116,7 +117,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
+                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(bp: 'depthead', host: widget.host, id: widget.list[0]['id'])),
                         );
                       }
                   ),
@@ -144,7 +145,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      CupertinoPageRoute(builder: (context) => PurchaseRequestScreen()),
+                      CupertinoPageRoute(builder: (context) => DeptPRScreen(host: widget.host, id: widget.list[0]['id'])),
                     );
                   }
               ),
@@ -256,7 +257,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
+                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(bp: 'sectorhead', host: widget.host, id: widget.list[0]['id'])),
                         );
                       }
                   ),
