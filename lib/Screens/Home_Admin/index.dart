@@ -1,4 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeApproval_BO.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeBottomAppBar.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/HomeDrawer.dart';
 import 'package:http/http.dart' as http;
@@ -11,6 +14,13 @@ import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeDashboard2.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeApproval.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeRequests.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeNotifs.dart';
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:async';
+import 'package:flutter/cupertino.dart';
+
+var flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+Timer timer;
 
 class Home_AdminScreen extends StatefulWidget {
   final String host;
@@ -31,30 +41,67 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     return json.decode(response.body);
   }
 
+  Future<List> getpushNotifs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final Id = prefs.getString('id') ?? '0';
+    final response = await http
+        .post("${host}/pushNotifs.php", body: {"id": Id.replaceAll("\"", "")});
+    return json.decode(response.body);
+  }
+
+  void pushnotif() async {
+    List notifDetails = await getpushNotifs();
+    if (notifDetails.length > 0) {
+      await _showNotification(notifDetails[0]['data']);
+    }
+  }
+
+  @override
+  initState() {
+    super.initState();
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidRecieveLocalNotification);
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) => pushnotif());
+  }
+
+
+//  @override
+//  void dispose() {
+//    timer?.cancel();
+//    super.dispose();
+//  }
+
   String _current = 'TAB: 0';
   void _selectedTab(int index) async {
     List userDetails = await getData();
     if (userDetails[0]['user_type_id'] == '1') {
       if (index == 2) {
         _current = 'TAB: 3';
-      }else if (index == 1) {
+      } else if (index == 1) {
         _current = 'TAB: 2';
-      }else {
+      } else {
         _current = 'TAB: $index';
       }
       setState(() {
         _current;
       });
-    }else if(userDetails[0]['user_type_id'] == '2') {
+    } else if (userDetails[0]['user_type_id'] == '2') {
       if (index == 2) {
         _current = 'TAB: 3';
-      }else {
+      } else {
         _current = 'TAB: $index';
       }
       setState(() {
         _current;
       });
-    }else{
+    } else {
       setState(() {
         _current = 'TAB: $index';
       });
@@ -64,6 +111,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
+    //pushnotif();
     void _showDialog() {
       showDialog(
         context: context,
@@ -154,57 +202,43 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       );
       onP = _showDialog;
     }
-
-    HomeBottomAppBar HomeBAP(String usertype){
-      if(usertype == '1'){
+    HomeBottomAppBar HomeBAP(String usertype) {
+      if (usertype == '1') {
         return HomeBottomAppBar(
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
             items: [
+              HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
               HomeBottomAppBarItem(
-                  iconData: CustomIcons.chart_bar, count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.paper_plane_empty,
-                  count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.bell, count: 5),
-            ]
-      );
-      }else if(usertype == '2'){
+                  iconData: CustomIcons.paper_plane_empty, count: 0),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+            ]);
+      } else if (usertype == '2') {
         return HomeBottomAppBar(
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
             items: [
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.chart_bar, count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.ok, count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.bell, count: 5),
-            ]
-        );
-      }else{
+              HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
+              HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+            ]);
+      } else {
         return HomeBottomAppBar(
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
             items: [
+              HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
+              HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
               HomeBottomAppBarItem(
-                  iconData: CustomIcons.chart_bar, count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.ok, count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.paper_plane_empty,
-                  count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.bell, count: 5),
-            ]
-        );
+                  iconData: CustomIcons.paper_plane_empty, count: 0),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+            ]);
       }
-
     }
+
     return Scaffold(
         key: _scaffoldKey,
         drawer: new FutureBuilder<List>(
@@ -215,13 +249,14 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
                     host: host,
                     list: snapshot.data,
                     pic: snapshot.data[0]['user_image']);
-              } else{
+              } else {
                 return Center(
                   child: new Container(
                     width: 10.0,
                     height: 10.0,
                   ),
-                );}
+                );
+              }
             }),
         appBar: new AppBar(
           centerTitle: true,
@@ -274,7 +309,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
                   if (page_no == 0) {
                     return page_dashboard(list: snapshot.data);
                   } else if (page_no == 1) {
-                    return page_approval(list: snapshot.data);
+                    return page_approval(host: host, list: snapshot.data);
                   } else if (page_no == 2) {
                     return page_requests(host: host, list: snapshot.data);
                   } else if (page_no == 3) {
@@ -292,13 +327,73 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         bottomNavigationBar: new FutureBuilder<List>(
             future: getData(),
             builder: (context, snapshot) {
-              if(snapshot.hasData){
+              if (snapshot.hasData) {
                 return HomeBAP(snapshot.data[0]['user_type_id']);
-              }else
+              } else
                 return new Center(
                   child: new CircularProgressIndicator(),
                 );
             }));
+  }
+
+  Future _showNotification(String data) async {
+    var length = data.length;
+    length -= 2;
+    String text = data.substring(12,length);
+    print(text);
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, 'Trial notif!', text, platformChannelSpecifics,
+        payload: 'trial name');
+//    await flutterLocalNotificationsPlugin.schedule(
+//        0,
+//        'scheduled title',
+//        'scheduled body',
+//        scheduledNotificationDateTime,
+//        platformChannelSpecifics);
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+
+    await Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => new SecondScreen(payload)),
+    );
+  }
+
+  Future onDidRecieveLocalNotification(
+      int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => new CupertinoAlertDialog(
+            title: new Text(title),
+            content: new Text(body),
+            actions: [
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: new Text('Ok'),
+                onPressed: () async {
+                  Navigator.of(context, rootNavigator: true).pop();
+                  await Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                      builder: (context) => new SecondScreen(payload),
+                    ),
+                  );
+                },
+              )
+            ],
+          ),
+    );
   }
 }
 
@@ -313,12 +408,17 @@ class page_dashboard extends StatelessWidget {
 }
 
 class page_approval extends StatelessWidget {
+  final String host;
   final List list;
-  page_approval({this.list});
+  page_approval({this.host, this.list});
 
   @override
   Widget build(BuildContext context) {
-    return new HomeApproval();
+    if(list[0]['user_type_id'] == '2'){
+      return new HomeApproval_BO(host: host, list: list);
+    }else if(list[0]['user_type_id'] == '3'){
+      return new HomeApproval(host: host, list: list);
+    }
   }
 }
 
@@ -340,5 +440,41 @@ class page_notifs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new HomeNotifs();
+  }
+}
+
+class SecondScreen extends StatefulWidget {
+  final String payload;
+  SecondScreen(this.payload);
+  @override
+  State<StatefulWidget> createState() => new SecondScreenState();
+}
+
+class SecondScreenState extends State<SecondScreen> {
+  String _payload;
+  @override
+  void initState() {
+    super.initState();
+    _payload = widget.payload;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text(
+          "Second Screenaaaaaaaaaaa: " + _payload,
+          style: TextStyle(fontSize: 14.0),
+        ),
+      ),
+      body: new Center(
+        child: new RaisedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: new Text('Go back!'),
+        ),
+      ),
+    );
   }
 }

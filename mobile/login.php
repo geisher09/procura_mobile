@@ -10,7 +10,7 @@ $password = $_POST["password"];
 
 $user_rec = 0;
 
-$user = $connect->query("SELECT * FROM users WHERE username = '".$username."' ");
+$user = $connect->query("SELECT * FROM users WHERE username = '".$username."' AND user_type_id != '4' ");
 
 if ($user) {
 	$row = mysqli_fetch_assoc($user);

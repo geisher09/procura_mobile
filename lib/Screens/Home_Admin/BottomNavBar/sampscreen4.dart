@@ -47,7 +47,11 @@ class _sampscreen4State extends State<sampscreen4> {
       _externalDocumentsDirectory = getExternalStorageDirectory();
     });
   }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +69,7 @@ class _sampscreen4State extends State<sampscreen4> {
                   child: RaisedButton(
                     child: const Text('URL Launcher'),
                     onPressed: (){
-                      launch('http://192.168.22.8/Procura/mobile/sampleurl.php');
+                      launch('http://192.168.22.9/Procura/storage/app/proposal_files/mZBWA32Eb7UyNw2IB47HLQo5h9kehQpNI3Tk8Udr.docx');
                     },
                   ),
                 ),
