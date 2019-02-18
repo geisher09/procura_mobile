@@ -12,7 +12,8 @@ class BudgetAllocationScreen extends StatefulWidget {
   final String host;
   final String funcId;
   final String yearId;
-  const BudgetAllocationScreen({Key key, this.host, this.funcId, this.yearId}) : super(key: key);
+  const BudgetAllocationScreen({Key key, this.host, this.funcId, this.yearId})
+      : super(key: key);
 
   @override
   _BudgetAllocationScreenState createState() => _BudgetAllocationScreenState();
@@ -20,20 +21,22 @@ class BudgetAllocationScreen extends StatefulWidget {
 
 class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
   Future<List> getSectors() async {
-    final response = await http
-        .get("${widget.host}/getSectors.php");
-    print(response.body);
+    final response = await http.post("${widget.host}/getSectors.php",
+        body: {"pid": widget.funcId, "yid": widget.yearId});
+    //print(response.body);
     return json.decode(response.body);
   }
 
   Future<List> getBudgetAllocationDetails() async {
-    final response = await http
-        .post("${widget.host}/getBudgetAllocationDetails.php", body: {"pid": widget.funcId, "yid": widget.yearId});
+    final response = await http.post(
+        "${widget.host}/getBudgetAllocationDetails.php",
+        body: {"pid": widget.funcId, "yid": widget.yearId});
     return json.decode(response.body);
   }
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -59,6 +62,25 @@ class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: widget.funcId == '1' ? Container(
+                  height: 35.0,
+                  width: width/1.1,
+                  decoration: BoxDecoration(
+                    borderRadius: new BorderRadius.circular(15.0),
+                    color: Colors.green,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Showing Current Budget Active Year',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontStyle: FontStyle.italic, color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ) : Container(),
+              ),
               Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
                   child: Container(
@@ -129,8 +151,8 @@ class SectorList extends StatelessWidget {
     }
   }
 
-  Widget sectorid(int index) {
-    if (index == 0) {
+  Widget sectorid(String index) {
+    if (index == '1') {
       return SizedBox(
         height: 15.0,
         width: 15.0,
@@ -138,7 +160,7 @@ class SectorList extends StatelessWidget {
           CustomIcons.uniE801,
         ),
       );
-    } else if (index == 1) {
+    } else if (index == '2') {
       return SizedBox(
         height: 15.0,
         width: 15.0,
@@ -146,7 +168,7 @@ class SectorList extends StatelessWidget {
           CustomIcons.uniE821,
         ),
       );
-    } else if (index == 2) {
+    } else if (index == '3') {
       return SizedBox(
         height: 15.0,
         width: 15.0,
@@ -154,20 +176,20 @@ class SectorList extends StatelessWidget {
           CustomIcons.handout,
         ),
       );
-    } else if (index == 3) {
-      return SizedBox(
-        height: 15.0,
-        width: 15.0,
-        child: Icon(
-          CustomIcons.notes,
-        ),
-      );
-    } else if (index == 4) {
+    } else if (index == '4') {
       return SizedBox(
         height: 15.0,
         width: 15.0,
         child: Icon(
           CustomIcons.search_outline,
+        ),
+      );
+    } else if (index == '5') {
+      return SizedBox(
+        height: 15.0,
+        width: 15.0,
+        child: Icon(
+          CustomIcons.notes,
         ),
       );
     }
@@ -183,9 +205,9 @@ class SectorList extends StatelessWidget {
           child: GestureDetector(
             onTap: () => Navigator.of(context).push(new MaterialPageRoute(
                 builder: (BuildContext context) => new BudgetAllocPage(
-                    host: host, title: list[i]['name'], id: i + 1))),
+                    host: host, title: list[i]['name'], id: list[i]['id']))),
             child: new ListTile(
-              leading: sectorid(i),
+              leading: sectorid(list[i]['sectorid']),
               title: Text(
                 list[i]['name'],
                 style:
@@ -260,6 +282,7 @@ class BudgetAllocationDetails extends StatelessWidget {
       return 'P' + formatCurrency.format(double.parse(fund));
     }
   }
+
   @override
   Widget build(BuildContext context) {
     var cardWidth = MediaQuery.of(context).size.width / 1.5;
@@ -271,9 +294,10 @@ class BudgetAllocationDetails extends StatelessWidget {
             children: <Widget>[
               Container(
                 height: 110.0,
-                width: MediaQuery.of(context).orientation == Orientation.portrait
-                    ? cardWidth
-                    : cardWidth / 1.6,
+                width:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? cardWidth
+                        : cardWidth / 1.6,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0)),
@@ -325,9 +349,10 @@ class BudgetAllocationDetails extends StatelessWidget {
               ),
               Container(
                 height: 110.0,
-                width: MediaQuery.of(context).orientation == Orientation.portrait
-                    ? cardWidth
-                    : cardWidth / 1.6,
+                width:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? cardWidth
+                        : cardWidth / 1.6,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0)),
@@ -367,7 +392,7 @@ class BudgetAllocationDetails extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).orientation ==
-                            Orientation.portrait
+                                Orientation.portrait
                             ? cardWidth - cardWidth / 5.0
                             : (cardWidth / 1.6) - (cardWidth / 1.6) / 5.0,
                         height: 0.5,
@@ -379,9 +404,10 @@ class BudgetAllocationDetails extends StatelessWidget {
               ),
               Container(
                 height: 110.0,
-                width: MediaQuery.of(context).orientation == Orientation.portrait
-                    ? cardWidth
-                    : cardWidth / 1.6,
+                width:
+                    MediaQuery.of(context).orientation == Orientation.portrait
+                        ? cardWidth
+                        : cardWidth / 1.6,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0)),
@@ -421,7 +447,7 @@ class BudgetAllocationDetails extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).orientation ==
-                            Orientation.portrait
+                                Orientation.portrait
                             ? cardWidth - cardWidth / 5.0
                             : (cardWidth / 1.6) - (cardWidth / 1.6) / 5.0,
                         height: 0.5,

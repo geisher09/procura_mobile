@@ -1,19 +1,26 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:dio/dio.dart';
 import 'package:open_file/open_file.dart';
 import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 import 'package:procura/Components/custom_icons.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ApprovalScreen2 extends StatelessWidget {
-  final text1, text2, date, time;
-  ApprovalScreen2(this.text2, this.text1, this.date, this.time);
+final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
-  Dio dio = Dio();
+class ApprovalScreen2 extends StatelessWidget {
+  final String host;
+  final String title;
+  final String requestType;
+  final String name;
+  final String image;
+  final String date;
+  final String remarks;
+  final String sign;
+  ApprovalScreen2({this.host, this.title, this.requestType, this.name, this.image, this.date, this.remarks, this.sign});
+  String datef(String date) {
+    return formatter.format(DateTime.parse(date));
+  }
   @override
   Widget build(BuildContext context) {
     void _approveDialog() {
@@ -39,7 +46,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       height: 80.0,
                       width: 180.0,
                       child: Image.network(
-                          'http://192.168.22.7/Procura/mobile/assets/UserSignatures/signature4.png'),
+                          host + sign),
                     ),
                   ),
                   FractionalTranslation(
@@ -248,29 +255,46 @@ class ApprovalScreen2 extends StatelessWidget {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.only(right: 12.0),
-              child: Text(
-                text2,
-                style: new TextStyle(
-                    color: Theme.of(context).brightness == Brightness.light
-                        ? Colors.black
-                        : Colors.white,
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.5),
+              child: Container(
+                width:
+                MediaQuery.of(context).orientation == Orientation.portrait
+                    ? MediaQuery.of(context).size.width / 1.8
+                    : MediaQuery.of(context).size.width / 1.35,
+                child: Text(
+                  title,
+                  style: new TextStyle(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white,
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5),
+                  overflow: TextOverflow.fade,
+                ),
               ),
             ),
             Container(
-              height: 15.0,
-              width: 30.0,
-              color: Colors.grey[500],
+              height: 30.0,
+              width: 60.0,
+              decoration: BoxDecoration(
+                borderRadius: new BorderRadius.circular(8.0),
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.grey[850]
+                    : Colors.grey[50],
+              ),
               child: Center(
-                child: Text(
-                  'PPMP',
-                  style: new TextStyle(
-                      color: Colors.black,
-                      fontSize: 10.0,
-                      fontWeight: FontWeight.w900,
-                      fontFamily: 'Montserrat'),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Text(
+                    requestType,
+                    style: new TextStyle(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.grey[50]
+                            : Colors.grey[850],
+                        fontSize: 12.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Lulo'),
+                  ),
                 ),
               ),
             )
@@ -294,7 +318,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
-                          image: new AssetImage("assets/images/user2.jpg"),
+                          image: new NetworkImage(host + image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -310,7 +334,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0, bottom: 5.0),
                         child: Text(
-                          text1,
+                          name,
                           style: new TextStyle(
                               fontSize: 13.5,
                               fontFamily: 'Montserrat',
@@ -320,7 +344,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       Padding(
                           padding: const EdgeInsets.only(left: 12.0),
                           child: Text(
-                            date + ', ' + time,
+                            datef(date),
                             style: new TextStyle(
                                 fontSize: 11.0, fontFamily: 'Montserrat-Thin'),
                           )),
@@ -360,49 +384,6 @@ class ApprovalScreen2 extends StatelessWidget {
                       )),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Container(
-                  width: noteswidth,
-                  height:
-                      MediaQuery.of(context).orientation == Orientation.portrait
-                          ? 60
-                          : 30,
-                  child: RichText(
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 4,
-                    text: new TextSpan(
-                      style: new TextStyle(
-                        fontSize: 12.5,
-                        //fontFamily: 'Montserrat',
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white,
-                      ),
-                      children: <TextSpan>[
-                        TextSpan(
-                            text: 'NOTES:' + ' ',
-                            style: new TextStyle(fontWeight: FontWeight.w700)),
-                        TextSpan(
-                          text:
-                              "Sample text Sample text Sample text Sample text Sample text Sample text Sample text"
-                              " Sample text Sample text Limit to 120 chars",
-                          style: new TextStyle(fontWeight: FontWeight.w400),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              )
-              //Document file
-//              RaisedButton(
-//                child: Text(text2),
-//                onPressed: () => FlutterPdfViewer.loadAsset("assets/files/finals.pdf"),
-//              ),
-//              RaisedButton(
-//                child: Text(text2+'2'),
-//                onPressed: () => OpenFile.open("/storage/sdcard1/MyFavorite/Geronima-resume.docx"),
-//              ),
             ],
           ),
         ),

@@ -6,10 +6,12 @@ import 'Routes.dart';
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_ip/get_ip.dart';
+import 'package:flutter/cupertino.dart';
+
 void main() async {
+  String host = 'http://192.168.22.5/Procura/mobile';
   final prefs = await SharedPreferences.getInstance();
   final Id = prefs.getString('id') ?? '0';
-  String host = 'http://192.168.22.7/Procura/mobile';
   print(host);
   Widget _defaultHome = new LoginScreen(host: host);
   if (Id != '0') {

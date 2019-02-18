@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:flutter/animation.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:ui';
 import 'package:flutter/rendering.dart';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class LoginScreen extends StatefulWidget {
   //const LoginScreen({Key key}) : super(key: key);
@@ -25,6 +25,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController usernameController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
+
+  @override
+  initState() {
+    super.initState();
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    var initializationSettingsAndroid =
+    new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidRecieveLocalNotification);
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
 
   void loginProcess(BuildContext context)async {
     print(usernameController.text + ',' + passwordController.text);
@@ -46,6 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
       prefs.setString('id',response.body.toString());
       await new Future.delayed(const Duration(seconds: 1));
       Navigator.pushReplacementNamed(context, "/home");
+      //await _showNotification();
     }
   }
   @override
@@ -254,4 +269,47 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  Future _showNotification() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+        0, 'Login Success', 'Welcome to Procura!', platformChannelSpecifics);
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+
+    await Navigator.pushReplacementNamed(context, "/home");
+  }
+
+  Future onDidRecieveLocalNotification(
+      int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => new CupertinoAlertDialog(
+        title: new Text(title),
+        content: new Text(body),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: new Text('Ok'),
+            onPressed: () async {
+              Navigator.pushReplacementNamed(context, "/home");
+            },
+          )
+        ],
+      ),
+    );
+  }
+
 }
+
+var flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();

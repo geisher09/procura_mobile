@@ -12,12 +12,7 @@ import 'package:procura/Screens/Home_Admin/Drawer/PurchaseRequestScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/SectorPPMPScreen.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/SettingsScreen.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/flutterappbadger.dart';
-import 'package:procura/Screens/Home_Admin/BottomNavBar/loop.dart';
-import 'package:procura/Screens/Home_Admin/Drawer/combobox.dart';
-import 'package:procura/Screens/Home_Admin/Drawer/samplesign.dart';
-import 'package:procura/Screens/Home_Admin/BottomNavBar/sampscreen1.dart';
-import 'package:procura/Screens/Home_Admin/Drawer/search.dart';
-import 'package:procura/main.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/try.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -173,7 +168,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
+                    CupertinoPageRoute(
+                        builder: (context) =>
+                            //SettingsScreen(host: widget.host, list: widget.list)
+                      Notif()
+                    ),
                   );
                 },
                 trailing: IconButton(
@@ -322,7 +321,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
+                    CupertinoPageRoute(
+                        builder: (context) => SettingsScreen(host: widget.host, list: widget.list)),
                   );
                 },
                 trailing: IconButton(
@@ -406,7 +406,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(host: widget.host)),
+                          CupertinoPageRoute(builder: (context) => BudgetProposalScreen(bp: 'budgetofficer', host: widget.host, id: widget.list[0]['id'])),
                         );
                       }
                   ),
@@ -454,7 +454,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    CupertinoPageRoute(builder: (context) => SignApp2(host: widget.host, list: widget.list)),
+                    CupertinoPageRoute(
+                        builder: (context) => SettingsScreen(host: widget.host, list: widget.list)),
                   );
                 },
                 trailing: IconButton(
