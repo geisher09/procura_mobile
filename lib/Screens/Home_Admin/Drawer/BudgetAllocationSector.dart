@@ -8,29 +8,29 @@ import 'package:procura/Screens/Home_Admin/Drawer/BudgetAllocPage.dart';
 
 final formatCurrency = new NumberFormat("#,##0.00", "en_US");
 
-class BudgetAllocationScreen extends StatefulWidget {
+class BudgetAllocationSector extends StatefulWidget {
   final String host;
-  final String funcId;
-  final String yearId;
-  const BudgetAllocationScreen({Key key, this.host, this.funcId, this.yearId})
+  final String uid;
+  const BudgetAllocationSector({Key key, this.host, this.uid})
       : super(key: key);
 
   @override
-  _BudgetAllocationScreenState createState() => _BudgetAllocationScreenState();
+  _BudgetAllocationSectorState createState() => _BudgetAllocationSectorState();
 }
 
-class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
+class _BudgetAllocationSectorState extends State<BudgetAllocationSector> {
   Future<List> getSectors() async {
-    final response = await http.post("${widget.host}/getSectors.php",
-        body: {"pid": widget.funcId, "yid": widget.yearId});
+    final response = await http.post(
+        "${widget.host}/getBudgetAllocationDetails_Sector.php",
+        body: {"id": '2', "uid": widget.uid});
     //print(response.body);
     return json.decode(response.body);
   }
 
   Future<List> getBudgetAllocationDetails() async {
     final response = await http.post(
-        "${widget.host}/getBudgetAllocationDetails.php",
-        body: {"pid": widget.funcId, "yid": widget.yearId});
+        "${widget.host}/getBudgetAllocationDetails_Sector.php",
+        body: {"id": '1', "uid": widget.uid});
     return json.decode(response.body);
   }
 
@@ -64,7 +64,7 @@ class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: widget.funcId == '1' ? Container(
+                child: Container(
                   height: 35.0,
                   width: width/1.1,
                   decoration: BoxDecoration(
@@ -79,7 +79,7 @@ class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
                           fontStyle: FontStyle.italic, color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                   ),
-                ) : Container(),
+                ),
               ),
               Padding(
                   padding: const EdgeInsets.only(left: 10.0, right: 10.0),
@@ -89,8 +89,12 @@ class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
                         future: getBudgetAllocationDetails(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            return new BudgetAllocationDetails(
-                                host: widget.host, list: snapshot.data);
+                            if(snapshot.data.length != 0){
+                              return new BudgetAllocationDetails(
+                                  host: widget.host, list: snapshot.data);
+                            }else{
+                              return Center(child: Text('No budget allocated yet!'));
+                            }
                           } else {
                             return Center(child: CircularProgressIndicator());
                           }
@@ -99,11 +103,11 @@ class _BudgetAllocationScreenState extends State<BudgetAllocationScreen> {
               Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: Container(
-                  height: 450.0,
+                  height: 100.0,
                   width:
-                      MediaQuery.of(context).orientation == Orientation.portrait
-                          ? MediaQuery.of(context).size.width / 1.2
-                          : MediaQuery.of(context).size.width / 1.3,
+                  MediaQuery.of(context).orientation == Orientation.portrait
+                      ? MediaQuery.of(context).size.width / 1.2
+                      : MediaQuery.of(context).size.width / 1.3,
                   child: Card(
                     shape: new RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(25.0)),
@@ -145,9 +149,7 @@ class SectorList extends StatelessWidget {
     if (index == 4) {
       return BoxDecoration(border: Border(bottom: BorderSide.none));
     } else {
-      return BoxDecoration(
-          border:
-              Border(bottom: BorderSide(color: Colors.grey[400], width: 1.0)));
+      return BoxDecoration(border: Border(bottom: BorderSide.none));
     }
   }
 
@@ -302,9 +304,9 @@ class BudgetAllocationDetails extends StatelessWidget {
               Container(
                 height: 110.0,
                 width:
-                    MediaQuery.of(context).orientation == Orientation.portrait
-                        ? cardWidth
-                        : cardWidth / 1.6,
+                MediaQuery.of(context).orientation == Orientation.portrait
+                    ? cardWidth
+                    : cardWidth / 1.6,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0)),
@@ -344,7 +346,7 @@ class BudgetAllocationDetails extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).orientation ==
-                                Orientation.portrait
+                            Orientation.portrait
                             ? cardWidth - cardWidth / 5.0
                             : (cardWidth / 1.6) - (cardWidth / 1.6) / 5.0,
                         height: 0.5,
@@ -357,9 +359,9 @@ class BudgetAllocationDetails extends StatelessWidget {
               Container(
                 height: 110.0,
                 width:
-                    MediaQuery.of(context).orientation == Orientation.portrait
-                        ? cardWidth
-                        : cardWidth / 1.6,
+                MediaQuery.of(context).orientation == Orientation.portrait
+                    ? cardWidth
+                    : cardWidth / 1.6,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0)),
@@ -399,7 +401,7 @@ class BudgetAllocationDetails extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).orientation ==
-                                Orientation.portrait
+                            Orientation.portrait
                             ? cardWidth - cardWidth / 5.0
                             : (cardWidth / 1.6) - (cardWidth / 1.6) / 5.0,
                         height: 0.5,
@@ -412,9 +414,9 @@ class BudgetAllocationDetails extends StatelessWidget {
               Container(
                 height: 110.0,
                 width:
-                    MediaQuery.of(context).orientation == Orientation.portrait
-                        ? cardWidth
-                        : cardWidth / 1.6,
+                MediaQuery.of(context).orientation == Orientation.portrait
+                    ? cardWidth
+                    : cardWidth / 1.6,
                 child: Card(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(15.0)),
@@ -454,7 +456,7 @@ class BudgetAllocationDetails extends StatelessWidget {
                       ),
                       Container(
                         width: MediaQuery.of(context).orientation ==
-                                Orientation.portrait
+                            Orientation.portrait
                             ? cardWidth - cardWidth / 5.0
                             : (cardWidth / 1.6) - (cardWidth / 1.6) / 5.0,
                         height: 0.5,

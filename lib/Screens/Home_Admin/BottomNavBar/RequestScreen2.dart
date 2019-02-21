@@ -74,6 +74,9 @@ class RequestScreen2 extends StatelessWidget {
   Widget build(BuildContext context) {
     var conwidth = MediaQuery.of(context).size.width / 1.25;
     var noteswidth = MediaQuery.of(context).size.width / 1.15;
+    List splithost = host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/';
+    String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -148,7 +151,7 @@ class RequestScreen2 extends StatelessWidget {
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
-                          image: new NetworkImage(host + image),
+                          image: new NetworkImage(newHost2 + image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -229,12 +232,17 @@ class RequestScreen2 extends StatelessWidget {
                               width: 30.0,
                             ),
                           ),
-                          Text(
-                            'FILENAME.pdf',
-                            style: new TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w900,
-                                fontFamily: 'Montserrat'),
+                          Container(
+                            width: conwidth/1.2,
+                            height: 20.0,
+                            child: Text(
+                              title+'.file',
+                              overflow: TextOverflow.ellipsis,
+                              style: new TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'Montserrat'),
+                            ),
                           ),
                         ],
                       )),

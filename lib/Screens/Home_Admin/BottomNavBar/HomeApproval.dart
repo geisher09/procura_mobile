@@ -19,7 +19,6 @@ class HomeApproval extends StatefulWidget {
 
 class _HomeApprovalState extends State<HomeApproval> {
   TextEditingController searchController = TextEditingController();
-
   Future<Null> getSectorsForApproval() async {
     final response = await http.post("${widget.host}/getSectorsForApproval.php",
         body: {"uid": widget.list[0]['id']});
@@ -58,6 +57,8 @@ class _HomeApprovalState extends State<HomeApproval> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    List splithost = widget.host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/public/';
     return Container(
       alignment: Alignment.topLeft,
       child: Column(
@@ -170,6 +171,9 @@ class _HomeApprovalState extends State<HomeApproval> {
                           new MaterialPageRoute(
                               builder: (BuildContext context) =>
                               new ApprovalScreen2(
+                                id: _searchResult[i].id,
+                                listuser: widget.list,
+                                user_id: _searchResult[i].user_id,
                                 host: widget.host,
                                 title: _searchResult[i].title,
                                 requestType: _searchResult[i].requestType,
@@ -196,8 +200,7 @@ class _HomeApprovalState extends State<HomeApproval> {
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: new DecorationImage(
-                                    image: new NetworkImage(widget
-                                        .host +
+                                    image: new NetworkImage(newHost +
                                         _searchResult[i].user_image),
                                     fit: BoxFit.cover,
                                   ),
@@ -296,6 +299,9 @@ class _HomeApprovalState extends State<HomeApproval> {
                           new MaterialPageRoute(
                               builder: (BuildContext context) =>
                               new ApprovalScreen2(
+                                  id: _requestDetails[i].id,
+                                  listuser: widget.list,
+                                  user_id: _requestDetails[i].user_id,
                                   host: widget.host,
                                   title: _requestDetails[i].title,
                                   requestType: _requestDetails[i].requestType,
@@ -322,8 +328,7 @@ class _HomeApprovalState extends State<HomeApproval> {
                                 decoration: new BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: new DecorationImage(
-                                    image: new NetworkImage(widget
-                                        .host +
+                                    image: new NetworkImage(newHost +
                                         _requestDetails[i].user_image,),
                                     fit: BoxFit.cover,
                                   ),
@@ -449,6 +454,8 @@ List<RequestDetails> _searchResult = [];
 List<RequestDetails> _requestDetails = [];
 
 class RequestDetails {
+  final String id;
+  final String user_id;
   final String title;
   final String name;
   final String departmentname;
@@ -458,7 +465,9 @@ class RequestDetails {
   final String remarks;
   final String user_image;
   RequestDetails(
-      {this.title,
+      {this.id,
+        this.user_id,
+        this.title,
         this.name,
         this.departmentname,
         this.datec,
@@ -470,6 +479,8 @@ class RequestDetails {
 
   factory RequestDetails.fromJson(Map<String, dynamic> json) {
     return new RequestDetails(
+        id: json['id'],
+        user_id: json['user_id'],
         title: json['title'],
         name: json['name'],
         departmentname: json['departmentname'],

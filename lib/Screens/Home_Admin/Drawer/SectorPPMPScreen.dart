@@ -9,8 +9,9 @@ import 'package:procura/Screens/Home_Admin/Drawer/PPMPDetailsPage.dart';
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
 class SectorPPMPScreen extends StatelessWidget {
-  SectorPPMPScreen({this.host, this.id});
+  SectorPPMPScreen({this.host, this.listuser, this.id});
   final String host;
+  final List listuser;
   final String id;
   Future<List> getPPMP(String page) async {
     final response = await http
@@ -94,7 +95,11 @@ class SectorPPMPScreen extends StatelessWidget {
                     print(snapshot.error);
                   }
                   if (snapshot.hasData) {
-                    return new PPMP(host: host, page: 1, list: snapshot.data);
+                    if (snapshot.data.length == 0) {
+                      return Center(child: Text('No Data Available'));
+                    } else {
+                      return new PPMP(host: host, page: 1, list: snapshot.data, listuser: listuser);
+                    }
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
@@ -106,7 +111,11 @@ class SectorPPMPScreen extends StatelessWidget {
                     print(snapshot.error);
                   }
                   if (snapshot.hasData) {
-                    return new PPMP(host: host, page: 2, list: snapshot.data);
+                    if (snapshot.data.length == 0) {
+                      return Center(child: Text('No Data Available'));
+                    } else {
+                      return new PPMP(host: host, page: 2, list: snapshot.data, listuser: listuser);
+                    }
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
@@ -118,7 +127,11 @@ class SectorPPMPScreen extends StatelessWidget {
                     print(snapshot.error);
                   }
                   if (snapshot.hasData) {
-                    return new PPMP(host: host, page: 3, list: snapshot.data);
+                    if (snapshot.data.length == 0) {
+                      return Center(child: Text('No Data Available'));
+                    } else {
+                      return new PPMP(host: host, page: 3, list: snapshot.data, listuser: listuser);
+                    }
                   } else {
                     return Center(child: CircularProgressIndicator());
                   }
@@ -132,9 +145,10 @@ class SectorPPMPScreen extends StatelessWidget {
 
 class PPMP extends StatelessWidget {
   final String host;
-  final List list;
   final int page;
-  PPMP({this.host, this.page, this.list});
+  final List list;
+  final List listuser;
+  PPMP({this.host, this.page, this.list, this.listuser});
   @override
   String date(String date) {
     return formatter.format(DateTime.parse(date));
@@ -147,13 +161,15 @@ class PPMP extends StatelessWidget {
         ? w1 / 4.5
         : w1 / 5.0;
 
-    Widget options(String title, String id, int page) {
+    Widget options(String title, String id, int page, String user_id) {
       if (page == 1) {
         return InkWell(
           borderRadius: BorderRadius.circular(20.0),
           splashColor: Colors.grey[500],
           onTap: () => Navigator.of(context).push(new MaterialPageRoute(
               builder: (BuildContext context) => new PPMPDetailsPage(
+                user_id: user_id,
+                  listuser: listuser,
                   usertype: 'sectorpending',
                   title: title,
                   host: host,
@@ -188,6 +204,8 @@ class PPMP extends StatelessWidget {
                 splashColor: Colors.grey[500],
                 onTap: () => Navigator.of(context).push(new MaterialPageRoute(
                     builder: (BuildContext context) => new PPMPDetailsPage(
+                        user_id: user_id,
+                        listuser: listuser,
                         usertype: 'sector', title: title, host: host, id: id))),
                 child: Container(
                   height: 30.0,
@@ -234,12 +252,14 @@ class PPMP extends StatelessWidget {
             ],
           ),
         );
-      } else {
+      } else if(page == 3){
         return InkWell(
           borderRadius: BorderRadius.circular(20.0),
           splashColor: Colors.grey[500],
           onTap: () => Navigator.of(context).push(new MaterialPageRoute(
               builder: (BuildContext context) => new PPMPDetailsPage(
+                  user_id: user_id,
+                  listuser: listuser,
                   usertype: 'sector', title: title, host: host, id: id))),
           child: Container(
             height: 30.0,
@@ -309,13 +329,13 @@ class PPMP extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Date created: ',
+                        'Date submitted: ',
                         style: new TextStyle(
                             fontStyle: FontStyle.italic, fontSize: 12.0),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        date(list[i]['created_at']),
+                        date(list[i]['submitted_at']),
                         style: new TextStyle(
                             fontFamily: 'Montserrat', fontSize: 12.0),
                         overflow: TextOverflow.ellipsis,
@@ -323,28 +343,8 @@ class PPMP extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Due date: ',
-                          style: new TextStyle(
-                              fontStyle: FontStyle.italic, fontSize: 12.0),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        Text(
-                          date('2019-11-24 11:33:17'),
-                          style: new TextStyle(
-                              fontFamily: 'Montserrat', fontSize: 12.0),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: options(list[i]['title'], list[i]['id'], page),
+                    padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                    child: options(list[i]['title'], list[i]['id'], page, list[i]['user_id']),
                   ),
                 ],
               ),

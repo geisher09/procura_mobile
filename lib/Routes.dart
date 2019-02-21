@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:get_ip/get_ip.dart';
-import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeDashboard.dart';
+import 'package:http/http.dart' as http;
 import 'package:procura/Screens/Login/index.dart';
 import 'package:procura/Screens/Home_Admin/index.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
-import 'package:procura/main.dart';
+import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 void launchMain({String host, Widget dh}) => runApp(new Routes(host: host,dh: dh));
 
-//void ipAdd() async{
-//  String ipAdd = await GetIp.ipAddress;
-//  List<String> splitId = ipAdd.split('.');
-//  int lastnum = int.parse(splitId[3]);
-//  lastnum -= 1;
-//  String newIp = splitId[0] + '.' + splitId[1] + '.' + splitId[2] + '.$lastnum';
-//  String host = 'http://$newIp/ProcuraMobile';
-//  Routes(host:host);
-//}
 class Routes extends StatelessWidget {
   Routes({this.dh, this.host});
   final Widget dh;
   final String host;
+  Future<List> getData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final Id = prefs.getString('id') ?? '0';
+    final response = await http
+        .post("${host}/getUserData.php", body: {"id": Id.replaceAll("\"", "")});
+    //print(response.body);
+    return json.decode(response.body);
+  }
   @override
   Widget build(BuildContext context) {
     return new DynamicTheme(

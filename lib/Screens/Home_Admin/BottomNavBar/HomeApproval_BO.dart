@@ -60,6 +60,8 @@ class _HomeApproval_BOState extends State<HomeApproval_BO> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    List splithost = widget.host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/public/';
     return Container(
       alignment: Alignment.topLeft,
       child: Column(
@@ -112,54 +114,6 @@ class _HomeApproval_BOState extends State<HomeApproval_BO> {
               ),
             ),
           ),
-//          Padding(
-//              padding: const EdgeInsets.all(10.0),
-//              child: Container(
-//                  decoration: new BoxDecoration(
-//                    borderRadius: BorderRadius.circular(20.0),
-//                    border: new Border.all(
-//                      color: Colors.grey,
-//                      width: 1.0,
-//                    ),
-//                  ),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.start,
-//                    children: <Widget>[
-//                      Padding(
-//                        padding: const EdgeInsets.fromLTRB(15.0, 4.0, 0.0, 0.0),
-//                        child: IconButton(
-//                          icon: _searchIcon,
-//                          onPressed: _searchPressed,
-//                        ),
-//                      ),
-//                      Padding(
-//                          padding:
-//                              const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-//                          child: _searchTitle),
-//                    ],
-//                  )
-//                  )),
-//          Expanded(
-//            child: FutureBuilder<List>(
-//                future: future(widget.list[0]['user_type_id']),
-//                builder: (context, snapshot) {
-//                  if (snapshot.hasError) {
-//                    print(snapshot.error);
-//                  }
-//                  if (snapshot.hasData) {
-//                    if (snapshot.data.length == 0) {
-//                      return Center(child: Text('No Data Available'));
-//                    } else {
-//                      return new MyRequests(
-//                          host: widget.host,
-//                          list: snapshot.data,
-//                          image: widget.list[0]['user_image']);
-//                    }
-//                  } else {
-//                    return Center(child: CircularProgressIndicator());
-//                  }
-//                }),
-//          )
           _requestDetails.length != 0
               ? Expanded(
                   child: _searchResult.length != 0 ||
@@ -206,8 +160,7 @@ class _HomeApproval_BOState extends State<HomeApproval_BO> {
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
-                                            image: new NetworkImage(widget
-                                                    .host +
+                                            image: new NetworkImage(newHost +
                                                 _searchResult[i].user_image),
                                             fit: BoxFit.cover,
                                           ),
@@ -342,7 +295,7 @@ class _HomeApproval_BOState extends State<HomeApproval_BO> {
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
                                             image: new NetworkImage(
-                                              widget.host +
+                                              newHost +
                                                   _requestDetails[i].user_image,
                                             ),
                                             fit: BoxFit.cover,

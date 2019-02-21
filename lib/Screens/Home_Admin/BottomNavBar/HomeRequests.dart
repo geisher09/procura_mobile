@@ -57,6 +57,8 @@ class _HomeRequestsState extends State<HomeRequests> {
 
   @override
   Widget build(BuildContext context) {
+    List splithost = widget.host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/public/';
     var width = MediaQuery.of(context).size.width;
     return Container(
       alignment: Alignment.topLeft,
@@ -200,8 +202,7 @@ class _HomeRequestsState extends State<HomeRequests> {
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
-                                            image: new NetworkImage(widget
-                                                    .host +
+                                            image: new NetworkImage(newHost +
                                                 widget.list[0]['user_image']),
                                             fit: BoxFit.cover,
                                           ),
@@ -330,8 +331,7 @@ class _HomeRequestsState extends State<HomeRequests> {
                                         decoration: new BoxDecoration(
                                           shape: BoxShape.circle,
                                           image: new DecorationImage(
-                                            image: new NetworkImage(widget
-                                                    .host +
+                                            image: new NetworkImage(newHost +
                                                 widget.list[0]['user_image']),
                                             fit: BoxFit.cover,
                                           ),

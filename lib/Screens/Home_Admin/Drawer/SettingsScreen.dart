@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:procura/Components/custom_icons.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/samplesign.dart';
 
@@ -158,6 +159,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List splithost = widget.host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/public/';
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -195,7 +198,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           shape: BoxShape.circle,
                           image: new DecorationImage(
                             image: new NetworkImage(
-                                widget.host + widget.list[0]['user_image']),
+                                newHost + widget.list[0]['user_image']),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -278,7 +281,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Container(
                           height: 80.0,
                           width: 180.0,
-                          child: Image.network(widget.host +
+                          child: Image.network(newHost +
                               widget.list[0]['user_signature']),
                         ),
                         Positioned(
@@ -319,6 +322,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ],
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15.0),
+                    child: RaisedButton(
+                        shape: StadiumBorder(),
+                        color: Colors.indigo[700],
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                          child: Container(
+                            width: MediaQuery.of(context).orientation ==
+                                Orientation.portrait
+                                ? width / 2.0
+                                : width / 3.0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Text(
+                                  'Change Password',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14.0),
+                                ),
+                                Icon(
+                                  CustomIcons.pencil,
+                                  size: 18.0,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        onPressed: _changePassDialog),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 25.0),
@@ -369,9 +406,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 15.0),
+                    padding: const EdgeInsets.only(top: 25.0),
                     child: RaisedButton(
-                        shape: StadiumBorder(),
+                        shape: BeveledRectangleBorder(),
                         color: Colors.indigo[700],
                         child: Padding(
                           padding:
@@ -385,14 +422,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Text(
-                                  'Change Password',
+                                  'Save changes',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14.0),
+                                      fontSize: 15.0),
                                 ),
                                 Icon(
-                                  CustomIcons.pencil,
+                                  FontAwesomeIcons.save,
                                   size: 18.0,
                                   color: Colors.white,
                                 ),
@@ -400,7 +437,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                           ),
                         ),
-                        onPressed: _changePassDialog),
+                        onPressed: (){}),
                   ),
                 ],
               ),

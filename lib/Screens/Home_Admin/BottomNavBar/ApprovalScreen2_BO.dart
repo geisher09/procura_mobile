@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
@@ -33,6 +34,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
     var noteswidth = MediaQuery.of(context).size.width / 1.15;
     List splithost = host.split('/');
     String newHost = 'http://${splithost[2]}/Procura/storage/app/';
+    String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
     void approveBudgetProposal() {
       var url = "$host/approveBP.php";
       http.post(url, body: {
@@ -126,7 +128,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
-                          image: new NetworkImage(host + image),
+                          image: new NetworkImage(newHost2 + image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -342,7 +344,8 @@ class ApprovalScreen2_BO extends StatelessWidget {
                                         ),
                                         onPressed: () {
                                           rejectBudgetProposal();
-                                          Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route)=>false);
+                                          Navigator.of(context).pushNamedAndRemoveUntil(
+                                              '/home', (Route<dynamic> route) => false);
                                         },
                                       ),
                                     ],
@@ -476,7 +479,8 @@ class ApprovalScreen2_BO extends StatelessWidget {
                                         ),
                                         onPressed: () {
                                           approveBudgetProposal();
-                                          Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route)=>false);
+                                          Navigator.of(context).pushNamedAndRemoveUntil(
+                                              '/home', (Route<dynamic> route) => false);
                                         },
                                       ),
                                     ],
