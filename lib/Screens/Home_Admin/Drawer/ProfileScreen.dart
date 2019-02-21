@@ -16,6 +16,8 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
+    List splithost = host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/public/';
     Widget ScaffoldPortrait() {
       return Scaffold(
 //      appBar: AppBar(
@@ -52,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                         decoration: new BoxDecoration(
                           shape: BoxShape.rectangle,
                           image: new DecorationImage(
-                            image: new NetworkImage(host + list[0]['user_image']),
+                            image: new NetworkImage(newHost + list[0]['user_image']),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -124,7 +126,7 @@ class ProfileScreen extends StatelessWidget {
                               height: 80.0,
                               width: 180.0,
                               child: Image.network(
-                                  host + list[0]['user_signature']),
+                                  newHost + list[0]['user_signature']),
                             ),
                           ),
                           FractionalTranslation(
@@ -171,10 +173,31 @@ class ProfileScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          FractionalTranslation(
+                            translation: Offset(0.0, 3.0),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width/1.2,
+                              child: Text(
+                                list[0]['position'],
+                                maxLines: 1,
+                                overflow: TextOverflow.fade,
+                                textAlign: TextAlign.center,
+                                style: new TextStyle(
+                                  color:
+                                  Theme.of(context).brightness == Brightness.light
+                                      ? Colors.black
+                                      : Colors.white,
+                                  fontSize: 17.0,
+                                  fontStyle: FontStyle.italic,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       Container(
-                        height: 20.0,
+                        height: 30.0,
                       ),
                       Align(
                           alignment: Alignment.bottomCenter,
@@ -223,7 +246,7 @@ class ProfileScreen extends StatelessWidget {
                           child: new Container(
                             decoration: new BoxDecoration(
                               image: new DecorationImage(
-                                image: NetworkImage(host + list[0]['user_image']),
+                                image: NetworkImage(newHost + list[0]['user_image']),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -247,7 +270,7 @@ class ProfileScreen extends StatelessWidget {
                             height: height / 2.0,
                             decoration: new BoxDecoration(
                               image: new DecorationImage(
-                                image: NetworkImage(host + list[0]['user_image']),
+                                image: NetworkImage(newHost + list[0]['user_image']),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -293,7 +316,15 @@ class ProfileScreen extends StatelessWidget {
                                   height: 80.0,
                                   width: 200.0,
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        CupertinoPageRoute(
+                                            builder: (context) => SignApp2(
+                                                host: host,
+                                                list: list)),
+                                      );
+                                    },
                                     child: Center(
                                       child: Text(
                                         'Signature not yet provided.\n'
@@ -314,7 +345,7 @@ class ProfileScreen extends StatelessWidget {
                                 height: 80.0,
                                 width: 180.0,
                                 child: Image.network(
-                                    host + list[0]['user_signature']),
+                                    newHost + list[0]['user_signature']),
                               ),
                             ),
                             FractionalTranslation(

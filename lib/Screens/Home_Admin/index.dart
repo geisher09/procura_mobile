@@ -101,6 +101,15 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       setState(() {
         _current;
       });
+    }else if (userDetails[0]['user_type_id'] == '3') {
+      if (index == 2) {
+        _current = 'TAB: 3';
+      } else {
+        _current = 'TAB: $index';
+      }
+      setState(() {
+        _current;
+      });
     } else {
       setState(() {
         _current = 'TAB: $index';
@@ -112,6 +121,8 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
   @override
   Widget build(BuildContext context) {
     //pushnotif();
+    List splithost = host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/public/';
     void _showDialog() {
       showDialog(
         context: context,
@@ -224,7 +235,17 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
               HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
             ]);
-      } else {
+      } else if (usertype == '3') {
+        return HomeBottomAppBar(
+            selectedColor: Colors.blueAccent,
+            notchedShape: CircularNotchedRectangle(),
+            onTabSelected: _selectedTab,
+            items: [
+              HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
+              HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+            ]);
+      }else if (usertype == '5') {
         return HomeBottomAppBar(
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
@@ -235,6 +256,14 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               HomeBottomAppBarItem(
                   iconData: CustomIcons.paper_plane_empty, count: 0),
               HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+            ]);
+      }else{
+        return HomeBottomAppBar(
+            selectedColor: Colors.blueAccent,
+            notchedShape: CircularNotchedRectangle(),
+            onTabSelected: _selectedTab,
+            items: [
+              HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0)
             ]);
       }
     }
@@ -268,7 +297,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
                 if (snapshot.hasData) {
                   return new IconButton(
                       icon: Image.network(
-                        host + snapshot.data[0]['user_image'],
+                        newHost + snapshot.data[0]['user_image'],
                         width: 30.0,
                         height: 30.0,
                       ),

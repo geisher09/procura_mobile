@@ -11,22 +11,27 @@ String money(String fund) {
   return 'P' + formatCurrency.format(double.parse(fund));
 }
 
-class BudgetProposalScreen extends StatelessWidget {
-  BudgetProposalScreen({this.bp, this.host, this.id});
+class BudgetProposalScreen extends StatefulWidget {
   final String bp;
   final String host;
   final String id;
+  BudgetProposalScreen({this.bp, this.host, this.id});
+  @override
+  _BudgetProposalScreenState createState() => _BudgetProposalScreenState();
+}
+
+class _BudgetProposalScreenState extends State<BudgetProposalScreen> {
   Future<List> getBudgetProposal(String page) async {
     final response =
-        await http.post("${host}/getBudgetProposal.php", body: {"id": page});
+    await http.post("${widget.host}/getBudgetProposal.php", body: {"id": page});
     //print(response.body);
     //List splitH = host.split('Procura');
     return json.decode(response.body);
   }
 
   Future<List> getBudgetProposal_Dept(String page) async {
-    final response = await http.post("${host}/getBudgetProposal_Dept.php",
-        body: {"id": page, "uid": id});
+    final response = await http.post("${widget.host}/getBudgetProposal_Dept.php",
+        body: {"id": page, "uid": widget.id});
     return json.decode(response.body);
   }
 
@@ -36,49 +41,49 @@ class BudgetProposalScreen extends StatelessWidget {
       return <Widget>[
         Tab(
             child: Text(
-          'ALL',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-        )),
+              'ALL',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
         Tab(
             child: Text(
-          'APPROVED',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-        )),
+              'APPROVED',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
         Tab(
             child: Text(
-          'REJECTED',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-          overflow: TextOverflow.ellipsis,
-        )),
+              'REJECTED',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+            )),
         Tab(
             child: Text(
-          'PENDING',
-          style: new TextStyle(
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            fontSize: 11.0,
-            fontWeight: FontWeight.w600,
-          ),
-        )),
+              'PENDING',
+              style: new TextStyle(
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                fontSize: 11.0,
+                fontWeight: FontWeight.w600,
+              ),
+            )),
       ];
     }
 
@@ -97,7 +102,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 1, list: snapshot.data);
+                          host: widget.host, page: 1, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -114,7 +119,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 2, list: snapshot.data);
+                          host: widget.host, page: 2, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -131,7 +136,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 3, list: snapshot.data);
+                          host: widget.host, page: 3, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -148,7 +153,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 4, list: snapshot.data);
+                          host: widget.host, page: 4, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -170,7 +175,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal_Dept(
-                          host: host, page: 1, list: snapshot.data);
+                          host: widget.host, page: 1, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -187,7 +192,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal_Dept(
-                          host: host, page: 2, list: snapshot.data);
+                          host: widget.host, page: 2, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -204,7 +209,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal_Dept(
-                          host: host, page: 3, list: snapshot.data);
+                          host: widget.host, page: 3, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -221,7 +226,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal_Dept(
-                          host: host, page: 4, list: snapshot.data);
+                          host: widget.host, page: 4, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -243,7 +248,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 1, list: snapshot.data);
+                          host: widget.host, page: 1, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -260,7 +265,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 2, list: snapshot.data);
+                          host: widget.host, page: 2, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -277,7 +282,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 3, list: snapshot.data);
+                          host: widget.host, page: 3, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -294,7 +299,7 @@ class BudgetProposalScreen extends StatelessWidget {
                       return Center(child: Text('No Data Available'));
                     } else {
                       return new BudgetProposal(
-                          host: host, page: 4, list: snapshot.data);
+                          host: widget.host, page: 4, list: snapshot.data);
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());
@@ -319,7 +324,7 @@ class BudgetProposalScreen extends StatelessWidget {
             tabs: _buildTabs(),
           ),
           title: Text(
-            bp == 'depthead' ? "MY BUDGET PROPOSAL" : "BUDGET PROPOSAL",
+            widget.bp == 'depthead' ? "MY BUDGET PROPOSAL" : "BUDGET PROPOSAL",
             style: new TextStyle(
                 color: Theme.of(context).brightness == Brightness.light
                     ? Colors.black
@@ -330,23 +335,29 @@ class BudgetProposalScreen extends StatelessWidget {
           elevation: 0.0,
           backgroundColor: Colors.transparent,
         ),
-        body: tabBarViewIndicator(bp),
+        body: tabBarViewIndicator(widget.bp),
       ),
     );
   }
 }
 
-class BudgetProposal extends StatelessWidget {
+class BudgetProposal extends StatefulWidget {
+  BudgetProposal({this.host, this.page, this.list});
   final String host;
   final int page;
   final List list;
-  BudgetProposal({this.host, this.page, this.list});
+  _BudgetProposalState createState() => _BudgetProposalState();
+}
 
+class _BudgetProposalState extends State<BudgetProposal> {
   TextEditingController remarks = new TextEditingController();
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  String _rem;
+  @override
   @override
   Widget build(BuildContext context) {
-    List splithost = host.split('/');
+    List splithost = widget.host.split('/');
     String newHost = 'http://${splithost[2]}/Procura/storage/app/';
     var w1 = MediaQuery.of(context).size.width;
     double width(int page) {
@@ -360,7 +371,6 @@ class BudgetProposal extends StatelessWidget {
             : w1 / 1.2;
       }
     }
-
     Widget options(
         String host, int page, String proposal_file, String proposal_id, String user_id) {
       void approveBudgetProposal() {
@@ -380,6 +390,28 @@ class BudgetProposal extends StatelessWidget {
           "is_approved": '0',
           "uid": user_id
         });
+      }
+      void _validateInputs(){
+        if(_formKey.currentState.validate()){
+          //_formKey.currentState.save();
+          approveBudgetProposal();
+          Navigator.of(context).pop();
+        }else{
+          setState(() {
+            _autoValidate = true;
+          });
+        }
+      }
+      void _validateInputs2(){
+        if(_formKey.currentState.validate()){
+          //_formKey.currentState.save();
+          rejectBudgetProposal();
+          Navigator.of(context).pop();
+        }else{
+          setState(() {
+            _autoValidate = true;
+          });
+        }
       }
       if (page == 4) {
         return Container(
@@ -416,121 +448,121 @@ class BudgetProposal extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.0),
                 splashColor: Colors.grey[500],
                 onTap: () => showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SingleChildScrollView(
-                          child: AlertDialog(
-                            title: Text(
-                              'Approve File',
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat', fontSize: 13.0),
-                              textAlign: TextAlign.center,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      child: AlertDialog(
+                        title: Text(
+                          'Approve File',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat', fontSize: 13.0),
+                          textAlign: TextAlign.center,
+                        ),
+                        titlePadding: EdgeInsets.only(top: 15.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(20.0))),
+                        contentPadding:
+                        EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        content: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Text(
+                                'Are you sure you want to approve this file?',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14.0,
+                                    fontStyle: FontStyle.italic),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                              ),
                             ),
-                            titlePadding: EdgeInsets.only(top: 15.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0))),
-                            contentPadding:
-                                EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                            content: Column(
+                            Container(
+                              decoration: new BoxDecoration(
+                                border: new Border.all(
+                                  color: Colors.grey,
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: Form(
+                                key: _formKey,
+                                autovalidate: _autoValidate,
+                                child: TextFormField(
+                                  controller: remarks,
+                                  obscureText: false,
+                                  validator: (String arg){
+                                    if(arg.length<1){
+                                      return 'You need to provide remarks';
+                                    }else{
+                                      return null;
+                                    }
+                                  },
+                                  onSaved: (String val){
+                                    _rem = val;
+                                  },
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                  decoration: new InputDecoration(
+                                    icon: Padding(
+                                      padding:
+                                      const EdgeInsets.only(left: 8.0),
+                                      child: new Icon(
+                                        CustomIcons.pencil,
+                                        color: Colors.black,
+                                        size: 15.0,
+                                      ),
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Remarks",
+                                    hintStyle: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w500),
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                        10.0, 10.0, 20.0, 10.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Text(
-                                    'Are you sure you want to approve this file?',
+                                new FlatButton(
+                                  child: new Text(
+                                    "Cancel",
                                     style: TextStyle(
+                                        color: Colors.green[800],
                                         fontFamily: 'Montserrat',
-                                        fontSize: 14.0,
-                                        fontStyle: FontStyle.italic),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
+                                        fontWeight: FontWeight.bold),
                                   ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
-                                Container(
-                                  decoration: new BoxDecoration(
-                                    border: new Border.all(
-                                      color: Colors.grey,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: TextFormField(
-                                    controller: remarks,
-                                    obscureText: false,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                    decoration: new InputDecoration(
-                                      icon: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: new Icon(
-                                          CustomIcons.pencil,
-                                          color: Colors.black,
-                                          size: 15.0,
-                                        ),
-                                      ),
-                                      border: InputBorder.none,
-                                      hintText: "Remarks",
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.w500),
-                                      contentPadding: EdgeInsets.fromLTRB(
-                                          10.0, 10.0, 20.0, 10.0),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8.0, bottom: 20.0),
-                                  child: Text(
-                                    'Provide remarks about this file',
+                                new FlatButton(
+                                  color: Colors.green[800],
+                                  child: new Text(
+                                    "Approve",
                                     style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontStyle: FontStyle.italic),
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    new FlatButton(
-                                      child: new Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                            color: Colors.green[800],
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    new FlatButton(
-                                      color: Colors.green[800],
-                                      child: new Text(
-                                        "Approve",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      onPressed: () {
-                                        approveBudgetProposal();
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                                  onPressed: () {
+                                    _validateInputs();
+                                  },
                                 ),
                               ],
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 child: Container(
                   height: 30.0,
                   width: 30.0,
@@ -554,121 +586,121 @@ class BudgetProposal extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20.0),
                 splashColor: Colors.grey[500],
                 onTap: () => showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SingleChildScrollView(
-                          child: AlertDialog(
-                            title: Text(
-                              'Reject File',
-                              style: TextStyle(
-                                  fontFamily: 'Montserrat', fontSize: 13.0),
-                              textAlign: TextAlign.center,
+                  context: context,
+                  builder: (BuildContext context) {
+                    return SingleChildScrollView(
+                      child: AlertDialog(
+                        title: Text(
+                          'Approve File',
+                          style: TextStyle(
+                              fontFamily: 'Montserrat', fontSize: 13.0),
+                          textAlign: TextAlign.center,
+                        ),
+                        titlePadding: EdgeInsets.only(top: 15.0),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                            BorderRadius.all(Radius.circular(20.0))),
+                        contentPadding:
+                        EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        content: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Text(
+                                'Are you sure you want to reject this file?',
+                                style: TextStyle(
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 14.0,
+                                    fontStyle: FontStyle.italic),
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                              ),
                             ),
-                            titlePadding: EdgeInsets.only(top: 15.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20.0))),
-                            contentPadding:
-                                EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                            content: Column(
+                            Container(
+                              decoration: new BoxDecoration(
+                                border: new Border.all(
+                                  color: Colors.grey,
+                                  width: 1.0,
+                                ),
+                              ),
+                              child: Form(
+                                key: _formKey,
+                                autovalidate: _autoValidate,
+                                child: TextFormField(
+                                  controller: remarks,
+                                  obscureText: false,
+                                  validator: (String arg){
+                                    if(arg.length<1){
+                                      return 'You need to provide remarks';
+                                    }else{
+                                      return null;
+                                    }
+                                  },
+                                  onSaved: (String val){
+                                    _rem = val;
+                                  },
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                  ),
+                                  decoration: new InputDecoration(
+                                    icon: Padding(
+                                      padding:
+                                      const EdgeInsets.only(left: 8.0),
+                                      child: new Icon(
+                                        CustomIcons.pencil,
+                                        color: Colors.black,
+                                        size: 15.0,
+                                      ),
+                                    ),
+                                    border: InputBorder.none,
+                                    hintText: "Remarks",
+                                    hintStyle: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w500),
+                                    contentPadding: EdgeInsets.fromLTRB(
+                                        10.0, 10.0, 20.0, 10.0),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(15.0),
-                                  child: Text(
-                                    'Are you sure you want to reject this file?',
+                                new FlatButton(
+                                  child: new Text(
+                                    "Cancel",
                                     style: TextStyle(
+                                        color: Colors.red[800],
                                         fontFamily: 'Montserrat',
-                                        fontSize: 14.0,
-                                        fontStyle: FontStyle.italic),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
+                                        fontWeight: FontWeight.bold),
                                   ),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
                                 ),
-                                Container(
-                                  decoration: new BoxDecoration(
-                                    border: new Border.all(
-                                      color: Colors.grey,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: TextFormField(
-                                    controller: remarks,
-                                    obscureText: false,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                    decoration: new InputDecoration(
-                                      icon: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: new Icon(
-                                          CustomIcons.pencil,
-                                          color: Colors.black,
-                                          size: 15.0,
-                                        ),
-                                      ),
-                                      border: InputBorder.none,
-                                      hintText: "Remarks",
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.w500),
-                                      contentPadding: EdgeInsets.fromLTRB(
-                                          10.0, 10.0, 20.0, 10.0),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8.0, bottom: 20.0),
-                                  child: Text(
-                                    'Provide remarks about why you rejected this file',
+                                new FlatButton(
+                                  color: Colors.red[800],
+                                  child: new Text(
+                                    "Reject",
                                     style: TextStyle(
-                                        fontSize: 12.0,
-                                        fontStyle: FontStyle.italic),
-                                    textAlign: TextAlign.center,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.bold),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    new FlatButton(
-                                      child: new Text(
-                                        "Cancel",
-                                        style: TextStyle(
-                                            color: Colors.red[800],
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    new FlatButton(
-                                      color: Colors.red[800],
-                                      child: new Text(
-                                        "Reject",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: 'Montserrat',
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      onPressed: () {
-                                        rejectBudgetProposal();
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                  ],
+                                  onPressed: () {
+                                    _validateInputs2();
+                                  },
                                 ),
                               ],
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
                 child: Container(
                   height: 30.0,
                   width: 30.0,
@@ -719,9 +751,9 @@ class BudgetProposal extends StatelessWidget {
         );
       }
     }
-
+    String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
     return ListView.builder(
-        itemCount: list == null ? 0 : list.length,
+        itemCount: widget.list == null ? 0 : widget.list.length,
         itemBuilder: (context, i) {
           return
 //            Padding(
@@ -747,87 +779,87 @@ class BudgetProposal extends StatelessWidget {
 //              ),
 //            ))),
 //          );
-              Container(
-            decoration: new BoxDecoration(
-                border: Border(
-              bottom: BorderSide(
-                  color: Colors.grey, width: 0.5, style: BorderStyle.solid),
-            )),
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
-                  child: Container(
-                    decoration: new BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: new DecorationImage(
-                        image: NetworkImage(host + list[i]['user_image']),
-                        fit: BoxFit.cover,
+            Container(
+              decoration: new BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: Colors.grey, width: 0.5, style: BorderStyle.solid),
+                  )),
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(10.0, 5.0, 5.0, 5.0),
+                    child: Container(
+                      decoration: new BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: new DecorationImage(
+                          image: NetworkImage(newHost2 + widget.list[i]['user_image']),
+                          fit: BoxFit.cover,
+                        ),
                       ),
+                      width: 35.0,
+                      height: 35.0,
                     ),
-                    width: 35.0,
-                    height: 35.0,
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Text(
-                        list[i]['name'],
-                        style: new TextStyle(
-                            fontSize: 13.5,
-                            fontFamily: 'Montserrat',
-                            fontWeight: FontWeight.w600),
-                        overflow: TextOverflow.ellipsis,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text(
+                          widget.list[i]['name'],
+                          style: new TextStyle(
+                              fontSize: 13.5,
+                              fontFamily: 'Montserrat',
+                              fontWeight: FontWeight.w600),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                    ),
-                    Container(
-                      width: width(page),
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Text(
-                            list[i]['proposal_name'],
-                            style: new TextStyle(
+                      Container(
+                        width: width(widget.page),
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Text(
+                              widget.list[i]['proposal_name'],
+                              style: new TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: 'Montserrat',
+                                  fontWeight: FontWeight.w500),
+                              overflow: TextOverflow.ellipsis,
+                            )),
+                      ),
+                      Container(
+                        height: 15.0,
+                        width: width(widget.page),
+                        child: Padding(
+                            padding: const EdgeInsets.only(left: 12.0),
+                            child: Text(
+                              'Amount: ' + money(widget.list[i]['amount']),
+                              style: new TextStyle(
                                 fontSize: 12,
                                 fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                    ),
-                    Container(
-                      height: 15.0,
-                      width: width(page),
-                      child: Padding(
-                          padding: const EdgeInsets.only(left: 12.0),
-                          child: Text(
-                            'Amount: ' + money(list[i]['amount']),
-                            style: new TextStyle(
-                              fontSize: 12,
-                              fontFamily: 'Montserrat',
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          )),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Text(
-                        list[i]['departmentname'],
-                        style: new TextStyle(fontSize: 12.0),
-                        overflow: TextOverflow.ellipsis,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            )),
                       ),
-                    ),
-                  ],
-                ),
-                options(host, page, list[i]['proposal_file'], list[i]['id'], list[i]['user_id']),
-              ],
-            ),
-            width: w1,
-            height: 70.0,
-          );
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: Text(
+                          widget.list[i]['departmentname'],
+                          style: new TextStyle(fontSize: 12.0),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  options(widget.host, widget.page, widget.list[i]['proposal_file'], widget.list[i]['id'], widget.list[i]['user_id']),
+                ],
+              ),
+              width: w1,
+              height: 70.0,
+            );
         });
   }
 }

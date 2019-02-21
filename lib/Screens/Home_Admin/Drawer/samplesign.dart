@@ -104,9 +104,10 @@ class SignApp2State extends State<SignApp2> {
       lastnum = 0;
     }else{
       splitSignpath = list[0]['user_signature'].split('.');
-      lastnum = int.parse(splitSignpath[3]);
-      print(splitSignpath);
+      lastnum = int.parse(splitSignpath[1]);
+      print('split: '+splitSignpath[1]);
     }
+    //user_signatures/7.1.png
     //./assets/UserSignatures/7.2.png
     lastnum += 1;
     await Directory('$path/$directoryName').create(recursive: true);

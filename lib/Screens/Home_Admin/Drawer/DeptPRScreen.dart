@@ -14,8 +14,8 @@ class DeptPRScreen extends StatelessWidget {
   final String host;
   final String id;
   Future<List> getPR(String page) async {
-    final response = await http
-        .post("$host/getPurchaseRequest_Dept.php", body: {"pid": page, "uid": id});
+    final response = await http.post("$host/getPurchaseRequest_Dept.php",
+        body: {"pid": page, "uid": id});
     //print(response.body);
     return json.decode(response.body);
   }
@@ -26,49 +26,49 @@ class DeptPRScreen extends StatelessWidget {
       return <Widget>[
         Tab(
             child: Text(
-              'ALL',
-              style: new TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-                fontSize: 11.0,
-                fontWeight: FontWeight.w600,
-              ),
-            )),
+          'ALL',
+          style: new TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
+            fontSize: 11.0,
+            fontWeight: FontWeight.w600,
+          ),
+        )),
         Tab(
             child: Text(
-              'APPROVED',
-              style: new TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-                fontSize: 11.0,
-                fontWeight: FontWeight.w600,
-              ),
-            )),
+          'APPROVED',
+          style: new TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
+            fontSize: 11.0,
+            fontWeight: FontWeight.w600,
+          ),
+        )),
         Tab(
             child: Text(
-              'REJECTED',
-              style: new TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-                fontSize: 11.0,
-                fontWeight: FontWeight.w600,
-              ),
-              overflow: TextOverflow.ellipsis,
-            )),
+          'REJECTED',
+          style: new TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
+            fontSize: 11.0,
+            fontWeight: FontWeight.w600,
+          ),
+          overflow: TextOverflow.ellipsis,
+        )),
         Tab(
             child: Text(
-              'PENDING',
-              style: new TextStyle(
-                color: Theme.of(context).brightness == Brightness.light
-                    ? Colors.black
-                    : Colors.white,
-                fontSize: 11.0,
-                fontWeight: FontWeight.w600,
-              ),
-            )),
+          'PENDING',
+          style: new TextStyle(
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black
+                : Colors.white,
+            fontSize: 11.0,
+            fontWeight: FontWeight.w600,
+          ),
+        )),
       ];
     }
 
@@ -295,7 +295,7 @@ class PR extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 5.0,bottom: 3.0),
+                    padding: const EdgeInsets.only(top: 5.0, bottom: 3.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -362,27 +362,58 @@ class PR extends StatelessWidget {
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          'Due date: ',
-                          style: new TextStyle(
-                              fontStyle: FontStyle.italic, fontSize: 12.0),
-                          overflow: TextOverflow.ellipsis,
+                    padding: const EdgeInsets.only(top: 7.0),
+                    child: list[i]['submitted_at'] == null
+                        ? Container(
+                      width: w1/1.4,
+                            color: Colors.yellow,
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 2.0),
+                                    child: Icon(
+                                      CustomIcons.uniE87C,
+                                      size: 12.5,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    'You have not submitted this file yet',
+                                    style: new TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontStyle: FontStyle.italic,
+                                        fontSize: 12.0),
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Submitted at: ',
+                              style: new TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                  fontSize: 12.0),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              date(list[i]['submitted_at']),
+                              style: new TextStyle(
+                                  fontFamily: 'Montserrat', fontSize: 12.0),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         ),
-                        Text(
-                          date('2019-11-24 11:33:17'),
-                          style: new TextStyle(
-                              fontFamily: 'Montserrat', fontSize: 12.0),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 15.0),
+                    padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
                     child: options(list[i]['pr_number'], list[i]['prId'], page),
                   ),
                 ],

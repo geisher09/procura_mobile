@@ -228,7 +228,7 @@ class HomeDashboard2 extends StatelessWidget {
     var wchart = MediaQuery.of(context).size.width / 1.06;
     var w3 = MediaQuery.of(context).size.width / 3.2;
     var h = 75.0;
-
+    var width = MediaQuery.of(context).size.width;
     List<Widget> updates = new List.generate(
         5,
         (i) => new updatewidgets(
@@ -384,9 +384,16 @@ class HomeDashboard2 extends StatelessWidget {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    'Hello ${list[0]['name']}!',
-                    style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+                  child: Container(
+                    width: width/1.3,
+                    child: Center(
+                      child: Text(
+                        'Hello ${list[0]['name']}!',
+                        style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
                   ),
                 ),
                 Text(

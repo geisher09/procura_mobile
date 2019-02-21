@@ -4,11 +4,16 @@ import 'package:path_provider/path_provider.dart';
 import 'package:open_file/open_file.dart';
 import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PPMPDetailsPage.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PRDetailsPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
 class ApprovalScreen2 extends StatelessWidget {
+  final String id;
+  final List listuser;
+  final String user_id;
   final String host;
   final String title;
   final String requestType;
@@ -17,7 +22,7 @@ class ApprovalScreen2 extends StatelessWidget {
   final String date;
   final String remarks;
   final String sign;
-  ApprovalScreen2({this.host, this.title, this.requestType, this.name, this.image, this.date, this.remarks, this.sign});
+  ApprovalScreen2({this.id,this.listuser, this.user_id, this.host, this.title, this.requestType, this.name, this.image, this.date, this.remarks, this.sign});
   String datef(String date) {
     return formatter.format(DateTime.parse(date));
   }
@@ -241,7 +246,9 @@ class ApprovalScreen2 extends StatelessWidget {
         },
       );
     }
-
+    List splithost = host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/';
+    String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
     var conwidth = MediaQuery.of(context).size.width / 1.25;
     var noteswidth = MediaQuery.of(context).size.width / 1.15;
     return Scaffold(
@@ -318,7 +325,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
-                          image: new NetworkImage(host + image),
+                          image: new NetworkImage(newHost2 + image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -355,7 +362,20 @@ class ApprovalScreen2 extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 50.0),
                 child: GestureDetector(
-                  onTap: () => PdfViewer.loadAsset("assets/files/finals.pdf"),
+                  onTap: () =>
+                    requestType == 'PR' ? Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) => new PRDetailsPage(user_id: user_id,
+                            listuser: listuser,
+                            usertype: 'sector',
+                            title: title,
+                            host: host,
+                            id: id))): Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) => new PPMPDetailsPage(user_id: user_id,
+                            listuser: listuser,
+                            usertype: 'sector',
+                            title: title,
+                            host: host,
+                            id: id))),
                   child: Container(
                       height: 50.0,
                       width: conwidth,
@@ -373,12 +393,17 @@ class ApprovalScreen2 extends StatelessWidget {
                               width: 30.0,
                             ),
                           ),
-                          Text(
-                            'FILENAME.pdf',
-                            style: new TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w900,
-                                fontFamily: 'Montserrat'),
+                          Container(
+                            width: conwidth/1.2,
+                            height: 20.0,
+                            child: Text(
+                              title+'.$requestType',
+                              overflow: TextOverflow.ellipsis,
+                              style: new TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'Montserrat'),
+                            ),
                           ),
                         ],
                       )),
