@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -50,6 +51,7 @@ class _PPMPDetailsPageState extends State<PPMPDetailsPage> {
             "uid": widget.listuser[0]['id'],
             "password": password.text
           });
+      final response2 = await http.delete("${widget.host}/accountCheck.php");
       print('PASS: ' + password.text);
       print(response.body);
       return(response.body);
@@ -67,21 +69,18 @@ class _PPMPDetailsPageState extends State<PPMPDetailsPage> {
     }
 
     void approveBudgetProposal() {
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_projects/${widget.id}';
       var url = "${widget.host}/approvePPMP.php";
-      http.post(url, body: {
-        "id": widget.id,
+      http.post(newHost, body: {
         "remarks": remarks.text,
-        "is_approved": '1',
-        "uid": widget.user_id
       });
     }
     void rejectBudgetProposal() {
-      var url = "${widget.host}/rejectPPMP.php";
-      http.post(url, body: {
-        "id": widget.id,
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_projects/${widget.id}';
+      Dio().delete(newHost, data: {
         "remarks": remarks.text,
-        "is_approved": '0',
-        "uid": widget.user_id
       });
     }
 

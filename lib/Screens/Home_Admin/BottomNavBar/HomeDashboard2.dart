@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 
 class updatewidgets extends StatelessWidget {
   final text1;
@@ -101,14 +104,8 @@ class LinearSales {
             r: color.red, g: color.green, b: color.blue, a: color.alpha);
 }
 
-class OrdinalSales {
-  final String year;
-  final int sales;
 
-  OrdinalSales(this.year, this.sales);
-}
-
-class OrdinalSales2 {
+class OrdinalSales2{
   final int year;
   final int sales;
 
@@ -212,10 +209,78 @@ Widget recentUpdate(w1, text1, text2, text3) {
   );
 }
 
-class HomeDashboard2 extends StatelessWidget {
-  HomeDashboard2(this.list);
+class HomeDashboard2 extends StatefulWidget {
+  final String host;
   final List list;
+  HomeDashboard2({this.host, this.list});
   @override
+  _HomeDashboard2State createState() => _HomeDashboard2State();
+}
+
+class _HomeDashboard2State extends State<HomeDashboard2> {
+  Future<List> getSectorBudgetAlloc() async {
+    final response = await http.post("${widget.host}/getSectorBudgetAllocated.php",
+        body: {"uid": widget.list[0]['id']});
+    final responseJson = json.decode(response.body);
+    print('SectorAlloc: $responseJson');
+    setState(() {
+      _sectorBudgetAlloc.clear();
+      for (Map request in responseJson) {
+        _sectorBudgetAlloc.add(SectorBudgetAlloc.fromJson(request));
+        //_sectorBudgetAlloc.add(OrdinalSales.fromJson(request));
+      }
+    });
+  }
+
+  Future<List> getBOBudgetAlloc() async {
+    final response = await http.post("${widget.host}/getBudgetOfficerBudgetAllocated.php",
+        body: {"uid": widget.list[0]['id']});
+    final responseJson = json.decode(response.body);
+    print('SectorAlloc: $responseJson');
+    setState(() {
+      _sectorBudgetAlloc.clear();
+      for (Map request in responseJson) {
+        _sectorBudgetAlloc.add(SectorBudgetAlloc.fromJson(request));
+        //_sectorBudgetAlloc.add(OrdinalSales.fromJson(request));
+      }
+    });
+  }
+
+  Future<List> getPurchasesMade() async {
+    final response = await http.post("${widget.host}/getPurchasesMade.php",
+        body: {"uid": widget.list[0]['id']});
+    final responseJson = json.decode(response.body);
+    print('PM: $responseJson');
+    setState(() {
+      _purchasesMade.clear();
+      for (Map request in responseJson) {
+        _purchasesMade.add(PurchaseMade.fromJson(request));
+        //_sectorBudgetAlloc.add(OrdinalSales.fromJson(request));
+      }
+    });
+  }
+
+  Future<String> getDocs() async {
+    final response = await http.post("${widget.host}/getDocumentsMade.php",
+        body: {"uid": widget.list[0]['id']});
+    //print('DOCS: ${response.body}');
+    return (response.body);
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(widget.list[0]['user_type_id'] == '3'){
+      getSectorBudgetAlloc();
+    }else if(widget.list[0]['user_type_id'] == '2'){
+      getBOBudgetAlloc();
+    }else if(widget.list[0]['user_type_id'] == '1'){
+      getPurchasesMade();
+    }
+    //
+  }
+  @override
+
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -231,12 +296,12 @@ class HomeDashboard2 extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     List<Widget> updates = new List.generate(
         5,
-        (i) => new updatewidgets(
-              w1: w1,
-              text1: "Your PPMP 'Sample Title(max 35 chars)'",
-              text2: "Has been approved!",
-              text3: "December 25, 2018 | 12:30pm",
-            ));
+            (i) => new updatewidgets(
+          w1: w1,
+          text1: "Your PPMP 'Sample Title(max 35 chars)'",
+          text2: "Has been approved!",
+          text3: "December 25, 2018 | 12:30pm",
+        ));
 
     var Piedata = [
       new LinearSales(0, 35, Color(0xFF0b1925)),
@@ -244,19 +309,28 @@ class HomeDashboard2 extends StatelessWidget {
       new LinearSales(2, 15, Color(0xFF093b5e)),
     ];
 
-    var HBardata = [
-      new OrdinalSales('2019', 500),
-      new OrdinalSales('2018', 750),
-      new OrdinalSales('2017', 600),
-      new OrdinalSales('2016', 900),
-    ];
+    var HBardata = [];
+    for(int i=0; i<_sectorBudgetAlloc.length; i++){
+      int total = int.parse(_sectorBudgetAlloc[i].sales.toString());
+     // _sectorBudgetAlloc.add(SectorBudgetAlloc('${_sectorBudgetAlloc[i]}', _sectorBudgetAlloc[i].sales));
+      HBardata.add(SectorBudgetAlloc('${_sectorBudgetAlloc[i].year}', _sectorBudgetAlloc[i].sales));
+    }
 
-    var PointLinedata = [
+    /*var PointLinedata = [
       new OrdinalSales2(0, 35000),
       new OrdinalSales2(1, 20000),
       new OrdinalSales2(2, 56000),
       new OrdinalSales2(3, 48000),
-    ];
+    ];*/
+
+    var PointLinedata = [];
+    for(int i=0; i<_purchasesMade.length; i++){
+      int total = int.parse(_purchasesMade[i].tot.toString()).round();
+      int num = int.parse(_purchasesMade[i].num.toString());
+      print(total);
+      PointLinedata.add(PurchaseMade(i+1, total));
+      //PointLinedata.add(PurchaseMade(1, 1));
+    }
 
     var Pieseries = [
       new charts.Series(
@@ -271,21 +345,21 @@ class HomeDashboard2 extends StatelessWidget {
     var HBarseries = [
       new charts.Series(
           id: 'Sales',
-          domainFn: (OrdinalSales sales, _) => sales.year,
-          measureFn: (OrdinalSales sales, _) => sales.sales,
-          data: HBardata,
+          domainFn: (SectorBudgetAlloc sales, _) => sales.year,
+          measureFn: (SectorBudgetAlloc sales, _) => sales.sales,
+          data: _sectorBudgetAlloc,
           // Set a label accessor to control the text of the bar label.
-          labelAccessorFn: (OrdinalSales sales, _) =>
-              '${sales.year}: \Php${sales.sales.toString()}k')
+          labelAccessorFn: (SectorBudgetAlloc sales, _) =>
+          '${sales.year}: \Php${sales.sales.toString()}')
     ];
 
     var PointLineseries = [
       new charts.Series(
         id: 'Sales',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (OrdinalSales2 sales, _) => sales.year,
-        measureFn: (OrdinalSales2 sales, _) => sales.sales,
-        data: PointLinedata,
+        domainFn: (PurchaseMade sales, _) => sales.num,
+        measureFn: (PurchaseMade sales, _) => sales.tot,
+        data: _purchasesMade,
       )
     ];
 
@@ -301,7 +375,7 @@ class HomeDashboard2 extends StatelessWidget {
       vertical: false,
       barRendererDecorator: new charts.BarLabelDecorator<String>(),
       domainAxis:
-          new charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),
+      new charts.OrdinalAxisSpec(renderSpec: new charts.NoneRenderSpec()),
     );
 
     var PointLinechart = new charts.LineChart(PointLineseries,
@@ -330,8 +404,126 @@ class HomeDashboard2 extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 10.0),
             child: Text(
-              'PURCHASES MADE',
+              'DOCUMENTS MADE',
               style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                        height: 100.0,
+                        child: FutureBuilder<String>(
+                          future: getDocs(),
+                          builder: (context, snapshot){
+                            if(snapshot.hasError){
+                              print('ERROR: ${snapshot.error}');
+                            }
+                            if(snapshot.hasData){
+                              print(snapshot.data.split(':')[1][1]);
+                              return DocumentsMade(list: snapshot.data.split(':'));
+                            }else{
+                              return CircularProgressIndicator();
+                            }
+                          },
+                        ),
+                      ),
+           /*child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  height: h,
+                  width: w3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        _docMade[0].ppmp,
+                        style: new TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'PPMP',
+                        style: new TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                new Container(
+                  height: 35.0,
+                  width: 1.0,
+                  color: Colors.grey[300],
+                ),
+                Container(
+                  height: h,
+                  width: w3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        _docMade[0].pr,
+                        style: new TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'PR',
+                        style: new TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                new Container(
+                  height: 35.0,
+                  width: 1.0,
+                  color: Colors.grey[300],
+                ),
+                Container(
+                  height: h,
+                  width: w3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        _docMade[0].bp,
+                        style: new TextStyle(
+                            fontSize: 40.0,
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'BP',
+                        style: new TextStyle(
+                          fontSize: 20.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),*/
+          ),
+          new Divider(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'PURCHASES MADE',
+                  style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+                ),
+                Text(
+                  '(Recent 10 purchases)',
+                  style: new TextStyle(fontSize: 15.0, letterSpacing: 2.5, fontStyle: FontStyle.italic),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 180, width: wchart, child: PointLinechart),
@@ -359,278 +551,194 @@ class HomeDashboard2 extends StatelessWidget {
               style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
             ),
           ),
-          SizedBox(height: 180, width: wchart, child: PointLinechart),
+          SizedBox(
+              height: 180,
+              width: wchart,
+              child: PointLinechart),
           new Divider(),
         ],
       );
     }
 
     var pagechart;
-    if (list[0]['user_type_id'] == '2') {
+    if (widget.list[0]['user_type_id'] == '2') {
       pagechart = budgetAllocated();
-    } else if (list[0]['user_type_id'] == '1') {
+    } else if (widget.list[0]['user_type_id'] == '1') {
       pagechart = purchaseMade();
+    } else if (widget.list[0]['user_type_id'] == '3') {
+      pagechart = budgetAllocated();
     } else {
       pagechart = bothBAPM();
     }
-
     return ListView.builder(
-        itemCount: list == null ? 0 : list.length,
+        itemCount: widget.list == null ? 0 : widget.list.length,
         itemBuilder: (context, i) {
           return SingleChildScrollView(
               child: Container(
-            child: new Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Container(
-                    width: width/1.3,
-                    child: Center(
-                      child: Text(
-                        'Hello ${list[0]['name']}!',
-                        style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                child: new Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: Container(
+                        width: width / 1.3,
+                        child: Center(
+                          child: Text(
+                            'Hello ${widget.list[0]['name']}!',
+                            style:
+                            new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Text(
-                  'BUDGET USED',
-                  style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
-                ),
-                Stack(
-                  children: <Widget>[
-                    FractionalTranslation(
-                      translation: Offset(0.0, 0.9),
-                      child: Center(
-                        child: Container(
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: Colors.black54, width: 1.0)),
-                          height: 90.0,
-                          width: w1,
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                height: 40.0,
-                              ),
-                              new Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                    Text(
+                      'BUDGET USED',
+                      style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
+                    ),
+                    Stack(
+                      children: <Widget>[
+                        FractionalTranslation(
+                          translation: Offset(0.0, 0.9),
+                          child: Center(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Colors.black54, width: 1.0)),
+                              height: 90.0,
+                              width: w1,
+                              child: Column(
                                 children: <Widget>[
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      Text(
-                                        'SPENT BUDGET',
-                                        style: new TextStyle(fontSize: 12.0),
-                                      ),
-                                      Text(
-                                        'Php 765,000',
-                                        style: new TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Montserrat'),
-                                      ),
-                                    ],
+                                  Container(
+                                    height: 40.0,
                                   ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
+                                  new Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    mainAxisSize: MainAxisSize.min,
+                                    MainAxisAlignment.spaceAround,
                                     children: <Widget>[
-                                      Text(
-                                        'UNUSED BUDGET',
-                                        style: new TextStyle(fontSize: 12.0),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Text(
+                                            'SPENT BUDGET',
+                                            style: new TextStyle(fontSize: 12.0),
+                                          ),
+                                          Text(
+                                            'Php 765,000',
+                                            style: new TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Montserrat'),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        'Php 255,000',
-                                        style: new TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Montserrat'),
+                                      Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                          Text(
+                                            'UNUSED BUDGET',
+                                            style: new TextStyle(fontSize: 12.0),
+                                          ),
+                                          Text(
+                                            'Php 255,000',
+                                            style: new TextStyle(
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: 'Montserrat'),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
                                 ],
                               ),
+                            ),
+                          ),
+                        ),
+                        Center(
+                          child: new Container(
+                            width: 130.0,
+                            height: 130.0,
+                            decoration: new BoxDecoration(
+                              gradient: new RadialGradient(colors: [
+                                Color(0xFFb6babf),
+                                Color(0xFF767b7b),
+                              ]),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Color(0xFF19b3b1),
+                                    offset: Offset.zero,
+                                    blurRadius: 20.0,
+                                    spreadRadius: 5.0),
+                                BoxShadow(
+                                    color: Color(0xFF093b5e),
+                                    offset: Offset.zero,
+                                    blurRadius: 15.0,
+                                    spreadRadius: 4.0),
+                                BoxShadow(
+                                    color: Color(0xFF0b1925),
+                                    offset: Offset.zero,
+                                    blurRadius: 20.0,
+                                    spreadRadius: 4.0),
+                              ],
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 180, width: 180, child: Piechart),
+                      ],
+                      alignment: AlignmentDirectional.center,
+                    ),
+                    Container(
+                      height: 40.0,
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              legend(Color(0xFF0b1925), '35% Consultancy', w),
+                              legend(Color(0xFF19b3b1), '25% Infastracture', w),
                             ],
                           ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              legend(Color(0xFF093b5e), '15% Goods & Services', w),
+                              legend(Color(0xFF767b7b), '25% Unused', w),
+                            ],
+                          ),
+                        )
+                      ],
                     ),
-                    Center(
-                      child: new Container(
-                        width: 130.0,
-                        height: 130.0,
-                        decoration: new BoxDecoration(
-                          gradient: new RadialGradient(colors: [
-                            Color(0xFFb6babf),
-                            Color(0xFF767b7b),
-                          ]),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color(0xFF19b3b1),
-                                offset: Offset.zero,
-                                blurRadius: 20.0,
-                                spreadRadius: 5.0),
-                            BoxShadow(
-                                color: Color(0xFF093b5e),
-                                offset: Offset.zero,
-                                blurRadius: 15.0,
-                                spreadRadius: 4.0),
-                            BoxShadow(
-                                color: Color(0xFF0b1925),
-                                offset: Offset.zero,
-                                blurRadius: 20.0,
-                                spreadRadius: 4.0),
-                          ],
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 180, width: 180, child: Piechart),
-                  ],
-                  alignment: AlignmentDirectional.center,
-                ),
-                Container(
-                  height: 40.0,
-                ),
-                Column(
-                  children: <Widget>[
+                    new Divider(),
+                    pagechart,
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          legend(Color(0xFF0b1925), '35% Consultancy', w),
-                          legend(Color(0xFF19b3b1), '25% Infastracture', w),
-                        ],
+                      child: Text(
+                        'RECENT UPDATES',
+                        style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          legend(Color(0xFF093b5e), '15% Goods & Services', w),
-                          legend(Color(0xFF767b7b), '25% Unused', w),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                new Divider(),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 10.0),
-                  child: Text(
-                    'DOCUMENTS MADE',
-                    style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      height: h,
-                      width: w3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '15',
-                            style: new TextStyle(
-                                fontSize: 40.0,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'PPMP',
-                            style: new TextStyle(
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: updates,
                     ),
-                    new Container(
-                      height: 35.0,
-                      width: 1.0,
-                      color: Colors.grey[300],
-                    ),
-                    Container(
-                      height: h,
-                      width: w3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '5',
-                            style: new TextStyle(
-                                fontSize: 40.0,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'PR',
-                            style: new TextStyle(
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    new Container(
-                      height: 35.0,
-                      width: 1.0,
-                      color: Colors.grey[300],
-                    ),
-                    Container(
-                      height: h,
-                      width: w3,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            '8',
-                            style: new TextStyle(
-                                fontSize: 40.0,
-                                fontFamily: 'Montserrat',
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            'BP',
-                            style: new TextStyle(
-                              fontSize: 20.0,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                new Divider(),
-                pagechart,
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'RECENT UPDATES',
-                    style: new TextStyle(fontSize: 17.0, letterSpacing: 2.5),
-                  ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: updates,
-                ),
 //          new Container(
 //            height: 350.0,
 //              width: w1,
@@ -672,20 +780,146 @@ class HomeDashboard2 extends StatelessWidget {
 //              ),
 //            ],
 //          ),
-                new Divider(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 5.0),
-                  child: Center(
-                    child: Text(
-                      '© 2018 Procura | Technological University of the Philippines Manila',
-                      style: new TextStyle(
-                          fontSize: 10.0, fontFamily: 'Montserrat'),
+                    new Divider(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: Center(
+                        child: Text(
+                          '© 2018 Procura | Technological University of the Philippines Manila',
+                          style: new TextStyle(
+                              fontSize: 10.0, fontFamily: 'Montserrat'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ));
+        });
+  }
+}
+
+
+class DocumentsMade extends StatelessWidget {
+  final List list;
+  const DocumentsMade({Key key, this.list}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    var w3 = MediaQuery.of(context).size.width / 3.2;
+    var h = 75.0;
+    return ListView.builder(
+      itemCount: list == null ? 0 : 1,
+      scrollDirection: Axis.horizontal,
+      itemBuilder: (context, i){
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              height: h,
+              width: w3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    list[1][1],
+                    style: new TextStyle(
+                        fontSize: 40.0,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'PPMP',
+                    style: new TextStyle(
+                      fontSize: 20.0,
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ));
-        });
+            new Container(
+              height: 35.0,
+              width: 1.0,
+              color: Colors.grey[300],
+            ),
+            Container(
+              height: h,
+              width: w3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    list[2][1],
+                    style: new TextStyle(
+                        fontSize: 40.0,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'PR',
+                    style: new TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            new Container(
+              height: 35.0,
+              width: 1.0,
+              color: Colors.grey[300],
+            ),
+            Container(
+              height: h,
+              width: w3,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    list[3][1],
+                    style: new TextStyle(
+                        fontSize: 40.0,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    'BP',
+                    style: new TextStyle(
+                      fontSize: 20.0,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+List<SectorBudgetAlloc> _sectorBudgetAlloc = [];
+class SectorBudgetAlloc {
+  final String year;
+  final int sales;
+  SectorBudgetAlloc(this.year,
+        this.sales);
+
+  factory SectorBudgetAlloc.fromJson(Map<String, dynamic> json) {
+    return new SectorBudgetAlloc(
+        json['year'],
+        double.parse(json['total']).round());
+  }
+}
+
+List<PurchaseMade> _purchasesMade = [];
+class PurchaseMade {
+  final int num;
+  final int tot;
+  PurchaseMade(this.num,
+    this.tot);
+
+  factory PurchaseMade.fromJson(Map<String, dynamic> json) {
+    int i =0;
+    return new PurchaseMade(
+        int.parse(json['id'].toString()), double.parse(json['tot'].toString()).round());
   }
 }

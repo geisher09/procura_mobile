@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -374,21 +375,17 @@ class _BudgetProposalState extends State<BudgetProposal> {
     Widget options(
         String host, int page, String proposal_file, String proposal_id, String user_id) {
       void approveBudgetProposal() {
-        var url = "$host/approveBP.php";
-        http.post(url, body: {
-          "id": proposal_id,
+        List splithost = host.split('/');
+        var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+        http.post(newHost, body: {
           "remarks": remarks.text,
-          "is_approved": '1',
-          "uid": user_id
         });
       }
       void rejectBudgetProposal() {
-        var url = "$host/rejectBP.php";
-        http.post(url, body: {
-          "id": proposal_id,
+        List splithost = host.split('/');
+        var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+        Dio().delete(newHost, data: {
           "remarks": remarks.text,
-          "is_approved": '0',
-          "uid": user_id
         });
       }
       void _validateInputs(){
@@ -604,18 +601,6 @@ class _BudgetProposalState extends State<BudgetProposal> {
                         EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                         content: Column(
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Text(
-                                'Are you sure you want to reject this file?',
-                                style: TextStyle(
-                                    fontFamily: 'Montserrat',
-                                    fontSize: 14.0,
-                                    fontStyle: FontStyle.italic),
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                              ),
-                            ),
                             Container(
                               decoration: new BoxDecoration(
                                 border: new Border.all(
@@ -653,7 +638,7 @@ class _BudgetProposalState extends State<BudgetProposal> {
                                       ),
                                     ),
                                     border: InputBorder.none,
-                                    hintText: "Remarks",
+                                    hintText: "uname",
                                     hintStyle: const TextStyle(
                                         color: Colors.black,
                                         fontSize: 13.0,

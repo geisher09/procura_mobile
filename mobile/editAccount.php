@@ -3,20 +3,20 @@
 include 'connection.php';
 
 /*check if entered new username already exists*/
-$username = 'sectorheaddc';
+$username = 'sectorhead';
 
 $queryResult=$connect->query("SELECT * FROM users WHERE username='".$username."'");
 $rows = $queryResult->num_rows;
 
 if($rows > 0) {
-    echo('1');
+    echo('wrong');
 }else{
-	echo('0');
+	echo('correct');
 }
 
 /*checking is old password entered is same as the users current pass*/
 $ID = '2'; 
-$password = '23';
+$password= '1234';
 $user = $connect->query("SELECT * FROM users WHERE id = '".$ID."' AND user_type_id != '4' ");
 
 if ($user) {
@@ -24,10 +24,10 @@ if ($user) {
 	if ($row) {
 		$hash = $row['password'];
 		if (password_verify($password,$hash)) {
-			echo "Password matched";
+			echo "correct";
 		}
 		else {
-			echo "Password mismatched";
+			echo "wrong";
 		}
 
 	}
@@ -37,6 +37,6 @@ if ($user) {
 
 /*hashing a password*/
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-echo($hashed_password);
+//print_r($hashed_password);
 
 ?>

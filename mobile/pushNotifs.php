@@ -6,7 +6,7 @@ $ID = $_POST["id"];
 //$ID = '2';
 date_default_timezone_set('Asia/Manila');
 $duration = 2;
-$datenow = date("Y-m-d H:i:s", strtotime("+$duration sec"));
+$datenow = date("Y-m-d H:i:s", strtotime("-$duration sec"));
 
 $queryResult=$connect->query("
 	SELECT *

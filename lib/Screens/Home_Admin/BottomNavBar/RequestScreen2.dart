@@ -5,11 +5,17 @@ import 'package:dio/dio.dart';
 import 'package:open_file/open_file.dart';
 import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PPMPDetailsPage.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PRDetailsPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
 class RequestScreen2 extends StatelessWidget {
+  final List listuser;
+  final String user_id;
+  final String id;
+  final String proposal_file;
   final String host;
   final String title;
   final String requestType;
@@ -19,7 +25,11 @@ class RequestScreen2 extends StatelessWidget {
   final String status;
   final String remarks;
   RequestScreen2(
-      {this.host,
+      {this.listuser,
+        this.user_id,
+        this.id,
+      this.proposal_file,
+      this.host,
       this.title,
       this.requestType,
       this.image,
@@ -62,10 +72,10 @@ class RequestScreen2 extends StatelessWidget {
     }
   }
 
-  String remarksText(String notes){
-    if(notes == null){
+  String remarksText(String notes) {
+    if (notes == null) {
       return 'No remarks';
-    }else{
+    } else {
       return notes;
     }
   }
@@ -77,6 +87,28 @@ class RequestScreen2 extends StatelessWidget {
     List splithost = host.split('/');
     String newHost = 'http://${splithost[2]}/Procura/storage/app/';
     String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
+    void viewer(String reqtype) {
+      if (reqtype == 'BP') {
+        launch('$newHost/$proposal_file');
+      }else if(reqtype == 'PPMP'){
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (BuildContext context) => new PPMPDetailsPage(user_id: user_id,
+                listuser: listuser,
+                usertype: 'sector',
+                title: title,
+                host: host,
+                id: id)));
+      }else if(reqtype == 'PR'){
+        Navigator.of(context).push(new MaterialPageRoute(
+            builder: (BuildContext context) => new PRDetailsPage(user_id: user_id,
+                listuser: listuser,
+                usertype: 'sector',
+                title: title,
+                host: host,
+                id: id)));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -206,7 +238,9 @@ class RequestScreen2 extends StatelessWidget {
                           Text(
                             'Status: ',
                             style: new TextStyle(
-                                fontSize: 15.0, fontFamily: 'Montserrat',letterSpacing: 1.0),
+                                fontSize: 15.0,
+                                fontFamily: 'Montserrat',
+                                letterSpacing: 1.0),
                           ),
                           stats(),
                         ],
@@ -214,7 +248,7 @@ class RequestScreen2 extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 10.0),
                 child: GestureDetector(
-                  onTap: () => PdfViewer.loadAsset("assets/files/finals.pdf"),
+                  onTap: () => viewer(requestType),
                   child: Container(
                       height: 50.0,
                       width: conwidth,
@@ -233,10 +267,10 @@ class RequestScreen2 extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            width: conwidth/1.2,
+                            width: conwidth / 1.2,
                             height: 20.0,
                             child: Text(
-                              title+'.file',
+                              title + '.$requestType',
                               overflow: TextOverflow.ellipsis,
                               style: new TextStyle(
                                   fontSize: 13.0,
@@ -270,11 +304,14 @@ class RequestScreen2 extends StatelessWidget {
                       children: <TextSpan>[
                         TextSpan(
                             text: 'REMARKS:' + ' ',
-                            style: new TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1.0)),
+                            style: new TextStyle(
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 1.0)),
                         TextSpan(
-                          text:
-                              remarksText(remarks),
-                          style: new TextStyle(fontWeight: FontWeight.w400, fontStyle: FontStyle.italic),
+                          text: remarksText(remarks),
+                          style: new TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.italic),
                         )
                       ],
                     ),

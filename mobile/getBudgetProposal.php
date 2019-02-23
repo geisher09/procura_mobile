@@ -10,7 +10,7 @@ $queryResult=$connect->query("
 	LEFT OUTER JOIN users
 	on budget_proposals.user_id = users.id
 	LEFT OUTER JOIN departments
-	on budget_proposals.department_id = departments.id ORDER BY budget_proposals.updated_at DESC
+	on budget_proposals.department_id = departments.id ORDER BY budget_proposals.updated_at ASC
 	");
 
 $queryResult2=$connect->query("
@@ -38,8 +38,7 @@ $queryResult4=$connect->query("
 	on budget_proposals.user_id = users.id
 	LEFT OUTER JOIN departments
 	on budget_proposals.department_id = departments.id 
-	where budget_proposals.is_approved IS NULL ORDER BY budget_proposals.updated_at DESC");
-
+	where budget_proposals.is_approved IS NULL ORDER BY budget_proposals.updated_at ASC");
 if($ID==2){
 	$approved=array();
 

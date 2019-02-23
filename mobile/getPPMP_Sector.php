@@ -63,7 +63,7 @@ for($i=0; $i<sizeof($deptHeads); $i++){
 	$senderPen=array();
 	for($i=0; $i<sizeof($department); $i++){
 		$queryResult2=$connect->query("
-			SELECT projects.user_id, users.name, users.user_image, projects.id, projects.title, projects.created_at, departments.name departmentname
+			SELECT projects.user_id, users.name, users.user_image, projects.id, projects.title, projects.submitted_at, departments.name departmentname
 			from projects
 			LEFT OUTER JOIN department_budgets
 			on projects.department_budget_id = department_budgets.id
@@ -75,10 +75,10 @@ for($i=0; $i<sizeof($deptHeads); $i++){
 			on sectors.id = sector_heads.sector_id
 			LEFT OUTER JOIN users
 			on sector_heads.id = users.userable_id
-			where projects.user_id = '".$department[$i]['id']."' AND users.user_type_id = '1' AND projects.is_approved = '1'
+			where projects.user_id = '".$department[$i]['id']."' AND users.user_type_id = '1' AND projects.is_approved = '1' AND projects.submitted_at is NOT NULL ORDER BY projects.created_at DESC
 			");
 		$queryResult3=$connect->query("
-			SELECT projects.user_id, users.name, users.user_image, projects.id, projects.title, projects.created_at, departments.name departmentname
+			SELECT projects.user_id, users.name, users.user_image, projects.id, projects.title, projects.submitted_at, departments.name departmentname
 			from projects
 			LEFT OUTER JOIN department_budgets
 			on projects.department_budget_id = department_budgets.id
@@ -90,11 +90,11 @@ for($i=0; $i<sizeof($deptHeads); $i++){
 			on sectors.id = sector_heads.sector_id
 			LEFT OUTER JOIN users
 			on sector_heads.id = users.userable_id
-			where projects.user_id = '".$department[$i]['id']."' AND users.user_type_id = '1' AND projects.is_approved = '0'
+			where projects.user_id = '".$department[$i]['id']."' AND users.user_type_id = '1' AND projects.is_approved = '0' AND projects.submitted_at is NOT NULL ORDER BY projects.created_at ASC
 			");
 
 		$queryResult4=$connect->query("
-			SELECT projects.user_id, users.name, users.user_image, projects.id, projects.title, projects.created_at, departments.name departmentname
+			SELECT projects.user_id, users.name, users.user_image, projects.id, projects.title, projects.submitted_at, departments.name departmentname
 			from projects
 			LEFT OUTER JOIN department_budgets
 			on projects.department_budget_id = department_budgets.id
@@ -106,7 +106,7 @@ for($i=0; $i<sizeof($deptHeads); $i++){
 			on sectors.id = sector_heads.sector_id
 			LEFT OUTER JOIN users
 			on sector_heads.id = users.userable_id
-			where projects.user_id = '".$department[$i]['id']."' AND users.user_type_id = '1' AND projects.is_approved is NULL
+			where projects.user_id = '".$department[$i]['id']."' AND users.user_type_id = '1' AND projects.is_approved IS NULL AND projects.submitted_at is NOT NULL ORDER BY projects.created_at ASC
 			");
 
 		if($ID==2){
