@@ -172,6 +172,12 @@ class _HomeRequestsState extends State<HomeRequests> {
                                   new MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           new RequestScreen2(
+                                              listuser: widget.list,
+                                              user_id: widget.list[0]
+                                              ['id'],
+                                              id: _searchResult[i].id,
+                                              proposal_file: _searchResult[i]
+                                                  .proposal_file,
                                               host: widget.host,
                                               title: _searchResult[i].title,
                                               requestType:
@@ -301,6 +307,12 @@ class _HomeRequestsState extends State<HomeRequests> {
                                   new MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           new RequestScreen2(
+                                            listuser: widget.list,
+                                              user_id: widget.list[0]
+                                              ['id'],
+                                              id: _requestDetails[i].id,
+                                              proposal_file: _requestDetails[i]
+                                                  .proposal_file,
                                               host: widget.host,
                                               title: _requestDetails[i].title,
                                               requestType: _requestDetails[i]
@@ -456,6 +468,8 @@ List<RequestDetails> _searchResult = [];
 List<RequestDetails> _requestDetails = [];
 
 class RequestDetails {
+  final String id;
+  final String proposal_file;
   final String title;
   final String approver;
   final String datec;
@@ -463,7 +477,9 @@ class RequestDetails {
   final String is_approved;
   final String remarks;
   RequestDetails(
-      {this.title,
+      {this.id,
+      this.proposal_file,
+      this.title,
       this.approver,
       this.datec,
       this.requestType,
@@ -472,6 +488,8 @@ class RequestDetails {
 
   factory RequestDetails.fromJson(Map<String, dynamic> json) {
     return new RequestDetails(
+        id: json['id'],
+        proposal_file: json['proposal_file'],
         title: json['title'],
         approver: json['approver'],
         datec: json['datec'],

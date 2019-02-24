@@ -126,7 +126,7 @@ class _HomeApproval_BOState extends State<HomeApproval_BO> {
                                   new MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           new ApprovalScreen2_BO(
-                                            list: widget.list,
+                                            listuser: widget.list,
                                             host: widget.host,
                                             title: _searchResult[i].title,
                                             requestType:
@@ -259,7 +259,7 @@ class _HomeApproval_BOState extends State<HomeApproval_BO> {
                                   new MaterialPageRoute(
                                       builder: (BuildContext context) =>
                                           new ApprovalScreen2_BO(
-                                            list: widget.list,
+                                            listuser: widget.list,
                                             host: widget.host,
                                             title: _requestDetails[i].title,
                                             requestType:

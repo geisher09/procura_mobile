@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeApproval_BO.dart';
 import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeBottomAppBar.dart';
+import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeNotifications.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/HomeDrawer.dart';
 import 'package:http/http.dart' as http;
 import 'package:procura/main.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/cupertino.dart';
 
 var flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
 Timer timer;
+Timer timernotif;
 
 class Home_AdminScreen extends StatefulWidget {
   final String host;
@@ -48,13 +50,34 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
         .post("${host}/pushNotifs.php", body: {"id": Id.replaceAll("\"", "")});
     return json.decode(response.body);
   }
-
+  void readNotif(String id) {
+    var url = "${widget.host}/readNotif.php";
+    http.post(url, body: {
+      "id": id,
+    });
+  }
   void pushnotif() async {
     List notifDetails = await getpushNotifs();
     if (notifDetails.length > 0) {
-      await _showNotification(notifDetails[0]['data']);
+      await _showNotification(notifDetails[0]['data'], notifDetails[0]['type'],notifDetails[0]['id']);
     }
   }
+
+  Future<Null> getNotifs() async {
+    final prefs = await SharedPreferences.getInstance();
+    final Id = prefs.getString('id') ?? '0';
+    final response = await http.post("${widget.host}/getNotifications.php",
+        body: {"id": '2', "uid": Id.replaceAll("\"", "")});
+    final responseJson = json.decode(response.body);
+    //print('Num: $responseJson');
+    setState(() {
+      _notifCount.clear();
+      for (Map request in responseJson) {
+        _notifCount.add(NotifCount.fromJson(request));
+      }
+    });
+  }
+
 
   @override
   initState() {
@@ -69,6 +92,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) => pushnotif());
+    timernotif = Timer.periodic(Duration(seconds: 1), (Timer t) => getNotifs());
   }
 
 
@@ -92,7 +116,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       setState(() {
         _current;
       });
-    } else if (userDetails[0]['user_type_id'] == '2') {
+    } else if ((userDetails[0]['user_type_id'] == '2') || (userDetails[0]['user_type_id'] == '5')) {
       if (index == 2) {
         _current = 'TAB: 3';
       } else {
@@ -137,7 +161,8 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
-                    image: new AssetImage("assets/images/alert.png"),
+                    image: Theme.of(context).brightness == Brightness.light
+                        ? new AssetImage("assets/images/alert.png") : new AssetImage("assets/images/alert2.png"),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -213,9 +238,11 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       );
       onP = _showDialog;
     }
-    HomeBottomAppBar HomeBAP(String usertype) {
+    HomeBottomAppBar HomeBAP(String host, List list, String usertype) {
       if (usertype == '1') {
         return HomeBottomAppBar(
+            host: host,
+            list:list,
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
@@ -223,47 +250,50 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
               HomeBottomAppBarItem(
                   iconData: CustomIcons.paper_plane_empty, count: 0),
-              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: _notifCount.length),
             ]);
       } else if (usertype == '2') {
         return HomeBottomAppBar(
+            host: host,list:list,
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
             items: [
               HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
               HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
-              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: _notifCount.length),
             ]);
       } else if (usertype == '3') {
         return HomeBottomAppBar(
+            host: host,list:list,
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
             items: [
               HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
               HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
-              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: _notifCount.length),
             ]);
       }else if (usertype == '5') {
         return HomeBottomAppBar(
+            host: host,list:list,
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
             items: [
               HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
-              HomeBottomAppBarItem(iconData: CustomIcons.ok, count: 0),
               HomeBottomAppBarItem(
                   iconData: CustomIcons.paper_plane_empty, count: 0),
-              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: 5),
+              HomeBottomAppBarItem(iconData: CustomIcons.bell, count: _notifCount.length),
             ]);
       }else{
         return HomeBottomAppBar(
+            host: host,list:list,
             selectedColor: Colors.blueAccent,
             notchedShape: CircularNotchedRectangle(),
             onTabSelected: _selectedTab,
             items: [
-              HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0)
+              HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: _notifCount.length)
             ]);
       }
     }
@@ -295,13 +325,23 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               future: getData(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  return new IconButton(
-                      icon: Image.network(
-                        newHost + snapshot.data[0]['user_image'],
-                        width: 30.0,
-                        height: 30.0,
+                  return new GestureDetector(
+                    onTap: () => _scaffoldKey.currentState.openDrawer(),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 5.0,
+                        height: 5.0,
+                        decoration: new BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: new DecorationImage(
+                            image: new NetworkImage(newHost + snapshot.data[0]['user_image']),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
-                      onPressed: () => _scaffoldKey.currentState.openDrawer());
+                    ),
+                  );
                 } else
                   return new Center(
                     child: new Container(
@@ -336,13 +376,13 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               else {
                 if (snapshot.hasData) {
                   if (page_no == 0) {
-                    return page_dashboard(list: snapshot.data);
+                    return page_dashboard(host: host, list: snapshot.data);
                   } else if (page_no == 1) {
                     return page_approval(host: host, list: snapshot.data);
                   } else if (page_no == 2) {
                     return page_requests(host: host, list: snapshot.data);
                   } else if (page_no == 3) {
-                    return page_notifs(list: snapshot.data);
+                    return page_notifs(host: host, list: snapshot.data);
                   }
                 } else
                   return new Center(
@@ -357,7 +397,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             future: getData(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return HomeBAP(snapshot.data[0]['user_type_id']);
+                return HomeBAP(host, snapshot.data, snapshot.data[0]['user_type_id']);
               } else
                 return new Center(
                   child: new CircularProgressIndicator(),
@@ -365,10 +405,11 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             }));
   }
 
-  Future _showNotification(String data) async {
+  Future _showNotification(String data, String type, String id) async {
     var length = data.length;
-    length -= 2;
+    length -= 3;
     String text = data.substring(12,length);
+    String payloadtext = type+'||'+id;
     print(text);
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
@@ -377,8 +418,8 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        0, 'Trial notif!', text, platformChannelSpecifics,
-        payload: 'trial name');
+        0, 'Procura notif', text, platformChannelSpecifics,
+        payload: payloadtext);
 //    await flutterLocalNotificationsPlugin.schedule(
 //        0,
 //        'scheduled title',
@@ -391,11 +432,11 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
     }
-
-    await Navigator.push(
+    print('PAYLOAD: $payload');
+    /*await Navigator.push(
       context,
       new MaterialPageRoute(builder: (context) => new SecondScreen(payload)),
-    );
+    );*/
   }
 
   Future onDidRecieveLocalNotification(
@@ -410,7 +451,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               CupertinoDialogAction(
                 isDefaultAction: true,
                 child: new Text('Ok'),
-                onPressed: () async {
+                /*onPressed: () async {
                   Navigator.of(context, rootNavigator: true).pop();
                   await Navigator.push(
                     context,
@@ -418,7 +459,8 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
                       builder: (context) => new SecondScreen(payload),
                     ),
                   );
-                },
+                },*/
+                onPressed: (){},
               )
             ],
           ),
@@ -427,12 +469,13 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
 }
 
 class page_dashboard extends StatelessWidget {
+  final String host;
   final List list;
-  page_dashboard({this.list});
+  page_dashboard({this.host,this.list});
 
   @override
   Widget build(BuildContext context) {
-    return new HomeDashboard2(list);
+    return new HomeDashboard2(host: host,list: list);
   }
 }
 
@@ -463,12 +506,14 @@ class page_requests extends StatelessWidget {
 }
 
 class page_notifs extends StatelessWidget {
+  final String host;
   final List list;
-  page_notifs({this.list});
+  page_notifs({this.host, this.list});
 
   @override
   Widget build(BuildContext context) {
-    return new HomeNotifs();
+    //return new HomeNotifs(host: host, list: list);
+    return new HomeNotifications(host: host, list: list);
   }
 }
 
@@ -505,5 +550,53 @@ class SecondScreenState extends State<SecondScreen> {
         ),
       ),
     );
+  }
+}
+
+List<NotifCount> _notifCount = [];
+
+class NotifCount {
+  final String count;
+  NotifCount(
+      {this.count});
+
+  factory NotifCount.fromJson(Map<String, dynamic> json) {
+    int c = json.length;
+    double count= c/2.0;
+    int notif = count.round();
+    return new NotifCount(
+      count: json.length == null ? '0' : notif.toString()
+    );
+  }
+}
+
+List<RequestDetails> _requestDetails = [];
+
+class RequestDetails {
+  final String id;
+  final String type;
+  final String notifiable_type;
+  final String notifiable_id;
+  final String data;
+  final String read_at;
+  final String created_at;
+  RequestDetails(
+      {this.id,
+        this.type,
+        this.notifiable_type,
+        this.notifiable_id,
+        this.data,
+        this.read_at,
+        this.created_at});
+
+  factory RequestDetails.fromJson(Map<String, dynamic> json) {
+    return new RequestDetails(
+        id: json['id'],
+        type: json['type'],
+        notifiable_type: json['notifiable_type'],
+        notifiable_id: json['notifiable_id'],
+        data: json['data'],
+        read_at: json['read_at'],
+        created_at: json['created_at']);
   }
 }

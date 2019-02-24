@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 
 
 const directoryName = 'Signature';
+//MediaQuery.of(context).orientation == Orientation.portrait ?
 
 class SignApp2 extends StatefulWidget {
   SignApp2({this.host,this.list});
@@ -65,8 +66,9 @@ class SignApp2State extends State<SignApp2> {
 //    SystemChrome.setPreferredOrientations([
 //      DeviceOrientation.landscapeRight
 //    ]);
-
-    return Scaffold(
+    return
+      MediaQuery.of(context).orientation == Orientation.landscape ?
+      Scaffold(
       body: Signature(key: signatureKey),
       persistentFooterButtons: <Widget>[
         FlatButton(
@@ -88,7 +90,17 @@ class SignApp2State extends State<SignApp2> {
           },
         )
       ],
-    );
+    ): Scaffold(
+        body: Center(
+          child: Text('This mobile needs to be in landscape!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 50.0,
+              fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+      );
   }
   Future<Null> showImage(BuildContext context, {List<ui.Offset> point}) async {
     var pngBytes = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -119,51 +131,94 @@ class SignApp2State extends State<SignApp2> {
     });
     String text;
     if(num2 > 0){
+      upload(host, list, _imagesign);
       text = 'Success! You have set your signature!';
-    }else{
-      text = 'Error! You should draw something.';
-    }
-    upload(host, list, _imagesign);
-    return showDialog<Null>(
-        context: context,
-        builder: (BuildContext context) {
-          return SingleChildScrollView(
-            child: AlertDialog(
-              title: Text(
-                text,
-                style: TextStyle(
-                    fontWeight: FontWeight.w300,
-                    color: Theme.of(context).primaryColor,
-                    letterSpacing: 1.1
+      return showDialog<Null>(
+          context: context,
+          builder: (BuildContext context) {
+            return SingleChildScrollView(
+              child: AlertDialog(
+                title: Text(
+                  text,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(context).primaryColor,
+                      letterSpacing: 1.1
+                  ),
                 ),
-              ),
-              //content: Image.memory(Uint8List.view(pngBytes.buffer)),
-              content: Column(
-                children: <Widget>[
-                  Image.asset('$path/$directoryName/${list[0]['id']}.$lastnum.png'),
-                  //Image.file(File('$path/$directoryName/heee.png'))
-                ],
-              ),
-              actions: <Widget>[
-                new FlatButton(
-                    child: new Text(
-                      "Close",
-                      style: TextStyle(
-                          fontFamily: 'Montserrat',
-                          fontWeight: FontWeight.bold),
-                    ),
-                    onPressed: () async {
-                      Navigator.of(context).popAndPushNamed('/home');
-                    }
+                //content: Image.memory(Uint8List.view(pngBytes.buffer)),
+                content: Column(
+                  children: <Widget>[
+                    Image.asset('$path/$directoryName/${list[0]['id']}.$lastnum.png'),
+                    //Image.file(File('$path/$directoryName/heee.png'))
+                  ],
+                ),
+                actions: <Widget>[
+                  new FlatButton(
+                      child: new Text(
+                        "Close",
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/home', (Route<dynamic> route) => false);
+                      }
 //                  {
 //                    Navigator.of(context).pop();
 //                  },
+                  ),
+                ],
+              ),
+            );
+          }
+      );
+    }else{
+      text = 'Error! You should draw something.';
+      return showDialog<Null>(
+          context: context,
+          builder: (BuildContext context) {
+            return SingleChildScrollView(
+              child: AlertDialog(
+                title: Text(
+                  text,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(context).primaryColor,
+                      letterSpacing: 1.1
+                  ),
                 ),
-              ],
-            ),
-          );
-        }
-    );
+                //content: Image.memory(Uint8List.view(pngBytes.buffer)),
+                content: Column(
+                  children: <Widget>[
+                    Image.asset('$path/$directoryName/${list[0]['id']}.$lastnum.png'),
+                    //Image.file(File('$path/$directoryName/heee.png'))
+                  ],
+                ),
+                actions: <Widget>[
+                  new FlatButton(
+                      child: new Text(
+                        "Close",
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: () async {
+                        Navigator.of(context).pushNamedAndRemoveUntil(
+                            '/home', (Route<dynamic> route) => false);
+                      }
+//                  {
+//                    Navigator.of(context).pop();
+//                  },
+                  ),
+                ],
+              ),
+            );
+          }
+      );
+    }
+
   }
 
 

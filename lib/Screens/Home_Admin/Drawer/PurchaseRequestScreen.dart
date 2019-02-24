@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:procura/Components/custom_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/PRDetailsPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
@@ -155,7 +156,8 @@ class PPMP extends StatelessWidget {
 
   Widget build(BuildContext context) {
     var w1 = MediaQuery.of(context).size.width;
-
+    List splithost = host.split('/');
+    String newHost = 'http://${splithost[2]}:8000/mobile/purchase_requests/';
     double width = MediaQuery.of(context).orientation == Orientation.portrait
         ? w1 / 4.5
         : w1 / 5.0;
@@ -223,7 +225,7 @@ class PPMP extends StatelessWidget {
               InkWell(
                 borderRadius: BorderRadius.circular(20.0),
                 splashColor: Colors.grey[500],
-                onTap: () {},
+                onTap: () => launch('$newHost$id/file'),
                 child: Container(
                   height: 30.0,
                   width: 30.0,

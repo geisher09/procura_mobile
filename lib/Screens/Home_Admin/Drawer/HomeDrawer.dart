@@ -186,8 +186,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 context,
                 CupertinoPageRoute(
                     builder: (context) =>
-                        //SettingsScreen(host: widget.host, list: widget.list)
-                        Notif()),
+                        SettingsScreen(host: widget.host, list: widget.list))
+                        //Notif()),
               );
             },
             trailing: IconButton(

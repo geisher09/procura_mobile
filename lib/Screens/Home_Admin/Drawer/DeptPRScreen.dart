@@ -6,6 +6,7 @@ import 'package:procura/Components/custom_icons.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/DataTable.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/PRDetailsPage.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
@@ -19,7 +20,7 @@ class DeptPRScreen extends StatelessWidget {
     //print(response.body);
     return json.decode(response.body);
   }
-
+  //http://192.168.22.7:8000/mobile/purchase_requests/
   @override
   Widget build(BuildContext context) {
     List<Widget> _buildTabs() {
@@ -181,6 +182,8 @@ class PR extends StatelessWidget {
   }
 
   Widget build(BuildContext context) {
+    List splithost = host.split('/');
+    String newHost = 'http://${splithost[2]}:8000/mobile/purchase_requests/';
     var w1 = MediaQuery.of(context).size.width;
 
     double width = MediaQuery.of(context).orientation == Orientation.portrait
@@ -222,7 +225,7 @@ class PR extends StatelessWidget {
               InkWell(
                 borderRadius: BorderRadius.circular(20.0),
                 splashColor: Colors.grey[500],
-                onTap: () {},
+                onTap: () => launch('$newHost$id/file'),
                 child: Container(
                   height: 30.0,
                   width: 30.0,

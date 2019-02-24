@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -6,11 +7,11 @@ import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 import 'package:procura/Components/custom_icons.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/PPMPDetailsPage.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/PRDetailsPage.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
-class ApprovalScreen2 extends StatelessWidget {
+class ApprovalScreen2 extends StatefulWidget {
   final String id;
   final List listuser;
   final String user_id;
@@ -23,11 +24,53 @@ class ApprovalScreen2 extends StatelessWidget {
   final String remarks;
   final String sign;
   ApprovalScreen2({this.id,this.listuser, this.user_id, this.host, this.title, this.requestType, this.name, this.image, this.date, this.remarks, this.sign});
+  @override
+  _ApprovalScreen2State createState() => _ApprovalScreen2State();
+}
+
+class _ApprovalScreen2State extends State<ApprovalScreen2> {
+  TextEditingController remarks = new TextEditingController();
   String datef(String date) {
     return formatter.format(DateTime.parse(date));
   }
   @override
   Widget build(BuildContext context) {
+    List splithost = widget.host.split('/');
+    String newHost = 'http://${splithost[2]}/Procura/storage/app/';
+    String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
+
+
+    void approvePR() {
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_purchase_requests/${widget.id}';
+      http.post(newHost, body: {
+        "remarks": remarks.text,
+      });
+    }
+    void rejectPR() {
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_purchase_requests/${widget.id}';
+      Dio().delete(newHost, data: {
+        "remarks": remarks.text,
+      });
+    }
+
+    void approvePPMP() {
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_projects/${widget.id}';
+      http.post(newHost, body: {
+        "remarks": remarks.text,
+      });
+    }
+    void rejectPPMP() {
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_projects/${widget.id}';
+      Dio().delete(newHost, data: {
+        "remarks": remarks.text,
+      });
+    }
+
+
     void _approveDialog() {
       showDialog(
         context: context,
@@ -51,7 +94,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       height: 80.0,
                       width: 180.0,
                       child: Image.network(
-                          host + sign),
+                          newHost2 + widget.listuser[0]['user_signature']),
                     ),
                   ),
                   FractionalTranslation(
@@ -64,7 +107,7 @@ class ApprovalScreen2 extends StatelessWidget {
                     child: Text(
                       'I hereby agree to digitally sign this file',
                       style:
-                          TextStyle(fontFamily: 'Montserrat', fontSize: 12.0),
+                      TextStyle(fontFamily: 'Montserrat', fontSize: 12.0),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -75,40 +118,28 @@ class ApprovalScreen2 extends StatelessWidget {
                         width: 1.0,
                       ),
                     ),
-                    child: TextFormField(
-                      //controller:
-                      obscureText: true,
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                      decoration: new InputDecoration(
-                        icon: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: new Icon(
-                            CustomIcons.lock,
-                            color: Colors.black,
-                            size: 15.0,
-                          ),
+                    child: Form(
+                      child: TextFormField(
+                        controller: remarks,
+                        obscureText: false,
+                        style: const TextStyle(
+                          color: Colors.black,
                         ),
-                        border: InputBorder.none,
-                        hintText: "Password",
-                        hintStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.w500),
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                        decoration: new InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Notes/Comments",
+                          hintStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w500),
+                          contentPadding:
+                          EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                        ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
-                    child: Text(
-                      'Enter password to continue',
-                      style: TextStyle(
-                          fontSize: 12.0, fontStyle: FontStyle.italic),
-                      textAlign: TextAlign.center,
-                    ),
+                  Container(
+                    height: 15.0,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,7 +166,9 @@ class ApprovalScreen2 extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          widget.requestType == 'PR' ? approvePR() : approvePPMP();
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/home', (Route<dynamic> route) => false);
                         },
                       ),
                     ],
@@ -147,7 +180,6 @@ class ApprovalScreen2 extends StatelessWidget {
         },
       );
     }
-
     void _rejectDialog() {
       showDialog(
         context: context,
@@ -166,12 +198,11 @@ class ApprovalScreen2 extends StatelessWidget {
               content: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(bottom:10.0),
+                    padding: const EdgeInsets.only(bottom: 10.0),
                     child: Container(
                       height: 80.0,
                       width: 180.0,
-                      child: Image.asset(
-                          "assets/images/Reject.png"),
+                      child: Image.asset("assets/images/Reject.png"),
                     ),
                   ),
                   Container(
@@ -181,22 +212,23 @@ class ApprovalScreen2 extends StatelessWidget {
                         width: 1.0,
                       ),
                     ),
-                    child: TextFormField(
-                      //controller:
-                      autocorrect: true,
-                      obscureText: false,
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                      decoration: new InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Notes/Comments",
-                        hintStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.w500),
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                    child: Form(
+                      child: TextFormField(
+                        controller: remarks,
+                        obscureText: false,
+                        style: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        decoration: new InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Notes/Comments",
+                          hintStyle: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w500),
+                          contentPadding:
+                          EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
+                        ),
                       ),
                     ),
                   ),
@@ -234,7 +266,9 @@ class ApprovalScreen2 extends StatelessWidget {
                               fontWeight: FontWeight.bold),
                         ),
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          widget.requestType == 'PR' ? rejectPR() : rejectPPMP();
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/home', (Route<dynamic> route) => false);
                         },
                       ),
                     ],
@@ -246,9 +280,8 @@ class ApprovalScreen2 extends StatelessWidget {
         },
       );
     }
-    List splithost = host.split('/');
-    String newHost = 'http://${splithost[2]}/Procura/storage/app/';
-    String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
+
+
     var conwidth = MediaQuery.of(context).size.width / 1.25;
     var noteswidth = MediaQuery.of(context).size.width / 1.15;
     return Scaffold(
@@ -268,7 +301,7 @@ class ApprovalScreen2 extends StatelessWidget {
                     ? MediaQuery.of(context).size.width / 1.8
                     : MediaQuery.of(context).size.width / 1.35,
                 child: Text(
-                  title,
+                  widget.title,
                   style: new TextStyle(
                       color: Theme.of(context).brightness == Brightness.light
                           ? Colors.black
@@ -293,7 +326,7 @@ class ApprovalScreen2 extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(2.0),
                   child: Text(
-                    requestType,
+                    widget.requestType,
                     style: new TextStyle(
                         color: Theme.of(context).brightness == Brightness.light
                             ? Colors.grey[50]
@@ -325,7 +358,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       decoration: new BoxDecoration(
                         shape: BoxShape.circle,
                         image: new DecorationImage(
-                          image: new NetworkImage(newHost2 + image),
+                          image: new NetworkImage(newHost2 + widget.image),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -341,7 +374,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.only(left: 12.0, bottom: 5.0),
                         child: Text(
-                          name,
+                          widget.name,
                           style: new TextStyle(
                               fontSize: 13.5,
                               fontFamily: 'Montserrat',
@@ -351,7 +384,7 @@ class ApprovalScreen2 extends StatelessWidget {
                       Padding(
                           padding: const EdgeInsets.only(left: 12.0),
                           child: Text(
-                            datef(date),
+                            datef(widget.date),
                             style: new TextStyle(
                                 fontSize: 11.0, fontFamily: 'Montserrat-Thin'),
                           )),
@@ -363,19 +396,19 @@ class ApprovalScreen2 extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 50.0),
                 child: GestureDetector(
                   onTap: () =>
-                    requestType == 'PR' ? Navigator.of(context).push(new MaterialPageRoute(
-                        builder: (BuildContext context) => new PRDetailsPage(user_id: user_id,
-                            listuser: listuser,
-                            usertype: 'sector',
-                            title: title,
-                            host: host,
-                            id: id))): Navigator.of(context).push(new MaterialPageRoute(
-                        builder: (BuildContext context) => new PPMPDetailsPage(user_id: user_id,
-                            listuser: listuser,
-                            usertype: 'sector',
-                            title: title,
-                            host: host,
-                            id: id))),
+                  widget.requestType == 'PR' ? Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext context) => new PRDetailsPage(user_id: widget.user_id,
+                          listuser: widget.listuser,
+                          usertype: 'sector',
+                          title: widget.title,
+                          host: widget.host,
+                          id: widget.id))): Navigator.of(context).push(new MaterialPageRoute(
+                      builder: (BuildContext context) => new PPMPDetailsPage(user_id: widget.user_id,
+                          listuser: widget.listuser,
+                          usertype: 'sector',
+                          title: widget.title,
+                          host: widget.host,
+                          id: widget.id))),
                   child: Container(
                       height: 50.0,
                       width: conwidth,
@@ -397,7 +430,7 @@ class ApprovalScreen2 extends StatelessWidget {
                             width: conwidth/1.2,
                             height: 20.0,
                             child: Text(
-                              title+'.$requestType',
+                              widget.title+'.${widget.requestType}',
                               overflow: TextOverflow.ellipsis,
                               style: new TextStyle(
                                   fontSize: 13.0,
@@ -426,7 +459,7 @@ class ApprovalScreen2 extends StatelessWidget {
                 child: Text(
                   'Approve this file?',
                   style:
-                      new TextStyle(fontSize: 13.0, fontFamily: 'Montserrat'),
+                  new TextStyle(fontSize: 13.0, fontFamily: 'Montserrat'),
                 ),
               ),
               Padding(
@@ -479,3 +512,4 @@ class ApprovalScreen2 extends StatelessWidget {
     );
   }
 }
+

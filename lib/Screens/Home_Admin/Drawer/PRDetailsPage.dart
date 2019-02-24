@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -24,7 +25,8 @@ class PRDetailsPage extends StatefulWidget {
   @override
   _PRDetailsPageState createState() => _PRDetailsPageState();
 }
-
+//Navigator.of(context).pushNamedAndRemoveUntil(
+//                                              '/home', (Route<dynamic> route) => false);
 class _PRDetailsPageState extends State<PRDetailsPage> {
   TextEditingController remarks = new TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -42,239 +44,18 @@ class _PRDetailsPageState extends State<PRDetailsPage> {
       return json.decode(response.body);
     }
 
-    void _rejectDialog2() {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SingleChildScrollView(
-            child: AlertDialog(
-              title: Text(
-                'Reject file',
-                style: TextStyle(fontFamily: 'Montserrat', fontSize: 13.0),
-                textAlign: TextAlign.center,
-              ),
-              titlePadding: EdgeInsets.all(15.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              content: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10.0),
-                    child: Container(
-                      height: 80.0,
-                      width: 180.0,
-                      child: Image.asset("assets/images/Reject.png"),
-                    ),
-                  ),
-                  Container(
-                    decoration: new BoxDecoration(
-                      border: new Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: TextFormField(
-                      //controller:
-                      autocorrect: true,
-                      obscureText: false,
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                      decoration: new InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Notes/Comments",
-                        hintStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.w500),
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
-                    child: Text(
-                      'Provide notes on why you rejected this file',
-                      style: TextStyle(
-                          fontSize: 12.0, fontStyle: FontStyle.italic),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new FlatButton(
-                        child: new Text(
-                          "Cancel",
-                          style: TextStyle(
-                              color: Colors.red[800],
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      new FlatButton(
-                        color: Colors.red[800],
-                        child: new Text(
-                          "Done",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-    void _approveDialog2() {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return SingleChildScrollView(
-            child: AlertDialog(
-              title: Text(
-                'Approve File',
-                style: TextStyle(fontFamily: 'Montserrat', fontSize: 13.0),
-                textAlign: TextAlign.center,
-              ),
-              titlePadding: EdgeInsets.only(top: 15.0),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-              content: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: Container(
-                      height: 80.0,
-                      width: 180.0,
-                      child: Image.network(
-                          newHost + widget.listuser[0]['user_signature']),
-                    ),
-                  ),
-                  FractionalTranslation(
-                      translation: Offset(0.0, -1.0),
-                      child: Divider(
-                        color: Colors.grey[600],
-                      )),
-                  FractionalTranslation(
-                    translation: Offset(0.0, -1.5),
-                    child: Text(
-                      'I hereby agree to digitally sign this file',
-                      style:
-                          TextStyle(fontFamily: 'Montserrat', fontSize: 12.0),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    decoration: new BoxDecoration(
-                      border: new Border.all(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ),
-                    ),
-                    child: TextFormField(
-                      //controller:
-                      obscureText: true,
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                      decoration: new InputDecoration(
-                        icon: Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: new Icon(
-                            CustomIcons.lock,
-                            color: Colors.black,
-                            size: 15.0,
-                          ),
-                        ),
-                        border: InputBorder.none,
-                        hintText: "Password",
-                        hintStyle: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.w500),
-                        contentPadding:
-                            EdgeInsets.fromLTRB(10.0, 10.0, 20.0, 10.0),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, bottom: 20.0),
-                    child: Text(
-                      'Enter password to continue',
-                      style: TextStyle(
-                          fontSize: 12.0, fontStyle: FontStyle.italic),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      new FlatButton(
-                        child: new Text(
-                          "Cancel",
-                          style: TextStyle(
-                              color: Colors.green[800],
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      new FlatButton(
-                        color: Colors.green[800],
-                        child: new Text(
-                          "Sign",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'Montserrat',
-                              fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      );
-    }
-
     void approveBudgetProposal() {
-      var url = "${widget.host}/approvePR.php";
-      http.post(url, body: {
-        "id": widget.id,
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_purchase_requests/${widget.id}';
+      http.post(newHost, body: {
         "remarks": remarks.text,
-        "is_approved": '1',
-        "uid": widget.user_id
       });
     }
     void rejectBudgetProposal() {
-      var url = "${widget.host}/rejectPR.php";
-      http.post(url, body: {
-        "id": widget.id,
+      List splithost = widget.host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_purchase_requests/${widget.id}';
+      Dio().delete(newHost, data: {
         "remarks": remarks.text,
-        "is_approved": '0',
-        "uid": widget.user_id
       });
     }
 

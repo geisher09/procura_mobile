@@ -9,7 +9,7 @@ $UserID = $_POST["uid"];
 
 
 $queryResult=$connect->query("
-	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver
+	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver, projects.submitted_at
 	from projects
 	LEFT OUTER JOIN department_budgets
 	on projects.department_budget_id = department_budgets.id
@@ -25,7 +25,7 @@ $queryResult=$connect->query("
 	");
 
 $queryResult2=$connect->query("
-	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver
+	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver, projects.submitted_at
 	from projects
 	LEFT OUTER JOIN department_budgets
 	on projects.department_budget_id = department_budgets.id
@@ -41,7 +41,7 @@ $queryResult2=$connect->query("
 	");
 
 $queryResult3=$connect->query("
-	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver
+	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver, projects.submitted_at
 	from projects
 	LEFT OUTER JOIN department_budgets
 	on projects.department_budget_id = department_budgets.id
@@ -57,7 +57,7 @@ $queryResult3=$connect->query("
 	");
 
 $queryResult4=$connect->query("
-	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver
+	SELECT projects.user_id, projects.id, projects.title, projects.created_at, departments.name departmentname, users.name approver, projects.submitted_at
 	from projects
 	LEFT OUTER JOIN department_budgets
 	on projects.department_budget_id = department_budgets.id

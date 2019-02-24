@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,12 +6,13 @@ import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 import 'package:procura/Components/custom_icons.dart';
 import 'package:http/http.dart' as http;
 import 'package:procura/Screens/Home_Admin/BottomNavBar/HomeApproval_BO.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/PRDetailsPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final formatter = new DateFormat.yMMMMd("en_US").add_jm();
 
 class ApprovalScreen2_BO extends StatelessWidget {
-  final List list;
+  final List listuser;
   final String host;
   final String title;
   final String requestType;
@@ -22,7 +24,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
   final String proposal_file;
   final String proposal_id;
   final String user_id;
-  ApprovalScreen2_BO({this.list, this.host, this.title, this.requestType, this.name, this.image, this.date, this.remarks, this.sign,
+  ApprovalScreen2_BO({this.listuser, this.host, this.title, this.requestType, this.name, this.image, this.date, this.remarks, this.sign,
   this.proposal_file, this.proposal_id, this.user_id});
   String datef(String date) {
     return formatter.format(DateTime.parse(date));
@@ -35,22 +37,33 @@ class ApprovalScreen2_BO extends StatelessWidget {
     List splithost = host.split('/');
     String newHost = 'http://${splithost[2]}/Procura/storage/app/';
     String newHost2 = 'http://${splithost[2]}/Procura/storage/app/public/';
-    void approveBudgetProposal() {
-      var url = "$host/approveBP.php";
-      http.post(url, body: {
-        "id": proposal_id,
+
+    void approvePR() {
+      List splithost = host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_purchase_requests/${proposal_id}';
+      http.post(newHost, body: {
         "remarks": remarks.text,
-        "is_approved": '1',
-        "uid": user_id
+      });
+    }
+    void rejectPR() {
+      List splithost = host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_purchase_requests/${proposal_id}';
+      Dio().delete(newHost, data: {
+        "remarks": remarks.text,
+      });
+    }
+    void approveBudgetProposal() {
+      List splithost = host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+      http.post(newHost, body: {
+        "remarks": remarks.text,
       });
     }
     void rejectBudgetProposal() {
-      var url = "$host/rejectBP.php";
-      http.post(url, body: {
-        "id": proposal_id,
+      List splithost = host.split('/');
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+      Dio().delete(newHost, data: {
         "remarks": remarks.text,
-        "is_approved": '0',
-        "uid": user_id
       });
     }
 
@@ -165,9 +178,14 @@ class ApprovalScreen2_BO extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(top: 50.0),
                 child: GestureDetector(
-                  onTap: () {
-                    launch('$newHost/$proposal_file');
-                  },
+                  onTap: () =>
+                    requestType == 'PR' ? Navigator.of(context).push(new MaterialPageRoute(
+                        builder: (BuildContext context) => new PRDetailsPage(user_id: user_id,
+                            listuser: listuser,
+                            usertype: 'sector',
+                            title: title,
+                            host: host,
+                            id: proposal_id))) : launch('$newHost/$proposal_file'),
                   child: Container(
                       height: 50.0,
                       width: conwidth,
@@ -189,7 +207,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
                             width: conwidth/1.2,
                             height: 20.0,
                             child: Text(
-                              title+'.file',
+                              title+'.$requestType',
                               overflow: TextOverflow.ellipsis,
                               style: new TextStyle(
                                   fontSize: 13.0,
@@ -258,7 +276,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
                               EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                               content: Column(
                                 children: <Widget>[
-                                  Padding(
+                                  requestType == 'BP' ? Padding(
                                     padding: const EdgeInsets.all(15.0),
                                     child: Text(
                                       'Are you sure you want to reject this file?',
@@ -268,6 +286,13 @@ class ApprovalScreen2_BO extends StatelessWidget {
                                           fontStyle: FontStyle.italic),
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
+                                    ),
+                                  ):Padding(
+                                    padding: const EdgeInsets.only(bottom: 10.0),
+                                    child: Container(
+                                      height: 80.0,
+                                      width: 180.0,
+                                      child: Image.asset("assets/images/Reject.png"),
                                     ),
                                   ),
                                   Container(
@@ -343,7 +368,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         onPressed: () {
-                                          rejectBudgetProposal();
+                                          requestType == 'BP' ? rejectBudgetProposal() : rejectPR();
                                           Navigator.of(context).pushNamedAndRemoveUntil(
                                               '/home', (Route<dynamic> route) => false);
                                         },
@@ -393,7 +418,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
                               EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                               content: Column(
                                 children: <Widget>[
-                                  Padding(
+                                  requestType == 'BP' ? Padding(
                                     padding: const EdgeInsets.all(15.0),
                                     child: Text(
                                       'Are you sure you want to approve this file?',
@@ -404,6 +429,32 @@ class ApprovalScreen2_BO extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       maxLines: 2,
                                     ),
+                                  ):Column(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5.0),
+                                        child: Container(
+                                          height: 80.0,
+                                          width: 180.0,
+                                          child: Image.network(
+                                              newHost2 + listuser[0]['user_signature']),
+                                        ),
+                                      ),
+                                      FractionalTranslation(
+                                          translation: Offset(0.0, -1.0),
+                                          child: Divider(
+                                            color: Colors.grey[600],
+                                          )),
+                                      FractionalTranslation(
+                                        translation: Offset(0.0, -1.5),
+                                        child: Text(
+                                          'I hereby agree to digitally sign this file',
+                                          style:
+                                          TextStyle(fontFamily: 'Montserrat', fontSize: 12.0),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   Container(
                                     decoration: new BoxDecoration(
@@ -478,7 +529,7 @@ class ApprovalScreen2_BO extends StatelessWidget {
                                               fontWeight: FontWeight.bold),
                                         ),
                                         onPressed: () {
-                                          approveBudgetProposal();
+                                          requestType == 'BP' ? approveBudgetProposal() : approvePR();
                                           Navigator.of(context).pushNamedAndRemoveUntil(
                                               '/home', (Route<dynamic> route) => false);
                                         },

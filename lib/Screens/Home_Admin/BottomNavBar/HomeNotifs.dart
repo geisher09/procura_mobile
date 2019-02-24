@@ -10,10 +10,10 @@ class notifwidgets extends StatelessWidget {
 
   const notifwidgets(
       {Key key,
-      this.notiftexts,
-      this.w1,
-      this.date,
-      this.conwidth})
+        this.notiftexts,
+        this.w1,
+        this.date,
+        this.conwidth})
       : super(key: key);
 
   @override
@@ -28,9 +28,9 @@ class notifwidgets extends StatelessWidget {
       child: Container(
         decoration: new BoxDecoration(
             border: Border(
-          bottom: BorderSide(
-              color: Colors.grey, width: 0.5, style: BorderStyle.solid),
-        )),
+              bottom: BorderSide(
+                  color: Colors.grey, width: 0.5, style: BorderStyle.solid),
+            )),
         child: Row(
           children: <Widget>[
             Padding(
@@ -85,6 +85,9 @@ class notifwidgets extends StatelessWidget {
 }
 
 class HomeNotifs extends StatelessWidget {
+  final String host;
+  final List list;
+  const HomeNotifs({Key key, this.host, this.list}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     var w1 = MediaQuery.of(context).size.width;
@@ -108,7 +111,7 @@ class HomeNotifs extends StatelessWidget {
               TextSpan(
                 text:
                 "Approved your PPMP aahhhvacaadooooo long etc etc etc etc etc etc etc etccccccccccccc",
-                  style: new TextStyle(fontWeight: FontWeight.w300),
+                style: new TextStyle(fontWeight: FontWeight.w300),
               )
             ],
           ),
@@ -118,22 +121,22 @@ class HomeNotifs extends StatelessWidget {
 
     List<Widget> notifs = new List.generate(
         15,
-        (i) => new notifwidgets(
-              w1: w1,
-              notiftexts: notifDetails(),
-              date: "Dec 31, 2018",
-              conwidth: w2,
-            ));
+            (i) => new notifwidgets(
+          w1: w1,
+          notiftexts: notifDetails(),
+          date: "Dec 31, 2018",
+          conwidth: w2,
+        ));
 
     return Container(
       alignment: Alignment.topLeft,
       child: new SingleChildScrollView(
           child: ConstrainedBox(
-        constraints: BoxConstraints(),
-        child: Column(
-          children: notifs,
-        ),
-      )),
+            constraints: BoxConstraints(),
+            child: Column(
+              children: notifs,
+            ),
+          )),
     );
   }
 }

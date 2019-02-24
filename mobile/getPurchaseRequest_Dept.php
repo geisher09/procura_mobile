@@ -6,78 +6,49 @@ include 'connection.php';
 
 $ID = $_POST["pid"];
 $UserID = $_POST["uid"];
+$str = file_get_contents('C://xampp/htdocs/Procura/storage/settings.json');
+$json = json_decode($str, true); // decode the JSON into an associative array
+$approver = $json['pr_approver_id'];
 
 
 $queryResult=$connect->query("
-	SELECT purchase_requests.id prId,purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver
+	SELECT purchase_requests.id prId,purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver, purchase_requests.submitted_at
 	from purchase_requests
 	LEFT OUTER JOIN projects
 	on purchase_requests.project_id = projects.id
-	LEFT OUTER JOIN department_budgets
-	on projects.department_budget_id = department_budgets.id
-	LEFT OUTER JOIN departments
-	on department_budgets.id = departments.id
-	LEFT OUTER JOIN sectors
-	on departments.sector_id = sectors.id
-	LEFT OUTER JOIN sector_heads
-	on sectors.id = sector_heads.sector_id
 	LEFT OUTER JOIN users
-	on sector_heads.id = users.userable_id
-	where projects.user_id = '".$UserID."' AND users.user_type_id = '3'
+	on users.id = '".$approver."'
+	where projects.user_id = '".$UserID."'
 	");
 
 $queryResult2=$connect->query("
-	SELECT purchase_requests.id prId, purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver
+	SELECT purchase_requests.id prId, purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver, purchase_requests.submitted_at
 	from purchase_requests
 	LEFT OUTER JOIN projects
 	on purchase_requests.project_id = projects.id
-	LEFT OUTER JOIN department_budgets
-	on projects.department_budget_id = department_budgets.id
-	LEFT OUTER JOIN departments
-	on department_budgets.id = departments.id
-	LEFT OUTER JOIN sectors
-	on departments.sector_id = sectors.id
-	LEFT OUTER JOIN sector_heads
-	on sectors.id = sector_heads.sector_id
 	LEFT OUTER JOIN users
-	on sector_heads.id = users.userable_id
-	where projects.user_id = '".$UserID."' AND users.user_type_id = '3' AND purchase_requests.is_approved = '1'
+	on users.id = '".$approver."'
+	where projects.user_id = '".$UserID."' AND purchase_requests.is_approved = '1' AND purchase_requests.submitted_at is NOT NULL
 	");
 
 $queryResult3=$connect->query("
-	SELECT purchase_requests.id prId, purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver
+	SELECT purchase_requests.id prId, purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver, purchase_requests.submitted_at
 	from purchase_requests
 	LEFT OUTER JOIN projects
 	on purchase_requests.project_id = projects.id
-	LEFT OUTER JOIN department_budgets
-	on projects.department_budget_id = department_budgets.id
-	LEFT OUTER JOIN departments
-	on department_budgets.id = departments.id
-	LEFT OUTER JOIN sectors
-	on departments.sector_id = sectors.id
-	LEFT OUTER JOIN sector_heads
-	on sectors.id = sector_heads.sector_id
 	LEFT OUTER JOIN users
-	on sector_heads.id = users.userable_id
-	where projects.user_id = '".$UserID."' AND users.user_type_id = '3' AND purchase_requests.is_approved = '0'
+	on users.id = '".$approver."'
+	where projects.user_id = '".$UserID."' AND purchase_requests.is_approved = '0' AND purchase_requests.submitted_at is NOT NULL
 	");
 
 $queryResult4=$connect->query("
-	SELECT purchase_requests.id prId, purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver
+	SELECT purchase_requests.id prId, purchase_requests.pr_number, purchase_requests.created_at, purchase_requests.purpose, users.name approver, purchase_requests.submitted_at
 	from purchase_requests
 	LEFT OUTER JOIN projects
 	on purchase_requests.project_id = projects.id
-	LEFT OUTER JOIN department_budgets
-	on projects.department_budget_id = department_budgets.id
-	LEFT OUTER JOIN departments
-	on department_budgets.id = departments.id
-	LEFT OUTER JOIN sectors
-	on departments.sector_id = sectors.id
-	LEFT OUTER JOIN sector_heads
-	on sectors.id = sector_heads.sector_id
 	LEFT OUTER JOIN users
-	on sector_heads.id = users.userable_id
-	where projects.user_id = '".$UserID."' AND users.user_type_id = '3' AND purchase_requests.is_approved is NULL
+	on users.id = '".$approver."'
+	where projects.user_id = '".$UserID."' AND purchase_requests.is_approved is NULL AND purchase_requests.submitted_at is NOT NULL
 	");
 
 if($ID=='2'){

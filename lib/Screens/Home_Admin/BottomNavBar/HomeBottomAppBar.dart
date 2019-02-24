@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class HomeBottomAppBarItem {
   HomeBottomAppBarItem({this.iconData, this.count});
@@ -9,6 +11,8 @@ class HomeBottomAppBarItem {
 
 class HomeBottomAppBar extends StatefulWidget {
   HomeBottomAppBar({
+    this.host,
+    this.list,
     this.items,
     this.height: 48.0,
     this.iconSize: 22.0,
@@ -22,7 +26,8 @@ class HomeBottomAppBar extends StatefulWidget {
   {
     assert(this.items.length == 3 || this.items.length == 4);
   }
-
+  final String host;
+  final List list;
   final List<HomeBottomAppBarItem> items;
   final double height;
   final double iconSize;
