@@ -5,7 +5,7 @@ include 'connection.php';
 $queryResult=$connect->query("
 	SELECT
 	id,
-	budget_year,
+	budget_year year,
 	is_active,
 	fund_101,
 	fund_164,
