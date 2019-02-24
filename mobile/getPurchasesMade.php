@@ -4,8 +4,8 @@ include 'connection.php';
 
 //$_POST["pid"] $_POST["uid"]
 
-//$UserID = $_POST["uid"];
-$UserID = '2';
+$UserID = $_POST["uid"];
+//$UserID = '2';
 $str = file_get_contents('C://xampp/htdocs/Procura/storage/settings.json');
 $json = json_decode($str, true); // decode the JSON into an associative array
 $approver = $json['pr_approver_id'];
@@ -18,7 +18,7 @@ $queryResult=$connect->query("
 	on purchase_requests.project_id = projects.id
 	LEFT OUTER JOIN users
 	on users.id = '".$approver."'
-	where projects.user_id = '".$UserID."' AND purchase_requests.submitted_at IS NOT NULL ORDER BY purchase_requests.submitted_at
+	where projects.user_id = '".$UserID."' AND purchase_requests.submitted_at IS NOT NULL ORDER BY purchase_requests.submitted_at LIMIT 10
 	");
 
 $all=array();
@@ -54,7 +54,7 @@ for($i=0; $i<sizeof($all); $i++){
 	foreach ($result as $item) {
 		$sum += $item['total_cost'];
 	}
-	$result2[] = array('tot' => $sum);
+	$result2[] = array('id'=>$i, 'tot' => $sum);
 }
 echo json_encode($result2);
 
