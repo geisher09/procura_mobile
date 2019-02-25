@@ -199,6 +199,7 @@ class SectorList extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return new ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: list == null ? 0 : list.length,
       itemBuilder: (context, i) {
         return Container(

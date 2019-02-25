@@ -54,14 +54,14 @@ class ApprovalScreen2_BO extends StatelessWidget {
     }
     void approveBudgetProposal() {
       List splithost = host.split('/');
-      var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_proposals/${proposal_id}';
       http.post(newHost, body: {
         "remarks": remarks.text,
       });
     }
     void rejectBudgetProposal() {
       List splithost = host.split('/');
-      var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+      var newHost = 'http://${splithost[2]}:8000/mobile/approved_proposals/${proposal_id}';
       Dio().delete(newHost, data: {
         "remarks": remarks.text,
       });

@@ -39,6 +39,7 @@ dependencies:
   intro_views_flutter: ^2.4.0
   http: ^0.12.0+1
   flutter_local_notifications: any
+  image_picker: ^0.4.5
 
   dio: any
 

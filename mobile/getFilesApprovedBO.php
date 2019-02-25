@@ -76,7 +76,7 @@ if($UserID == $approver){
 	//$prcount = sizeof($pendingPR);
 	$bpcount = sizeof($pending);
 
-	$doc = array('BP' => strval($bpcount), 'PR' => 0);
+	$doc = array('BP' => strval($bpcount), 'PR' => "0");
 
 	echo json_encode($doc);
 }

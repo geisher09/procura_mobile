@@ -136,5 +136,8 @@ $merge2 = array_combine($doc2,$doc22);
 $merge3 = array_combine($doc3,$diff);
 $merge4 = array_combine($doc4,$td);
 $mergedcount = array_merge($merge2, $merge, $merge3,$merge4);
-echo json_encode($mergedcount);
+
+$arr = array($mergedcount);
+
+echo json_encode($arr);
 ?>

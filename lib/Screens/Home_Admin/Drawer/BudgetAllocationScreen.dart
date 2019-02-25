@@ -151,6 +151,14 @@ class SectorList extends StatelessWidget {
     }
   }
 
+  EdgeInsets pad(int index) {
+    if (index == 4) {
+      return EdgeInsets.only(top: 15.0, bottom: 2.0);
+    } else {
+      return EdgeInsets.only(top: 2.0, bottom: 10.0);
+    }
+  }
+
   Widget sectorid(String index) {
     if (index == '1') {
       return SizedBox(
@@ -197,10 +205,11 @@ class SectorList extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return new ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: list == null ? 0 : list.length,
       itemBuilder: (context, i) {
         return Container(
-          padding: EdgeInsets.only(top: 2.0, bottom: 10.0),
+          padding: pad(i),
           decoration: border(i),
           child: GestureDetector(
             onTap: () => Navigator.of(context).push(new MaterialPageRoute(

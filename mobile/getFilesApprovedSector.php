@@ -184,7 +184,7 @@ if($UserID == $approver){
 	$ppmpcount = sizeof($pendingPPMP);
 	//$prcount = sizeof($pendingPR);
 
-	$doc = array('PPMP' => strval($ppmpcount), 'PR' => 0);
+	$doc = array('PPMP' => strval($ppmpcount), 'PR' => "0");
 
 	echo json_encode($doc);
 }

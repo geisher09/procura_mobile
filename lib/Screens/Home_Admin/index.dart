@@ -116,7 +116,7 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       setState(() {
         _current;
       });
-    } else if ((userDetails[0]['user_type_id'] == '2') || (userDetails[0]['user_type_id'] == '5')) {
+    } else if (userDetails[0]['user_type_id'] == '2') {
       if (index == 2) {
         _current = 'TAB: 3';
       } else {
@@ -127,6 +127,15 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
       });
     }else if (userDetails[0]['user_type_id'] == '3') {
       if (index == 2) {
+        _current = 'TAB: 3';
+      } else {
+        _current = 'TAB: $index';
+      }
+      setState(() {
+        _current;
+      });
+    }else if (userDetails[0]['user_type_id'] == '5') {
+      if (index == 1) {
         _current = 'TAB: 3';
       } else {
         _current = 'TAB: $index';
@@ -156,8 +165,8 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
               title: Container(
                 height:
                     MediaQuery.of(context).orientation == Orientation.portrait
-                        ? MediaQuery.of(context).size.height / 3.75
-                        : MediaQuery.of(context).size.height / 1.25,
+                        ? MediaQuery.of(context).size.height / 5.0
+                        : MediaQuery.of(context).size.height / 1.0,
                 width: double.infinity,
                 decoration: new BoxDecoration(
                   image: new DecorationImage(
@@ -282,8 +291,6 @@ class _Home_AdminScreenState extends State<Home_AdminScreen> {
             onTabSelected: _selectedTab,
             items: [
               HomeBottomAppBarItem(iconData: CustomIcons.chart_bar, count: 0),
-              HomeBottomAppBarItem(
-                  iconData: CustomIcons.paper_plane_empty, count: 0),
               HomeBottomAppBarItem(iconData: CustomIcons.bell, count: _notifCount.length),
             ]);
       }else{

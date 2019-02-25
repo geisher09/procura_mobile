@@ -20,6 +20,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter/cupertino.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
   final String host;
@@ -143,7 +144,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   context,
                   CupertinoPageRoute(
                       builder: (context) => DeptPPMPScreen(
-                          host: widget.host, listuser:widget.list, id: widget.list[0]['id'])),
+                          host: widget.host,
+                          listuser: widget.list,
+                          id: widget.list[0]['id'])),
                 );
               }),
           new ListTile(
@@ -161,19 +164,90 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 );
               }),
           new ListTile(
-              title: new Text('Logout'),
-              leading: Icon(
-                CustomIcons.uniE820,
-                size: 20.0,
-              ),
-              onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                  () async {
-                final prefs = await SharedPreferences.getInstance();
-                prefs.remove('id');
-                prefs.remove('ifStop');
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/login', (Route<dynamic> route) => false);
-              }),
+            title: new Text('Logout'),
+            leading: Icon(
+              CustomIcons.uniE820,
+              size: 20.0,
+            ),
+            onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return SingleChildScrollView(
+                  child: AlertDialog(
+                    title: Text(
+                      'Logout',
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 17.0,
+                          letterSpacing: 1.0),
+                      textAlign: TextAlign.center,
+                    ),
+                    titlePadding: EdgeInsets.only(top: 15.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20.0))),
+                    contentPadding:
+                    EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    content: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            'You are about to logout from this device, click "Ok" to continue',
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            new FlatButton(
+                              child: new Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: Color(0xFF19b3b1),
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            new FlatButton(
+                              color: Color(0xFF19b3b1),
+                              child: new Text(
+                                "Ok",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () async {
+                                final prefs = await SharedPreferences
+                                    .getInstance();
+                                prefs.remove('id');
+                                prefs.remove('ifStop');
+                                Navigator.of(context)
+                                    .pushNamedAndRemoveUntil(
+                                    '/login',
+                                        (Route<dynamic> route) =>
+                                    false);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
           new Divider(),
           new ListTile(
             title: new Text('Settings'),
@@ -183,12 +257,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
             onTap: () {
               Navigator.push(
-                context,
-                CupertinoPageRoute(
-                    builder: (context) =>
-                        SettingsScreen(host: widget.host, list: widget.list))
-                        //Notif()),
-              );
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) =>
+                          SettingsScreen(host: widget.host, list: widget.list))
+                  //Notif()),
+                  );
             },
             trailing: IconButton(
               icon: Theme.of(context).brightness == Brightness.light
@@ -223,8 +297,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           : Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        newHost + widget.list[0]['user_image'])),
+                    backgroundImage:
+                        NetworkImage(newHost + widget.list[0]['user_image'])),
                 decoration: new BoxDecoration(
                   color: Colors.transparent,
                 ),
@@ -281,7 +355,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         context,
                         CupertinoPageRoute(
                             builder: (context) => BudgetAllocationSector(
-                                host: widget.host,uid: widget.list[0]['id'])),
+                                host: widget.host, uid: widget.list[0]['id'])),
                       );
                     }),
               ],
@@ -297,7 +371,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     context,
                     CupertinoPageRoute(
                         builder: (context) => SectorPPMPScreen(
-                            host: widget.host, listuser:widget.list, id: widget.list[0]['id'])),
+                            host: widget.host,
+                            listuser: widget.list,
+                            id: widget.list[0]['id'])),
                   );
                 }),
             new ListTile(
@@ -310,8 +386,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) =>
-                            PurchaseRequestScreen(host: widget.host, listuser:widget.list,)),
+                        builder: (context) => PurchaseRequestScreen(
+                              host: widget.host,
+                              listuser: widget.list,
+                            )),
                   );
                 }),
             new ListTile(
@@ -320,14 +398,84 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   CustomIcons.uniE820,
                   size: 20.0,
                 ),
-                onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                    () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('id');
-                  prefs.remove('ifStop');
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login', (Route<dynamic> route) => false);
-                }),
+              onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                  () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: AlertDialog(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 17.0,
+                            letterSpacing: 1.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      titlePadding: EdgeInsets.only(top: 15.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0))),
+                      contentPadding:
+                      EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      content: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              'You are about to logout from this device, click "Ok" to continue',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      color: Color(0xFF19b3b1),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new FlatButton(
+                                color: Color(0xFF19b3b1),
+                                child: new Text(
+                                  "Ok",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  final prefs = await SharedPreferences
+                                      .getInstance();
+                                  prefs.remove('id');
+                                  prefs.remove('ifStop');
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      '/login',
+                                          (Route<dynamic> route) =>
+                                      false);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),),
             new Divider(),
             new ListTile(
               title: new Text('Settings'),
@@ -375,8 +523,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           : Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        newHost + widget.list[0]['user_image'])),
+                    backgroundImage:
+                        NetworkImage(newHost + widget.list[0]['user_image'])),
                 decoration: new BoxDecoration(
                   color: Colors.transparent,
                 ),
@@ -433,7 +581,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                         context,
                         CupertinoPageRoute(
                             builder: (context) => BudgetAllocationSector(
-                                host: widget.host,uid: widget.list[0]['id'])),
+                                host: widget.host, uid: widget.list[0]['id'])),
                       );
                     }),
               ],
@@ -449,7 +597,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     context,
                     CupertinoPageRoute(
                         builder: (context) => SectorPPMPScreen(
-                            host: widget.host, listuser:widget.list, id: widget.list[0]['id'])),
+                            host: widget.host,
+                            listuser: widget.list,
+                            id: widget.list[0]['id'])),
                   );
                 }),
             new ListTile(
@@ -458,14 +608,84 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   CustomIcons.uniE820,
                   size: 20.0,
                 ),
-                onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                    () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('id');
-                  prefs.remove('ifStop');
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login', (Route<dynamic> route) => false);
-                }),
+              onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                  () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: AlertDialog(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 17.0,
+                            letterSpacing: 1.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      titlePadding: EdgeInsets.only(top: 15.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0))),
+                      contentPadding:
+                      EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      content: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              'You are about to logout from this device, click "Ok" to continue',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      color: Color(0xFF19b3b1),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new FlatButton(
+                                color: Color(0xFF19b3b1),
+                                child: new Text(
+                                  "Ok",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  final prefs = await SharedPreferences
+                                      .getInstance();
+                                  prefs.remove('id');
+                                  prefs.remove('ifStop');
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      '/login',
+                                          (Route<dynamic> route) =>
+                                      false);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),),
             new Divider(),
             new ListTile(
               title: new Text('Settings'),
@@ -515,8 +735,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           : Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        newHost + widget.list[0]['user_image'])),
+                    backgroundImage:
+                        NetworkImage(newHost + widget.list[0]['user_image'])),
                 decoration: new BoxDecoration(
                   color: Colors.transparent,
                 ),
@@ -610,8 +830,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) =>
-                            PurchaseRequestScreen(host: widget.host, listuser:widget.list,)),
+                        builder: (context) => PurchaseRequestScreen(
+                              host: widget.host,
+                              listuser: widget.list,
+                            )),
                   );
                 }),
             new ListTile(
@@ -620,14 +842,84 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   CustomIcons.uniE820,
                   size: 20.0,
                 ),
-                onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                    () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('id');
-                  prefs.remove('ifStop');
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login', (Route<dynamic> route) => false);
-                }),
+              onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                  () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: AlertDialog(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 17.0,
+                            letterSpacing: 1.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      titlePadding: EdgeInsets.only(top: 15.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0))),
+                      contentPadding:
+                      EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      content: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              'You are about to logout from this device, click "Ok" to continue',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      color: Color(0xFF19b3b1),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new FlatButton(
+                                color: Color(0xFF19b3b1),
+                                child: new Text(
+                                  "Ok",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  final prefs = await SharedPreferences
+                                      .getInstance();
+                                  prefs.remove('id');
+                                  prefs.remove('ifStop');
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      '/login',
+                                          (Route<dynamic> route) =>
+                                      false);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),),
             new Divider(),
             new ListTile(
               title: new Text('Settings'),
@@ -675,8 +967,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           : Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        newHost + widget.list[0]['user_image'])),
+                    backgroundImage:
+                        NetworkImage(newHost + widget.list[0]['user_image'])),
                 decoration: new BoxDecoration(
                   color: Colors.transparent,
                 ),
@@ -766,14 +1058,84 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   CustomIcons.uniE820,
                   size: 20.0,
                 ),
-                onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                    () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('id');
-                  prefs.remove('ifStop');
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login', (Route<dynamic> route) => false);
-                }),
+              onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                  () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: AlertDialog(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 17.0,
+                            letterSpacing: 1.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      titlePadding: EdgeInsets.only(top: 15.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0))),
+                      contentPadding:
+                      EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      content: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              'You are about to logout from this device, click "Ok" to continue',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      color: Color(0xFF19b3b1),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new FlatButton(
+                                color: Color(0xFF19b3b1),
+                                child: new Text(
+                                  "Ok",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  final prefs = await SharedPreferences
+                                      .getInstance();
+                                  prefs.remove('id');
+                                  prefs.remove('ifStop');
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      '/login',
+                                          (Route<dynamic> route) =>
+                                      false);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),),
             new Divider(),
             new ListTile(
               title: new Text('Settings'),
@@ -823,8 +1185,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                           : Colors.white),
                 ),
                 currentAccountPicture: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        newHost + widget.list[0]['user_image'])),
+                    backgroundImage:
+                        NetworkImage(newHost + widget.list[0]['user_image'])),
                 decoration: new BoxDecoration(
                   color: Colors.transparent,
                 ),
@@ -871,26 +1233,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 new ListTile(
                     title: new Text('CSE'),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => BudgetProposalScreen(
-                                bp: 'depthead',
-                                host: widget.host,
-                                id: widget.list[0]['id'])),
-                      );
+                      List splithost = widget.host.split('/');
+                      var newHost = 'http://${splithost[2]}:8000/mobile/app_cse';
+                      launch(newHost);
                     }),
                 new ListTile(
                     title: new Text('Non-CSE'),
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        CupertinoPageRoute(
-                            builder: (context) => BudgetProposalScreen(
-                                bp: 'depthead',
-                                host: widget.host,
-                                id: widget.list[0]['id'])),
-                      );
+                      List splithost = widget.host.split('/');
+                      var newHost = 'http://${splithost[2]}:8000/mobile/app_non_cse';
+                      launch(newHost);
                     }),
               ],
             ),
@@ -904,8 +1256,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Navigator.push(
                     context,
                     CupertinoPageRoute(
-                        builder: (context) =>
-                            PurchaseRequestScreen(host: widget.host, listuser:widget.list,)),
+                        builder: (context) => PurchaseRequestScreen(
+                              host: widget.host,
+                              listuser: widget.list,
+                            )),
                   );
                 }),
             new ListTile(
@@ -914,14 +1268,84 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   CustomIcons.uniE820,
                   size: 20.0,
                 ),
-                onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                    () async {
-                  final prefs = await SharedPreferences.getInstance();
-                  prefs.remove('id');
-                  prefs.remove('ifStop');
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login', (Route<dynamic> route) => false);
-                }),
+              onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                  () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: AlertDialog(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 17.0,
+                            letterSpacing: 1.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      titlePadding: EdgeInsets.only(top: 15.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0))),
+                      contentPadding:
+                      EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      content: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              'You are about to logout from this device, click "Ok" to continue',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      color: Color(0xFF19b3b1),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new FlatButton(
+                                color: Color(0xFF19b3b1),
+                                child: new Text(
+                                  "Ok",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  final prefs = await SharedPreferences
+                                      .getInstance();
+                                  prefs.remove('id');
+                                  prefs.remove('ifStop');
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      '/login',
+                                          (Route<dynamic> route) =>
+                                      false);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),),
             new Divider(),
             new ListTile(
               title: new Text('Settings'),
@@ -947,235 +1371,361 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ],
         ));
-      }else{
+      } else {
         return Drawer(
             child: new ListView(
+          children: <Widget>[
+            GestureDetector(
+              child: new UserAccountsDrawerHeader(
+                accountName: new Text(
+                  '${widget.list[0]['name']}',
+                  style: new TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white),
+                ),
+                accountEmail: new Text(
+                  '${widget.list[0]['username']}',
+                  style: new TextStyle(
+                      color: Theme.of(context).brightness == Brightness.light
+                          ? Colors.black
+                          : Colors.white),
+                ),
+                currentAccountPicture: CircleAvatar(
+                    backgroundImage:
+                        NetworkImage(newHost + widget.list[0]['user_image'])),
+                decoration: new BoxDecoration(
+                  color: Colors.transparent,
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => ProfileScreen(
+                          host: widget.host,
+                          list: widget.list,
+                          pic: widget.pic)),
+                );
+              },
+            ),
+            new ListTile(
+              title: new Text('Profile'),
+              leading: Icon(
+                CustomIcons.single_01,
+                size: 20.0,
+              ),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) => ProfileScreen(
+                          host: widget.host,
+                          list: widget.list,
+                          pic: widget.pic)),
+                );
+              },
+            ),
+            new ExpansionTile(
+              title: new Text(
+                'APP',
+                style: TextStyle(fontSize: 14.0),
+              ),
+              leading: Icon(
+                CustomIcons.wallet_43,
+                size: 20.0,
+              ),
               children: <Widget>[
-                GestureDetector(
-                  child: new UserAccountsDrawerHeader(
-                    accountName: new Text(
-                      '${widget.list[0]['name']}',
-                      style: new TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white),
-                    ),
-                    accountEmail: new Text(
-                      '${widget.list[0]['username']}',
-                      style: new TextStyle(
-                          color: Theme.of(context).brightness == Brightness.light
-                              ? Colors.black
-                              : Colors.white),
-                    ),
-                    currentAccountPicture: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            newHost + widget.list[0]['user_image'])),
-                    decoration: new BoxDecoration(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => ProfileScreen(
-                              host: widget.host,
-                              list: widget.list,
-                              pic: widget.pic)),
-                    );
-                  },
-                ),
                 new ListTile(
-                  title: new Text('Profile'),
-                  leading: Icon(
-                    CustomIcons.single_01,
-                    size: 20.0,
-                  ),
-                  onTap: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => ProfileScreen(
-                              host: widget.host,
-                              list: widget.list,
-                              pic: widget.pic)),
-                    );
-                  },
-                ),
-                new ExpansionTile(
-                  title: new Text(
-                    'APP',
-                    style: TextStyle(fontSize: 14.0),
-                  ),
-                  leading: Icon(
-                    CustomIcons.wallet_43,
-                    size: 20.0,
-                  ),
-                  children: <Widget>[
-                    new ListTile(
-                        title: new Text('CSE'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => BudgetProposalScreen(
-                                    bp: 'depthead',
-                                    host: widget.host,
-                                    id: widget.list[0]['id'])),
-                          );
-                        }),
-                    new ListTile(
-                        title: new Text('Non-CSE'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            CupertinoPageRoute(
-                                builder: (context) => BudgetProposalScreen(
-                                    bp: 'depthead',
-                                    host: widget.host,
-                                    id: widget.list[0]['id'])),
-                          );
-                        }),
-                  ],
-                ),
-                new ListTile(
-                    title: new Text('Logout'),
-                    leading: Icon(
-                      CustomIcons.uniE820,
-                      size: 20.0,
-                    ),
-                    onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                        () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.remove('id');
-                      prefs.remove('ifStop');
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          '/login', (Route<dynamic> route) => false);
+                    title: new Text('CSE'),
+                    onTap: () {
+                      List splithost = widget.host.split('/');
+                      var newHost = 'http://${splithost[2]}:8000/mobile/app_cse';
+                      launch(newHost);
                     }),
-                new Divider(),
                 new ListTile(
-                  title: new Text('Settings'),
-                  leading: Icon(
-                    CustomIcons.cog,
-                    size: 20.0,
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) =>
-                              SettingsScreen(host: widget.host, list: widget.list)),
-                    );
-                  },
-                  trailing: IconButton(
-                    icon: Theme.of(context).brightness == Brightness.light
-                        ? Icon(FontAwesomeIcons.moon)
-                        : Icon(FontAwesomeIcons.solidMoon),
-                    onPressed: changeBrightness,
-                    iconSize: 20.0,
-                  ),
-                ),
+                    title: new Text('Non-CSE'),
+                    onTap: () {
+                      List splithost = widget.host.split('/');
+                      var newHost = 'http://${splithost[2]}:8000/mobile/app_non_cse';
+                      launch(newHost);
+                    }),
               ],
-            ));
+            ),
+            new ListTile(
+                title: new Text('Logout'),
+                leading: Icon(
+                  CustomIcons.uniE820,
+                  size: 20.0,
+                ),
+              onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                  () => showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return SingleChildScrollView(
+                    child: AlertDialog(
+                      title: Text(
+                        'Logout',
+                        style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 17.0,
+                            letterSpacing: 1.0),
+                        textAlign: TextAlign.center,
+                      ),
+                      titlePadding: EdgeInsets.only(top: 15.0),
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(20.0))),
+                      contentPadding:
+                      EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                      content: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text(
+                              'You are about to logout from this device, click "Ok" to continue',
+                              style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontStyle: FontStyle.italic),
+                              textAlign: TextAlign.center,
+                              maxLines: 3,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new FlatButton(
+                                child: new Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      color: Color(0xFF19b3b1),
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              new FlatButton(
+                                color: Color(0xFF19b3b1),
+                                child: new Text(
+                                  "Ok",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'Montserrat',
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () async {
+                                  final prefs = await SharedPreferences
+                                      .getInstance();
+                                  prefs.remove('id');
+                                  prefs.remove('ifStop');
+                                  Navigator.of(context)
+                                      .pushNamedAndRemoveUntil(
+                                      '/login',
+                                          (Route<dynamic> route) =>
+                                      false);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),),
+            new Divider(),
+            new ListTile(
+              title: new Text('Settings'),
+              leading: Icon(
+                CustomIcons.cog,
+                size: 20.0,
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                      builder: (context) =>
+                          SettingsScreen(host: widget.host, list: widget.list)),
+                );
+              },
+              trailing: IconButton(
+                icon: Theme.of(context).brightness == Brightness.light
+                    ? Icon(FontAwesomeIcons.moon)
+                    : Icon(FontAwesomeIcons.solidMoon),
+                onPressed: changeBrightness,
+                iconSize: 20.0,
+              ),
+            ),
+          ],
+        ));
       }
-    }else{
+    } else {
       return Drawer(
           child: new ListView(
-            children: <Widget>[
-              GestureDetector(
-                child: new UserAccountsDrawerHeader(
-                  accountName: new Text(
-                    '${widget.list[0]['name']}',
-                    style: new TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white),
-                  ),
-                  accountEmail: new Text(
-                    '${widget.list[0]['username']}',
-                    style: new TextStyle(
-                        color: Theme.of(context).brightness == Brightness.light
-                            ? Colors.black
-                            : Colors.white),
-                  ),
-                  currentAccountPicture: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          newHost + widget.list[0]['user_image'])),
-                  decoration: new BoxDecoration(
-                    color: Colors.transparent,
-                  ),
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => ProfileScreen(
-                            host: widget.host,
-                            list: widget.list,
-                            pic: widget.pic)),
-                  );
-                },
+        children: <Widget>[
+          GestureDetector(
+            child: new UserAccountsDrawerHeader(
+              accountName: new Text(
+                '${widget.list[0]['name']}',
+                style: new TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white),
               ),
-              new ListTile(
-                title: new Text('Profile'),
-                leading: Icon(
-                  CustomIcons.single_01,
-                  size: 20.0,
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => ProfileScreen(
-                            host: widget.host,
-                            list: widget.list,
-                            pic: widget.pic)),
-                  );
-                },
+              accountEmail: new Text(
+                '${widget.list[0]['username']}',
+                style: new TextStyle(
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : Colors.white),
               ),
-              new ListTile(
-                  title: new Text('Logout'),
-                  leading: Icon(
-                    CustomIcons.uniE820,
-                    size: 20.0,
+              currentAccountPicture: CircleAvatar(
+                  backgroundImage:
+                      NetworkImage(newHost + widget.list[0]['user_image'])),
+              decoration: new BoxDecoration(
+                color: Colors.transparent,
+              ),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => ProfileScreen(
+                        host: widget.host, list: widget.list, pic: widget.pic)),
+              );
+            },
+          ),
+          new ListTile(
+            title: new Text('Profile'),
+            leading: Icon(
+              CustomIcons.single_01,
+              size: 20.0,
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) => ProfileScreen(
+                        host: widget.host, list: widget.list, pic: widget.pic)),
+              );
+            },
+          ),
+          new ListTile(
+              title: new Text('Logout'),
+              leading: Icon(
+                CustomIcons.uniE820,
+                size: 20.0,
+              ),
+            onTap: //() => Navigator.pushReplacementNamed(context, "/login")
+                () => showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return SingleChildScrollView(
+                  child: AlertDialog(
+                    title: Text(
+                      'Logout',
+                      style: TextStyle(
+                          fontFamily: 'Montserrat',
+                          fontSize: 17.0,
+                          letterSpacing: 1.0),
+                      textAlign: TextAlign.center,
+                    ),
+                    titlePadding: EdgeInsets.only(top: 15.0),
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                        BorderRadius.all(Radius.circular(20.0))),
+                    contentPadding:
+                    EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    content: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Text(
+                            'You are about to logout from this device, click "Ok" to continue',
+                            style: TextStyle(
+                                fontSize: 14.0,
+                                fontStyle: FontStyle.italic),
+                            textAlign: TextAlign.center,
+                            maxLines: 3,
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            new FlatButton(
+                              child: new Text(
+                                "Cancel",
+                                style: TextStyle(
+                                    color: Color(0xFF19b3b1),
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            new FlatButton(
+                              color: Color(0xFF19b3b1),
+                              child: new Text(
+                                "Ok",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () async {
+                                final prefs = await SharedPreferences
+                                    .getInstance();
+                                prefs.remove('id');
+                                prefs.remove('ifStop');
+                                Navigator.of(context)
+                                    .pushNamedAndRemoveUntil(
+                                    '/login',
+                                        (Route<dynamic> route) =>
+                                    false);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  onTap: //() => Navigator.pushReplacementNamed(context, "/login"),
-                      () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    prefs.remove('id');
-                    prefs.remove('ifStop');
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/login', (Route<dynamic> route) => false);
-                  }),
-              new Divider(),
-              new ListTile(
-                title: new Text('Settings'),
-                leading: Icon(
-                  CustomIcons.cog,
-                  size: 20.0,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) =>
-                            SettingsScreen(host: widget.host, list: widget.list)),
-                  );
-                },
-                trailing: IconButton(
-                  icon: Theme.of(context).brightness == Brightness.light
-                      ? Icon(FontAwesomeIcons.moon)
-                      : Icon(FontAwesomeIcons.solidMoon),
-                  onPressed: changeBrightness,
-                  iconSize: 20.0,
-                ),
-              ),
-            ],
-          ));
+                );
+              },
+            ),),
+          new Divider(),
+          new ListTile(
+            title: new Text('Settings'),
+            leading: Icon(
+              CustomIcons.cog,
+              size: 20.0,
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                    builder: (context) =>
+                        SettingsScreen(host: widget.host, list: widget.list)),
+              );
+            },
+            trailing: IconButton(
+              icon: Theme.of(context).brightness == Brightness.light
+                  ? Icon(FontAwesomeIcons.moon)
+                  : Icon(FontAwesomeIcons.solidMoon),
+              onPressed: changeBrightness,
+              iconSize: 20.0,
+            ),
+          ),
+        ],
+      ));
     }
   }
 

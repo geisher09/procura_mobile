@@ -1,9 +1,15 @@
+import 'dart:async';
+import 'dart:io';
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:procura/Components/custom_icons.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/SettingsScreen2.dart';
 import 'package:procura/Screens/Home_Admin/Drawer/samplesign.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:procura/Screens/Home_Admin/Drawer/uploadPic.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String host;
@@ -27,7 +33,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   final GlobalKey<FormState> _formKeynp2 = GlobalKey<FormState>();
   bool _autoValidate = false;
   String _rem;
-
 
   @override
   void initState() {
@@ -78,13 +83,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
       "password": newPassword2Controller.text,
     });
   }
+
+  File _image;
+  Future getImageGallery() async {
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = imageFile;
+    });
+  }
+
+  Future getImageCamera() async {
+    var imageFile = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = imageFile;
+    });
+  }
   void _validateInputs() async {
     if (_formKey.currentState.validate() && _formKey2.currentState.validate()) {
       if (usernameController.text == widget.list[0]['username']) {
         print('same uname okay edit');
         editAccount();
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            '/home', (Route<dynamic> route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
       } else {
         final response = await http.post("${widget.host}/accountCheck.php",
             body: {
@@ -94,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             });
         print('USERNAME: ' + usernameController.text);
         print(response.body);
-        if(response.body=='correct_username'){
+        if (response.body == 'correct_username') {
           print('okay uname okay edit');
           editAccount();
           Navigator.of(context).pushNamedAndRemoveUntil(
@@ -109,7 +131,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _validatePass() async {
-    if (_formKeyop.currentState.validate() && _formKeynp.currentState.validate() && _formKeynp2.currentState.validate()) {
+    if (_formKeyop.currentState.validate() &&
+        _formKeynp.currentState.validate() &&
+        _formKeynp2.currentState.validate()) {
       final response = await http.post("${widget.host}/accountCheck.php",
           body: {
             "id": '2',
@@ -118,11 +142,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
           });
       print('PASS: ' + oldPasswordController.text);
       print(response.body);
-      if((newPasswordController.text == newPassword2Controller.text) && (response.body == 'correct_password')){
+      if ((newPasswordController.text == newPassword2Controller.text) &&
+          (response.body == 'correct_password')) {
         print('okay edit pass');
         editPass();
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            '/home', (Route<dynamic> route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/home', (Route<dynamic> route) => false);
       }
     } else {
       setState(() {
@@ -326,7 +351,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       },
     );
   }
-
   @override
   Widget build(BuildContext context) {
     String _name;
@@ -364,58 +388,156 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: const EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 10.0),
               child: Column(
                 children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                        decoration: new BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: new DecorationImage(
-                            image: new NetworkImage(
-                                newHost + widget.list[0]['user_image']),
-                            fit: BoxFit.cover,
-                          ),
+                  Container(
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.indigo,
+                          style: BorderStyle.solid,
+                          width: 3.0,
                         ),
-                        width: MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? height / 4.0
-                            : width / 4.0,
-                        height: MediaQuery.of(context).orientation ==
-                                Orientation.portrait
-                            ? height / 4.0
-                            : width / 4.0,
-                      ),
-                      Positioned(
-                        right: 1.0,
-                        bottom: 1.0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 15.0),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(20.0),
-                            splashColor: Colors.indigo[400],
-                            onTap: () {},
-                            child: Container(
-                              height: 40.0,
-                              width: 40.0,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.indigo[800],
-                                  border: Border.all(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.light
-                                        ? Colors.white
-                                        : Colors.grey[200],
-                                    width: 1.5,
-                                  )),
-                              child: Icon(
-                                CustomIcons.pencil,
-                                size: 18.0,
-                                color: Colors.white,
+                        borderRadius: BorderRadius.circular(15.0)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        children: <Widget>[
+                          _image == null
+                              ? Container(
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: new DecorationImage(
+                                      image: new NetworkImage(newHost +
+                                          widget.list[0]['user_image']),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  width: MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? height / 4.0
+                                      : width / 4.0,
+                                  height: MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? height / 4.0
+                                      : width / 4.0,
+                                )
+                              : Container(
+                                  decoration: new BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: new DecorationImage(
+                                      image: FileImage(_image),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  width: MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? height / 4.0
+                                      : width / 4.0,
+                                  height: MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? height / 4.0
+                                      : width / 4.0,
+                                ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: new RaisedButton(
+                              color: Colors.teal[600],
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.image,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "Select from Gallery",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
+                              onPressed: () {
+                                getImageGallery();
+                              },
                             ),
                           ),
-                        ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 15.0),
+                            child: new RaisedButton(
+                              color: Colors.teal[600],
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.camera_alt,
+                                    color: Colors.white,
+                                  ),
+                                  Text(
+                                    "Use Camera",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Montserrat',
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              onPressed: () {
+                                getImageCamera();
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5.0),
+                            child: RaisedButton(
+                              shape: BeveledRectangleBorder(),
+                              color: Colors.indigo[700],
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 15.0, bottom: 15.0),
+                                child: Container(
+                                  width: MediaQuery.of(context).orientation ==
+                                          Orientation.portrait
+                                      ? width / 2.0
+                                      : width / 3.0,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Text(
+                                        'Save changes',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15.0),
+                                      ),
+                                      Icon(
+                                        FontAwesomeIcons.save,
+                                        size: 18.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              onPressed: _image == null
+                                  ? () async {
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil('/home',
+                                              (Route<dynamic> route) => false);
+                                    }
+                                  : () {
+                                      uploadPic(widget.host, widget.list, _image);
+                                      Navigator.of(context)
+                                          .pushNamedAndRemoveUntil('/home',
+                                              (Route<dynamic> route) => false);
+                                    },
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 15.0),
