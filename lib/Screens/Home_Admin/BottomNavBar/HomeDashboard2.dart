@@ -274,6 +274,7 @@ class _HomeDashboard2State extends State<HomeDashboard2> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    //new Future.delayed(const Duration(seconds: 2));
     if (widget.list[0]['user_type_id'] == '3') {
       getSectorBudgetAlloc();
       getDocumentsApproved();
@@ -286,6 +287,12 @@ class _HomeDashboard2State extends State<HomeDashboard2> {
     }
     getRecentUpdates();
   }
+
+  /*@override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }*/
 
   @override
   Widget build(BuildContext context) {

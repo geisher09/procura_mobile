@@ -9,7 +9,7 @@ import 'package:get_ip/get_ip.dart';
 import 'package:flutter/cupertino.dart';
 
 void main() async {
-  String host = 'http://192.168.22.4/Procura/mobile';
+  String host = 'http://192.168.43.105/Procura/mobile';
   final prefs = await SharedPreferences.getInstance();
   final Id = prefs.getString('id') ?? '0';
   print(host);

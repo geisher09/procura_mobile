@@ -18,6 +18,6 @@ Future uploadPic(String host, List list, File imageFile) async {
   if(response.statusCode == 200){
     print("IMAGE UPDATED");
   }else{
-    print("Failed");
+    print("Failed to update");
   }
 }
