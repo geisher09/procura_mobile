@@ -376,14 +376,14 @@ class _BudgetProposalState extends State<BudgetProposal> {
         String host, int page, String proposal_file, String proposal_id, String user_id) {
       void approveBudgetProposal() {
         List splithost = host.split('/');
-        var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+        var newHost = 'http://${splithost[2]}:8000/mobile/approved_proposals/${proposal_id}';
         http.post(newHost, body: {
           "remarks": remarks.text,
         });
       }
       void rejectBudgetProposal() {
         List splithost = host.split('/');
-        var newHost = 'http://${splithost[2]}:8000/mobile/approved_budget_proposals/${proposal_id}';
+        var newHost = 'http://${splithost[2]}:8000/mobile/approved_proposals/${proposal_id}';
         Dio().delete(newHost, data: {
           "remarks": remarks.text,
         });

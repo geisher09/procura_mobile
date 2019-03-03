@@ -76,7 +76,7 @@ class _HomeNotificationsState extends State<HomeNotifications> {
     }else if(type == r'App\Notifications\PurchaseRequestRejected'){
       return AssetImage("assets/images/prrejected.png");
     }else if(type == r'App\Notifications\BudgetProposalApproved'){
-      return AssetImage("assets/images/prapproved.png");
+      return AssetImage("assets/images/bpapproved.png");
     }else if(type == r'App\Notifications\BudgetProposalRejected'){
       return AssetImage("assets/images/bprejected.png");
     }else if(type == r'App\Notifications\ProjectSubmitted'){
@@ -109,13 +109,24 @@ class _HomeNotificationsState extends State<HomeNotifications> {
     }else if(type == r'App\Notifications\BudgetYearActivated'){
       readNotif(id);
       if(widget.list[0]['user_type_id'] == '1'){
-        return BudgetProposalScreen(
+        /*return BudgetProposalScreen(
             bp: 'depthead',
             host: widget.host,
-            id: widget.list[0]['id']);
+            id: widget.list[0]['id']);*/
+        return Scaffold(
+          body: Center(
+            child: Text('A new active budget year has been set!', textAlign: TextAlign.center),
+          ),
+        );
       }else if(widget.list[0]['user_type_id'] == '3'){
         return BudgetAllocationSector(
             host: widget.host,uid: widget.list[0]['id']);
+      }else if(widget.list[0]['user_type_id'] == '5'){
+          return Scaffold(
+            body: Center(
+              child: Text('A new active budget year has been set!', textAlign: TextAlign.center),
+            ),
+          );
       }
     }else if(type == r'App\Notifications\SectorBudgetAllocated'){
       readNotif(id);
@@ -123,10 +134,15 @@ class _HomeNotificationsState extends State<HomeNotifications> {
           host: widget.host,uid: widget.list[0]['id']);
     }else if(type == r'App\Notifications\DepartmentBudgetAllocated'){
       readNotif(id);
-      return BudgetProposalScreen(
+      /*return BudgetProposalScreen(
           bp: 'depthead',
           host: widget.host,
-          id: widget.list[0]['id']);
+          id: widget.list[0]['id']);*/
+      return Scaffold(
+        body: Center(
+          child: Text("Your department's budget for the active year has now been allocated", textAlign: TextAlign.center),
+        ),
+      );
     }else if(type == r'App\Notifications\ProjectSubmitted'){
       readNotif(id);
       return SectorPPMPScreen(

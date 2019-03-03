@@ -389,7 +389,7 @@ class _HomeApproval_BOState extends State<HomeApproval_BO> {
                           }))
               : Expanded(
                   child: Center(
-                    child: Text('You have no requests yet'),
+                    child: Text('You have no files to approve yet'),
                   ),
                 )
         ],

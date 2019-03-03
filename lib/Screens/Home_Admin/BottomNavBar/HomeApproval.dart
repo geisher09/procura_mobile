@@ -421,7 +421,7 @@ class _HomeApprovalState extends State<HomeApproval> {
                   }))
               : Expanded(
             child: Center(
-              child: Text('You have no requests yet'),
+              child: Text('You have no files to approve yet'),
             ),
           )
         ],
